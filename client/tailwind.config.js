@@ -9,9 +9,9 @@ export default {
                 sans: ['Plus Jakarta Sans', ...fontFamily.sans],
             },
             colors: {
-                primary: '#f3f8fa',
-                secondary: '#29303d',
-                tertiary: '#a3bbd6',
+                primary: 'var(--color-primary)',
+                secondary: 'var(--color-secondary)',
+                tertiary: 'var(--color-tertiary)',
             },
         },
     },

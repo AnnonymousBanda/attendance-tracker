@@ -1,5 +1,6 @@
 @import "@fontsource/plus-jakarta-sans";
 @import "tailwindcss";
+@tailwind utilities;
 
 @layer base {
     html {
@@ -66,4 +67,22 @@
         margin: 0 auto;
         padding: 0 clamp(1rem, -0.35rem + 4.2188vw, 6.4rem);
     }
+}
+
+:root {
+    --color-primary: #f3f8fa;
+    --color-secondary: #29303d;
+    --color-tertiary: #a3bbd6;
+}
+
+.bg-primary {
+    background-color: var(--color-primary);
+}
+
+.bg-secondary {
+    background-color: var(--color-secondary);
+}
+
+.bg-tertiary {
+    background-color: var(--color-tertiary);
 }
