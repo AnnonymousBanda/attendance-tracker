@@ -1,5 +1,7 @@
 import React from 'react'
 
-export default function NotFound() {
-    return <div>NotFound</div>
+const NotFound = () => {
+    return <div className="max-container">NotFound</div>
 }
+
+export default NotFound

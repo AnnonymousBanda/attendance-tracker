@@ -7,8 +7,8 @@ const Navbar = () => {
     const isActive = (path) => location.pathname === path
 
     return (
-        <nav className="fixed bottom-0 left-0 w-full bg-white shadow-md border-t border-slate-400 py-[2rem]">
-            <div className="flex justify-around items-center">
+        <nav className="w-full bg-white shadow-md border-t border-slate-400 py-[1rem]">
+            <div className="flex justify-between items-center max-container">
                 <Link to="/">
                     <img
                         src={Home}

@@ -1,4 +1,4 @@
-import Card from './Card'
+import Lecture from './Lecture'
 import Navbar from './Navbar'
 
-export { Card, Navbar }
+export { Lecture, Navbar }
