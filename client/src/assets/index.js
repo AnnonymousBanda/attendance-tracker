@@ -6,5 +6,6 @@ import msLogo from './ms_logo.svg'
 import logo from './logo.svg'
 import addIcon from './addIcon.png'
 import closeIcon from './closeIcon.png'
+import user from './user.png'
 
-export { Home, Library, Schedule, Present, msLogo, logo, addIcon, closeIcon }
+export { Home, Library, Schedule, Present, msLogo, logo, addIcon, closeIcon, user }
