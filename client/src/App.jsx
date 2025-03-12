@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route, BrowserRouter, Routes, useLocation } from 'react-router-dom'
 import { Home, NotFound, Schedule, Stats, Timetable, Login } from './pages'
-import Navbar from './components/Navbar'
+import { Navbar } from './components'
 
 const Layout = ({ children }) => {
     const pathname = useLocation()
