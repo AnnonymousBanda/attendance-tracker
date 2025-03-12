@@ -1,17 +1,15 @@
 import React from 'react'
-import { Route, BrowserRouter, Routes, useLocation } from 'react-router-dom'
+import { Route, BrowserRouter, Routes } from 'react-router-dom'
 import { Home, NotFound, Schedule, Stats, Timetable, Login } from './pages'
 import { Navbar } from './components'
-import Header  from './components/Header'
+import Header from './components/Header'
 
 const Layout = ({ children }) => {
-    const pathname = useLocation()
-
     return (
         <div className="w-screen h-svh flex flex-col gap-[1rem]">
-            <Header/>
+            <Header />
             <div className="w-full h-full">{children}</div>
-            {pathname.pathname !== '/login' && <Navbar />}
+            <Navbar />
         </div>
     )
 }
@@ -19,16 +17,19 @@ const Layout = ({ children }) => {
 const App = () => {
     return (
         <BrowserRouter>
-            <Layout>
-                <Routes>
+            <Routes>
+                <Route element={<Layout />}>
                     <Route path="/" element={<Home />} />
                     <Route path="/schedule" element={<Schedule />} />
                     <Route path="/stats" element={<Stats />} />
                     <Route path="/timetable" element={<Timetable />} />
+                </Route>
+
+                <Route>
                     <Route path="/login" element={<Login />} />
                     <Route path="*" element={<NotFound />} />
-                </Routes>
-            </Layout>
+                </Route>
+            </Routes>
         </BrowserRouter>
     )
 }
