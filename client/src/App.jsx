@@ -6,9 +6,9 @@ import Header from './components/Header'
 import { Outlet } from 'react-router-dom'
 
 const Layout = () => (
-    <div className="w-screen h-svh flex flex-col gap-[1rem]">
+    <div className="w-screen h-svh flex flex-col">
         <Header />
-        <div className="w-full h-full">
+        <div className="w-full h-full py-[1rem]">
             <Outlet />
         </div>
         <Navbar />
