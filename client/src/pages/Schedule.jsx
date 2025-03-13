@@ -1,7 +1,13 @@
 import React from 'react'
+import DaySelector from '../components/DaySelector'
 
-const Schedule = () => {
-    return <div className="max-container">Schedule</div>
+export default function Schedule() {
+    const daysList = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+    return (
+        <div>
+            <DaySelector days={daysList} />
+        </div>
+    )
 }
 
 export default Schedule
