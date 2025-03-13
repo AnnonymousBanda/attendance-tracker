@@ -1,4 +1,4 @@
-import Card from './Card'
+import Card from './Feature'
 import Navbar from './Navbar'
 
 export { Card, Navbar }
