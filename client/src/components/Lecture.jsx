@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Card = ({ fro, to, sub_name }) => {
+const Lecture = ({ fro, to, sub_name }) => {
     return (
         <div className=" border-l-10 border-black relative bg-[#F5F5F5] shadow-lg rounded-xl px-4 py-8 w-72 border  font-[Plus Jakarta Sans]">
             <div className="absolute left-[-55px]  top-1/2 -translate-y-21 text-right">
@@ -27,4 +27,4 @@ const Card = ({ fro, to, sub_name }) => {
     )
 }
 
-export default Card
+export default Lecture

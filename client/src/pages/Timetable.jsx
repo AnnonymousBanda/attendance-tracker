@@ -1,7 +1,7 @@
 import React from 'react'
 
 const Timetable = () => {
-	return <div>Timetable</div>
+    return <div className="max-container">Timetable</div>
 }
 
 export default Timetable

@@ -1,7 +1,7 @@
 import React from 'react'
 
 const Stats = () => {
-	return <div>Stats</div>
+    return <div className="max-container">Stats</div>
 }
 
 export default Stats

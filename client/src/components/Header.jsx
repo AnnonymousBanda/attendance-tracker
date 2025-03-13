@@ -1,42 +1,29 @@
 import React from 'react'
 import { useLocation } from 'react-router-dom'
+import { user } from '../assets'
 
 const Header = () => {
     const location = useLocation()
 
-    const getHearderContent = () => {
-        switch (location.pathname) {
-            case '/schedule':
-                return (
-                    <div className="flex justify-between items-center py-4 px-8">
-                        <h1 className="text-4xl font-medium font-[Plus Jakarta Sans]">Schedule</h1>
-                        <img
-                            src="/images/user-avatar.png"
-                            alt="User Avatar"
-                            className="w-10 h-10 rounded-full"
-                        />
-                    </div>
-                )
-            case '/timetable':
-                return (
-                    <div className="flex justify-between items-center py-4 px-8">
-                        <h1 className="text-4xl font-medium font-[Plus Jakarta Sans]">Timetable</h1>
+    const formatPath = (path) => {
+        if (path === '/') return 'Home'
 
-                        <img
-                            src="/images/user-avatar.png"
-                            alt="User Avatar"
-                            className="w-10 h-10 rounded-full"
-                        />
-                    </div>
-                )
-            default:
-                return null
-        }
+        return path.charAt(1).toUpperCase() + path.slice(2)
     }
 
     return (
-        <div className="border-b border-gray-100 shadow-sm">
-            {getHearderContent()}
+        <div className="border-b border-gray-100 shadow-sm w-full">
+            <div className="max-container">
+                <div className="flex justify-between items-center py-[1rem]">
+                    <h1>{formatPath(location.pathname)}</h1>
+
+                    <img
+                        src={user}
+                        alt="User Avatar"
+                        className="w-[3rem] h-[3rem] rounded-full cursor-pointer"
+                    />
+                </div>
+            </div>
         </div>
     )
 }
