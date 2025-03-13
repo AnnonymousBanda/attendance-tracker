@@ -1,5 +1,5 @@
 import React from 'react'
-import Calender from '../components/Calender'
+import { Calender } from '../components'
 
 const Timetable = () => {
     const daysData = [

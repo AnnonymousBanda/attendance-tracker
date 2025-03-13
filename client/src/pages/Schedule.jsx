@@ -1,7 +1,7 @@
 import React from 'react'
-import DaySelector from '../components/DaySelector'
+import { DaySelector } from '../components'
 
-export default function Schedule() {
+const Schedule = () => {
     const daysList = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
     return (
         <div>
