@@ -1,70 +1,77 @@
 {
     "name": "Attendance Tracker",
-    "short_name": "Attendance",
+    "short_name": "AttTrack",
     "description": "Track your attendance effortlessly and stay on top of your requirements. Get visual insights into your attendance trends, projections, missed classes, and the mandatory sessions you need to attend.",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#f3f8fa",
-    "theme_color": "transparent",
+    "theme_color": "#f3f8fa",
     "orientation": "portrait",
+    "scope": "/",
+    "id": "/",
     "icons": [
-    {
-        "src": "/images/logo-192x192.png",
-        "sizes": "192x192",
-        "type": "image/png"
-    },
-    {
-        "src": "/images/logo-512x512.png",
-        "sizes": "512x512",
-        "type": "image/png"
-    },
-    {
+      {
         "src": "/images/logo-120x120.png",
         "sizes": "120x120",
         "type": "image/png"
-    },
-    {
+      },
+      {
         "src": "/images/logo-152x152.png",
         "sizes": "152x152",
         "type": "image/png"
-    },
-    {
+      },
+      {
         "src": "/images/logo-167x167.png",
         "sizes": "167x167",
         "type": "image/png"
-    },
-    {
+      },
+      {
         "src": "/images/logo-180x180.png",
         "sizes": "180x180",
-        "type": "image/png"
-    },
-    {
+        "type": "image/png",
+        "purpose": "any maskable"
+      },
+      {
+        "src": "/images/logo-192x192.png",
+        "sizes": "192x192",
+        "type": "image/png",
+        "purpose": "any maskable"
+      },
+      {
         "src": "/images/logo-256x256.png",
         "sizes": "256x256",
         "type": "image/png"
-    },
-    {
+      },
+      {
         "src": "/images/logo-384x384.png",
         "sizes": "384x384",
         "type": "image/png"
-    },
-    {
+      },
+      {
+        "src": "/images/logo-512x512.png",
+        "sizes": "512x512",
+        "type": "image/png",
+        "purpose": "any maskable"
+      },
+      {
         "src": "/images/logo-1024x1024.png",
         "sizes": "1024x1024",
         "type": "image/png"
-    }],  
-  "screenshots": [
-    {
-      "src": "/images/screenshot-mobile.png",
-      "sizes": "394x756",
-      "type": "image/png",
-      "form_factor": "narrow"
-    },
-    {
-      "src": "/images/screenshot-desktop.png",
-      "sizes": "1919x862",
-      "type": "image/png",
-      "form_factor": "wide"
-    }
-  ]
-}
+      }
+    ],
+    "screenshots": [
+      {
+        "src": "/images/screenshot-mobile.png",
+        "sizes": "394x756",
+        "type": "image/png",
+        "form_factor": "narrow"
+      },
+      {
+        "src": "/images/screenshot-desktop.png",
+        "sizes": "1919x862",
+        "type": "image/png",
+        "form_factor": "wide"
+      }
+    ]
+  }
+  
