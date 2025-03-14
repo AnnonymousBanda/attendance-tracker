@@ -1,6 +1,6 @@
 import React from 'react'
 import { Route, BrowserRouter, Routes } from 'react-router-dom'
-import { Home, NotFound, Schedule, Stats, Timetable, Login } from './pages'
+import { Home, NotFound, Schedule, Stats, Login, Lectures } from './pages'
 import { Navbar } from './components'
 import Header from './components/Header'
 import { Outlet } from 'react-router-dom'
@@ -22,7 +22,7 @@ const App = () => (
                 <Route path="/" element={<Home />} />
                 <Route path="/schedule" element={<Schedule />} />
                 <Route path="/stats" element={<Stats />} />
-                <Route path="/timetable" element={<Timetable />} />
+                <Route path="/lectures" element={<Lectures />} />
             </Route>
             <Route path="/login" element={<Login />} />
             <Route path="*" element={<NotFound />} />
