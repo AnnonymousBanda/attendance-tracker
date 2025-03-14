@@ -7,7 +7,7 @@ const Navbar = () => {
     const isActive = (path) => location.pathname === path
 
     return (
-        <nav className="w-full bg-white shadow-md border-t border-slate-400 py-[1rem]">
+        <nav className="w-full bg-primary shadow-[0_-2px_4px_rgba(0,0,0,0.1)] py-[1rem]">
             <div className="flex justify-between items-center max-container">
                 <Link to="/">
                     <img

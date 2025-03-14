@@ -15,7 +15,7 @@ const Header = () => {
 
     return (
         <>
-            <div className="border-b border-gray-100 shadow-sm w-full">
+            <div className="border-b border-gray-100 shadow-sm w-full bg-primary">
                 <div className="max-container">
                     <div className="flex justify-between items-center py-[1rem]">
                         <h1>{formatPath(location.pathname)}</h1>

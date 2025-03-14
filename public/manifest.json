@@ -3,7 +3,7 @@
     "short_name": "AttTrack",
     "description": "Track your attendance effortlessly and stay on top of your requirements. Get visual insights into your attendance trends, projections, missed classes, and the mandatory sessions you need to attend.",
     "start_url": "/",
-    "display": "fullscreen",
+    "display": "standalone",
     "background_color": "#f3f8fa",
     "theme_color": "#f3f8fa",
     "orientation": "portrait",
