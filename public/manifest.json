@@ -3,7 +3,7 @@
     "short_name": "AttTrack",
     "description": "Track your attendance effortlessly and stay on top of your requirements. Get visual insights into your attendance trends, projections, missed classes, and the mandatory sessions you need to attend.",
     "start_url": "/",
-    "display": "standalone",
+    "display": "fullscreen",
     "background_color": "#f3f8fa",
     "theme_color": "#f3f8fa",
     "orientation": "portrait",
@@ -28,14 +28,12 @@
       {
         "src": "/images/logo-180x180.png",
         "sizes": "180x180",
-        "type": "image/png",
-        "purpose": "any maskable"
+        "type": "image/png"
       },
       {
         "src": "/images/logo-192x192.png",
         "sizes": "192x192",
-        "type": "image/png",
-        "purpose": "any maskable"
+        "type": "image/png"
       },
       {
         "src": "/images/logo-256x256.png",
@@ -50,8 +48,7 @@
       {
         "src": "/images/logo-512x512.png",
         "sizes": "512x512",
-        "type": "image/png",
-        "purpose": "any maskable"
+        "type": "image/png"
       },
       {
         "src": "/images/logo-1024x1024.png",
