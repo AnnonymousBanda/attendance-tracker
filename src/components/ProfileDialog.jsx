@@ -1,6 +1,10 @@
 import { XMarkIcon } from '@heroicons/react/16/solid'
 import { UserCircleIcon } from '@heroicons/react/24/outline'
 import { user } from '../assets'
+import { FaBookBookmark } from 'react-icons/fa6'
+import { HiAcademicCap } from 'react-icons/hi2'
+import { IoCalendar } from 'react-icons/io5'
+import { MdBugReport, MdLogout, MdOutlineDeveloperMode } from 'react-icons/md'
 
 export default function ProfileDialog({ setisDialogOpen, profile }) {
     const handleClose = () => {
@@ -14,12 +18,12 @@ export default function ProfileDialog({ setisDialogOpen, profile }) {
         >
             <div
                 onClick={(e) => e.stopPropagation()}
-                className="md:w-[40vw] w-[95%] max-h-[95%] bg-white p-[2rem] rounded-lg shadow-lg flex flex-col gap-[2rem]"
+                className="md:w-fit w-[95%] max-h-[95%] bg-white p-[2rem] rounded-lg shadow-lg flex flex-col gap-[2rem] overflow-auto"
             >
                 <div className="flex justify-between items-center">
                     <div className="flex justify-center items-center gap-[0.5rem]">
                         <UserCircleIcon className="w-[2.5rem] h-[2.5rem]" />
-                        <h2 className="font-bold uppercase tracking-wide">
+                        <h2 className="font-[900] uppercase tracking-wide">
                             Profile
                         </h2>
                     </div>
@@ -27,56 +31,62 @@ export default function ProfileDialog({ setisDialogOpen, profile }) {
                         <XMarkIcon className="w-[2.8rem] h-[2.8rem] cursor-pointer" />
                     </button>
                 </div>
-                <div className="flex flex-col justify-center items-center gap-[4rem]">
-                    <img
-                        src={user}
-                        alt="User icon"
-                        className="w-[12rem] h-[12rem]"
-                    />
-                    <div className="flex flex-col gap-[1.2rem] w-full">
-                        <div className="flex w-full items-center">
-                            <p className="font-bold w-[10rem] flex-shrink-0">
-                                Name
-                            </p>{' '}
-                            <p className="font-bold mr-4">:</p>
-                            <p>John Doe</p>
-                        </div>
-                        <div className="flex w-full items-center">
-                            <p className="font-bold w-[10rem] flex-shrink-0">
-                                Roll Number
-                            </p>{' '}
-                            <p className="font-bold mr-4">:</p>
-                            <p>2301CS01</p>
-                        </div>
-                        <div className="flex w-full items-center">
-                            <p className="font-bold w-[10rem] flex-shrink-0">
-                                Branch
-                            </p>{' '}
-                            <p className="font-bold mr-4">:</p>
-                            <p>Computer Science and Engineering</p>
-                        </div>
-                        <div className="flex w-full items-center">
-                            <p className="font-bold w-[10rem] flex-shrink-0">
-                                Email
-                            </p>{' '}
-                            <p className="font-bold mr-4">:</p>
-                            <p className="break-all">
+                <div className="flex flex-col justify-center items-center gap-[3rem]">
+                    <div className="flex justify-center items-center gap-[2rem] w-fit">
+                        <img
+                            src={user}
+                            alt="User icon"
+                            className="w-[8rem] h-[8rem]"
+                        />
+                        <div className="flex flex-col gap-[0.5rem] w-full justify-center">
+                            <h1 className="font-bold">John Doe</h1>
+                            <h2 className="text-[1.5rem]">2301CS01</h2>
+                            <h2 className="text-[1.5rem]">
                                 john_2301cs01@iitp.ac.in
-                            </p>
+                            </h2>
                         </div>
-                        <div className="flex w-full items-center">
-                            <p className="font-bold w-[10rem] flex-shrink-0">
-                                Semester
-                            </p>{' '}
-                            <p className="font-bold mr-4">:</p>
-                            <p className="break-all">4</p>
+                    </div>
+                    <div className="flex flex-col gap-[1.2rem] w-full">
+                        <div className="flex justify-center items-center bg-primary p-[1rem] gap-[1rem] rounded-lg">
+                            <FaBookBookmark className="w-[3.3rem] h-[4rem]" />
+                            <div className="flex flex-col w-full justify-center">
+                                <h2 className="font-bold">Branch</h2>
+                                <p>Computer Science and Engineering</p>
+                            </div>
                         </div>
-                        <div className="flex w-full items-center">
-                            <p className="font-bold w-[10rem] flex-shrink-0">
-                                Batch
-                            </p>{' '}
-                            <p className="font-bold mr-4">:</p>
-                            <p>2024</p>
+                        <div className="flex justify-center bg-primary p-[1rem] gap-[1rem] rounded-lg">
+                            <HiAcademicCap className="w-[3.3rem] h-[4rem]" />
+                            <div className="flex flex-col w-full justify-center">
+                                <h2 className="font-bold">Batch</h2>
+                                <p>2023</p>
+                            </div>
+                        </div>
+                        <div className="flex justify-center items-center bg-primary p-[1rem] gap-[1rem] rounded-lg">
+                            <IoCalendar className="w-[3.3rem] h-[4rem]" />
+                            <div className="flex flex-col w-full justify-center">
+                                <h2 className="font-bold">Semster</h2>
+                                <p>4</p>
+                            </div>
+                        </div>
+                        <div className='flex flex-col w-full bg-tertiary justify-center items-center mt-[4rem] p-[1rem] gap-[1rem] rounded-lg'>
+                            <div className="w-full flex justify-center items-center bg-primary p-[1rem] gap-[1rem] rounded-lg">
+                                <MdOutlineDeveloperMode className="w-[3.3rem] h-[4rem]" />
+                                <div className="flex flex-col w-full justify-center">
+                                    <h2 className="font-bold">Developers</h2>
+                                </div>
+                            </div>
+                            <div className=" w-full flex justify-center items-center bg-primary p-[1rem] gap-[1rem] rounded-lg">
+                                <MdBugReport className="w-[3.3rem] h-[4rem]" />
+                                <div className="flex flex-col w-full justify-center">
+                                    <h2 className="font-bold">Report a Bug</h2>
+                                </div>
+                            </div>
+                            <div className=" w-full flex justify-center items-center bg-[#fca5a5] p-[1rem] gap-[1rem] rounded-lg">
+                                <MdLogout className="w-[3.3rem] h-[4rem]" />
+                                <div className="flex flex-col w-full justify-center">
+                                    <h2 className="font-bold">Logout</h2>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
