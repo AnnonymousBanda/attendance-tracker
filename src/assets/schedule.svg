@@ -1,15 +1,68 @@
-<svg width="41" height="42" viewBox="0 0 41 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g clip-path="url(#clip0_200_701)">
-<path d="M15.3753 34.6667H10.2503C6.47638 34.6667 3.41699 31.6072 3.41699 27.8333V12.4583C3.41699 8.68439 6.47638 5.625 10.2503 5.625H29.042C32.8159 5.625 35.8753 8.68439 35.8753 12.4583V17.5833" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M13.667 3.91667V7.33333" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M25.625 3.91667V7.33333" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M0 1H32.4583" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M31.6045 27.2233L29.042 29.7858" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M29.0417 38.0833C33.7591 38.0833 37.5833 34.2591 37.5833 29.5417C37.5833 24.8242 33.7591 21 29.0417 21C24.3242 21 20.5 24.8242 20.5 29.5417C20.5 34.2591 24.3242 38.0833 29.0417 38.0833Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<defs>
-<clipPath id="clip0_200_701">
-<rect width="41" height="41" fill="white" transform="translate(0 0.5)"/>
-</clipPath>
-</defs>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg 
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="400"
+   height="400"
+   viewBox="0 0 400 400.00001"
+   id="svg23475"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="task.svg">
+  <defs
+     id="defs23477" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.35"
+     inkscape:cx="375"
+     inkscape:cy="520"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="px"
+     inkscape:window-width="1920"
+     inkscape:window-height="1056"
+     inkscape:window-x="1920"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata23480">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>
+</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Capa 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-652.36216)">
+    <path
+       inkscape:connector-curvature="0"
+       style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 162.2617,652.15012 0,28.6992 -27.7617,0.01 0,-28.7051 -25,0 0,28.707 -27,0 0,-0.043 -25,0 0,0.043 0,25 0,45 0,25 0,251.71298 0,25 25,0 235,0 23.2148,0 1.7852,0 0,-171.57038 0,-200.1855 -51.2383,0.01 0,-28.6777 -25,0 0,28.6816 -27.7617,0.01 0,-28.6875 -25,0 0,28.6914 -26.2383,0 0,-28.6953 -25,0 z M 82.5,705.86491 l 27,0 0,21.2872 25,0 0,-21.2872 27.7617,0 0,21.2872 25,0 0,-21.2872 26.2383,0 0,21.2872 25,0 0,-21.2872 27.7617,0 0,21.2872 25,0 0,-21.2872 26.2383,0 0,45 -235,0 0,-45 z m 0,70 235,0 0,112.1426 0,139.57039 -235,0 0,-251.71299 z m 25.4551,30.252 0,25 30.6074,0 0,-25 -30.6074,0 z m 55.6074,0 0,25 127.5332,0 0,-25 -127.5332,0 z m -55.6074,58 0,25 30.6074,0 0,-25 -30.6074,0 z m 55.6074,0 0,25 127.4883,0 0,-25 -127.4883,0 z m -55.6074,58 0,25 30.6074,0 0,-25 -30.6074,0 z m 55.6074,0 0,25 127.082,0 0,-25 -127.082,0 z m -55.6074,56 0,25.00009 30.6074,0 0,-25.00009 -30.6074,0 z m 55.6074,0 0,25.00009 127.5078,0 0,-25.00009 -127.5078,0 z"
+       id="task">
+      <title
+         id="title23459">task</title>
+    </path>
+  </g>
 </svg>

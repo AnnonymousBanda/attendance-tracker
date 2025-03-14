@@ -1,11 +1,11 @@
 import Home from './home.svg'
-import Library from './library.svg'
+import Stats from './stats.svg'
 import Schedule from './schedule.svg'
-import Present from './present.svg'
+import Lectures from './lectures.svg'
 import msLogo from './ms_logo.svg'
 import logo from './logo.svg'
 import addIcon from './addIcon.png'
 import closeIcon from './closeIcon.png'
 import user from './user.png'
 
-export { Home, Library, Schedule, Present, msLogo, logo, addIcon, closeIcon, user }
+export { Home, Stats, Schedule, Lectures, msLogo, logo, addIcon, closeIcon, user }
