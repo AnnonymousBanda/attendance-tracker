@@ -1,8 +1,23 @@
 import React from 'react'
-import { Pie } from 'react-chartjs-2'
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
+import { Bar } from 'react-chartjs-2'
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Tooltip,
+    Legend,
+} from 'chart.js'
+import annotationPlugin from 'chartjs-plugin-annotation'
 
-ChartJS.register(ArcElement, Tooltip, Legend)
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Tooltip,
+    Legend,
+    annotationPlugin
+) 
 
 const Stats = () => {
     const getOrdinalSuffix = (day) => {
@@ -16,41 +31,69 @@ const Stats = () => {
     const day = new Date().getDate()
     const formattedDate = `${month} ${getOrdinalSuffix(day)}`
 
+    const labels = ['CS2201', 'CS2202', 'CS2203', 'CS2204', 'CS2207']
+    const chartHeight = labels.length * 50
+
     const data = {
-        labels: ['Attended', 'Absent', 'Sick'],
+        labels: labels,
         datasets: [
             {
-                data: [7, 2, 1],
-                backgroundColor: [
-                    'rgba(75, 255, 192, 0.8)',
-                    'rgba(255, 10, 50, 0.8)',
-                    'rgba(201, 203, 220, 0.8)',
-                ],
-                borderColor: [
-                    'rgba(0, 0, 0, 0.8)',
-                    'rgba(0, 0, 0, 0.8)',
-                    'rgba(0, 0, 0, 0.8)',
-                ],
-                borderWidth: 2,
+                label: 'Attendance Report',
+                data: [62, 76, 89, 99, 100],
+                backgroundColor: (context) => {
+                    const value = context.raw
+                    if (value >= 90) return 'rgba(75, 255, 100, 0.5)'
+                    if (value >= 75) return 'rgba(255, 206, 86, 0.5)'
+                    return 'rgba(255, 99, 132, 0.5)'
+                },
+                borderColor: 'rgba(0, 0, 0, 0.5)',
+                borderWidth: 1,
+                barPercentage: 0.8,
             },
         ],
     }
 
     const chartOptions = {
+        indexAxis: 'y',
         responsive: true,
+        maintainAspectRatio: false,
+        animation: {
+            duration: 1500,
+            easing: 'easeInOutQuart',
+        },
         plugins: {
-            legend: {
-                position: 'top',
-                labels: {
-                    font: {
-                        size: 14,
-                        family: 'Arial',
-                        weight: 'bold',
+            legend: { display: false },
+            tooltip: { enabled: true },
+            annotation: {
+                annotations: {
+                    line1: {
+                        type: 'line',
+                        scaleID: 'x',
+                        value: 75,
+                        borderColor: 'red',
+                        borderWidth: 1,
+                        borderDash: [6, 6],
+                        label: {
+                            display: true,
+                            content: '75%',
+                            backgroundColor: 'red',
+                            color: 'white',
+                            position: 'start',
+                            xAdjust: 20,
+                            zAjust: 20,
+                        },
                     },
-                    color: '#333',
-                    padding: 20,
-                    boxWidth: 20,
                 },
+            },
+        },
+        scales: {
+            x: {
+                beginAtZero: true,
+                max: 100,
+                ticks: { font: { size: 13 }, color: '#333' },
+            },
+            y: {
+                ticks: { font: { size: 12 }, color: '#333' },
             },
         },
     }
@@ -60,10 +103,10 @@ const Stats = () => {
             <h2 className="font-[900] text-[#858699]">
                 Today, {formattedDate}
             </h2>
-            <div className="flex flex-col w-full gap-[1rem] border-[2px] border-solid border-[#f0f0f0] rounded-[1rem] p-[1rem]">
-                <h2 className="font-bold">Monthly Report</h2>
-                <div className="w-[200px] mx-auto">
-                    <Pie data={data} options={chartOptions} />
+            <div className="flex flex-col items-center w-full gap-[1rem] border-[2px] border-solid border-[#f0f0f0] rounded-[1rem] p-[1rem]">
+                <h2 className="font-bold">Attendance Report</h2>
+                <div className="w-full mx-auto" style={{ height: `${chartHeight}px` }}>
+                    <Bar data={data} options={chartOptions} />
                 </div>
             </div>
         </div>
