@@ -109,6 +109,16 @@ const Stats = () => {
                     <Bar data={data} options={chartOptions} />
                 </div>
             </div>
+            <div className="flex flex-col items-center w-full gap-[1rem] border-[2px] border-solid border-[#f0f0f0] rounded-[1rem] px-[1.5rem] py-[1rem]">
+                <h1 className='font-bold'>Analysis</h1>
+                <div className='w-full flex flex-col items-center gap-[1rem]'>
+                    <div className='flex w-full flex-col gap-[0.5rem]'>
+                        <h2 className='font-bold'>CS2201</h2>
+                        <p>You are too short of attendance. Be prepared for the debarment mail from the course instructor.</p>
+                    </div>
+
+                </div>
+            </div>
         </div>
     )
 }
