@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { user } from '../assets'
+import { ProfileDialog } from './index'
 
 const Header = () => {
     const location = useLocation()
+    const [isDialogOpen, setisDialogOpen] = useState(false)
 
     const formatPath = (path) => {
         if (path === '/') return 'Home'
@@ -12,19 +14,25 @@ const Header = () => {
     }
 
     return (
-        <div className="border-b border-gray-100 shadow-sm w-full">
-            <div className="max-container">
-                <div className="flex justify-between items-center py-[1rem]">
-                    <h1>{formatPath(location.pathname)}</h1>
+        <>
+            <div className="border-b border-gray-100 shadow-sm w-full">
+                <div className="max-container">
+                    <div className="flex justify-between items-center py-[1rem]">
+                        <h1>{formatPath(location.pathname)}</h1>
 
-                    <img
-                        src={user}
-                        alt="User Avatar"
-                        className="w-[3rem] h-[3rem] rounded-full cursor-pointer"
-                    />
+                        <img
+                            onClick={() => setisDialogOpen(true)}
+                            src={user}
+                            alt="User Avatar"
+                            className="w-[3rem] h-[3rem] rounded-full cursor-pointer"
+                        />
+                    </div>
                 </div>
             </div>
-        </div>
+            {isDialogOpen && (
+                <ProfileDialog setisDialogOpen={setisDialogOpen} />
+            )}
+        </>
     )
 }
 
