@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route, BrowserRouter, Routes } from 'react-router-dom'
 import { Home, NotFound, Schedule, Stats, Login, Lectures } from './pages'
-import { Navbar } from './components'
+import { Navbar, PreventBrowserRefresh } from './components'
 import Header from './components/Header'
 import { Outlet } from 'react-router-dom'
 
@@ -17,6 +17,7 @@ const Layout = () => (
 
 const App = () => (
     <BrowserRouter>
+        <PreventBrowserRefresh />
         <Routes>
             <Route element={<Layout />}>
                 <Route path="/" element={<Home />} />
