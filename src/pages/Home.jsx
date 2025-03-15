@@ -102,7 +102,7 @@ const Home = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-6 font-Plus Jakarta Sans overflow-auto">
+        <div className="bg-primary p-[1rem] rounded-lg">
             <div className="max-w-7xl mx-auto space-y-6">
                 {/* Header Section */}
                 <div className="animate-fade-in">

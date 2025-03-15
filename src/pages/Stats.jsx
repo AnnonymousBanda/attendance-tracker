@@ -99,7 +99,7 @@ const Stats = () => {
     }
 
     return (
-        <div className="max-container flex flex-col items-center py-[1rem] gap-[2rem]">
+        <div className="flex flex-col items-center p-[1rem] gap-[2rem] bg-primary rounded-lg">
             <h2 className="font-[900] text-[#858699]">
                 Today, {formattedDate}
             </h2>
