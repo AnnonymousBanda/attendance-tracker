@@ -16,22 +16,6 @@ const Layout = () => (
 )
 
 const App = () => {
-    React.useEffect(() => {
-        window.addEventListener('popstate', () => {
-            if (
-                window.matchMedia('(display-mode: standalone)').matches ||
-                window.navigator.standalone
-            )
-                window.location.href = window.location.href
-                    .split('/')
-                    .slice(0, 3)
-                    .join('/')
-
-            history.replaceState(null, '', '/')
-            history.pushState(null, '', '/')
-        })
-    })
-
     return (
         <BrowserRouter>
             <PreventBrowserRefresh />

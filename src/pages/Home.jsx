@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const Home = () => {
     const [greeting, setGreeting] = useState('')
@@ -100,6 +101,18 @@ const Home = () => {
         })
         setShowForm(false)
     }
+
+    const navigate = useNavigate()
+
+    //controls the back button navigation
+    React.useEffect(() => {
+        window.addEventListener('popstate', () => {
+            navigate('/')
+
+            history.replaceState(null, '', '/')
+            history.pushState(null, '', '/')
+        })
+    })
 
     return (
         <div className="bg-primary p-[1rem] rounded-lg">
@@ -231,7 +244,10 @@ const Home = () => {
                         <div className="text-2xl font-semibold text-gray-700">
                             Today's Classes
                         </div>
-                        <button onClick={() => setShowForm(true)} className="text-blue-500 hover:text-blue-900  transition-colors text-4xl font-bold">
+                        <button
+                            onClick={() => setShowForm(true)}
+                            className="text-blue-500 hover:text-blue-900  transition-colors text-4xl font-bold"
+                        >
                             +
                         </button>
                     </div>
