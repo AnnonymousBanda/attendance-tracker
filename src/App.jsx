@@ -15,20 +15,30 @@ const Layout = () => (
     </div>
 )
 
-const App = () => (
-    <BrowserRouter>
-        <PreventBrowserRefresh />
-        <Routes>
-            <Route element={<Layout />}>
-                <Route path="/" element={<Home />} />
-                <Route path="/schedule" element={<Schedule />} />
-                <Route path="/stats" element={<Stats />} />
-                <Route path="/lectures" element={<Lectures />} />
-            </Route>
-            <Route path="/login" element={<Login />} />
-            <Route path="*" element={<NotFound />} />
-        </Routes>
-    </BrowserRouter>
-)
+const App = () => {
+    React.useEffect(() => {
+        window.addEventListener('popstate', () => {
+            history.replaceState(null, '', '/')
+
+            history.pushState(null, '', '/')
+        })
+    })
+
+    return (
+        <BrowserRouter>
+            <PreventBrowserRefresh />
+            <Routes>
+                <Route element={<Layout />}>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/schedule" element={<Schedule />} />
+                    <Route path="/stats" element={<Stats />} />
+                    <Route path="/lectures" element={<Lectures />} />
+                </Route>
+                <Route path="/login" element={<Login />} />
+                <Route path="*" element={<NotFound />} />
+            </Routes>
+        </BrowserRouter>
+    )
+}
 
 export default App
