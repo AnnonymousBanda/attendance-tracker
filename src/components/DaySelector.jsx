@@ -5,7 +5,7 @@ const DaySelector = ({ days }) => {
     const [selectedDay, setSelectedDay] = useState(days[0])
 
     return (
-        <div className="max-container">
+        <div className="max-container px-[0.2rem]">
             <div className="flex w-full bg-white gap-[0.2rem]">
                 {days.map((day, index) => (
                     <button
@@ -21,8 +21,8 @@ const DaySelector = ({ days }) => {
                     index === 0
                         ? 'rounded-[1rem] rounded-br-none'
                         : index === days.length - 1
-                          ? 'rounded-[1rem] rounded-bl-none'
-                          : 'rounded-[1rem]'
+                        ? 'rounded-[1rem] rounded-bl-none'
+                        : 'rounded-[1rem]'
                 } 
                 shadow-md`}
                     >

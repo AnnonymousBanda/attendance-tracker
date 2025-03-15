@@ -4,10 +4,12 @@ const Lecture = ({ fro, to, sub_name }) => {
     return (
         <div className=" border-l-10 border-black relative bg-[#F5F5F5] shadow-lg rounded-xl px-4 py-8 w-72 border  font-[Plus Jakarta Sans]">
             <div className="absolute left-[-55px]  top-1/2 -translate-y-21 text-right">
-                <span className="block text-sm text-black font-semibold">
+                <span className="block text-sm text-black font-semibold py-[1rem] text-[1.1rem]">
                     {fro}
                 </span>
-                <span className="block text-xs text-gray-400">{to}</span>
+                <span className="block text-xs text-gray-600 text-[0.9rem] ">
+                    {to}
+                </span>
             </div>
             <div className="absolute right-2 top-2 cursor-pointer text-gray-700 hover:text-black text-xl font-semibold">
                 ✕
