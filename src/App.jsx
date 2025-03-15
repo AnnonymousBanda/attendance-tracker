@@ -18,7 +18,7 @@ const Layout = () => (
 const App = () => {
     return (
         <BrowserRouter>
-            <PreventBrowserRefresh />
+            {/* <PreventBrowserRefresh /> */}
             <Routes>
                 <Route element={<Layout />}>
                     <Route path="/" element={<Home />} />
