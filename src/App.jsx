@@ -8,7 +8,7 @@ import { Outlet } from 'react-router-dom'
 const Layout = () => (
     <div className="w-screen h-svh flex flex-col">
         <Header />
-        <div className="w-full h-full py-1 overflow-auto">
+        <div className="w-full h-full py-[1rem] max-container overflow-auto">
             <Outlet />
         </div>
         <Navbar />
