@@ -11,6 +11,7 @@ import {
     Legend,
 } from 'chart.js'
 import annotationPlugin from 'chartjs-plugin-annotation'
+import { PieChart } from '@/components'
 
 ChartJS.register(
     CategoryScale,
@@ -168,46 +169,20 @@ const Stats = () => {
                 <div className="w-full flex flex-col items-center gap-[1rem]">
                     <div className="flex w-full flex-col gap-[4rem]">
                         {courseData.map((data) => (
-                            <div key={data.courseCode} className="flex flex-col justify-between w-full gap-[1.3rem] bg-primary">
+                            <div
+                                key={data.courseCode}
+                                className="flex flex-col justify-between items-center w-full gap-[1.3rem] bg-primary"
+                            >
                                 <h2 className="font-bold">
                                     {data.courseCode} - {data.courseName}
                                 </h2>
-                                <div className="flex justify-center items-center w-full gap-[1rem]">
-                                    <div className="flex flex-col p-[0.5rem] justify-center items-center gap-[0.2rem] w-[10rem] bg-[#4bff63b7] rounded-xl shadow-lg">
-                                        <p>{data.attended}</p>
-                                        <p>Attended</p>
-                                    </div>
-                                    <div className="flex flex-col p-[0.5rem] justify-center items-center gap-[0.2rem] w-[10rem] bg-[#FF6384b7] rounded-xl shadow-lg">
-                                        <p>{data.total - data.attended}</p>
-                                        <p>Absent</p>
-                                    </div>
-                                    <div className="flex flex-col p-[0.5rem] justify-center items-center gap-[0.2rem] w-[10rem] bg-tertiary rounded-xl shadow-lg">
-                                        <p>{data.total}</p>
-                                        <p>Total</p>
-                                    </div>
+                                <div className="flex justify-center items-center w-[250px] gap-[1rem]">
+                                    <PieChart courseData={data} />
                                 </div>
-                                <div className="flex flex-col items-center gap-[1rem] px-[1rem] w-full">
-                                    <p className="w-full">
-                                        Medical Leaves requested: {data.medical}
-                                    </p>
-                                    <p className="w-full">
-                                        Your current attendance for the course{' '}
-                                        <b>{data.courseCode}</b> is{' '}
-                                        <b>{data.attendance}%</b>
-                                    </p>
-                                    <div
-                                        className={`w-full rounded-[1rem] ${
-                                            data.attendance > 75
-                                                ? 'bg-[#4bff63b7]'
-                                                : 'bg-[#FF6384b7]'
-                                        } p-[1rem]`}
-                                    >
-                                        <h2 className="font-bold">
-                                            Prediction
-                                        </h2>
-                                        <p>{data.prediction}</p>
-                                    </div>
-                                </div>
+                                <p>
+                                    Current attendance :{' '}
+                                    <span className={`font-bold p-[0.35rem] rounded-lg ${data.attendance >= 90 ? 'bg-[#4BFF6480]' : (data.attendance >= 75 ? 'bg-[FFCE5680]' : 'bg-[#FF638480]') }`}>{data.attendance}%</span>
+                                </p>
                             </div>
                         ))}
                     </div>
