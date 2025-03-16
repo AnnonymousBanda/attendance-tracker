@@ -6,7 +6,7 @@ Attendance Tracker is a Progressive Web App (PWA) designed to help users monitor
 
 ## Tech Stack
 
-- **Frontend**: React.js, TailwindCSS, Chart.js
+- **Frontend**: Next.js, TailwindCSS, Chart.js
 - **Backend**: Firebase
 - **Authentication**: OAuth with Microsoft for IITP students, JWT registration for outsiders
 
@@ -28,4 +28,4 @@ npm run dev
 
 This will launch the application, which will be accessible at:
 
-- **Client**: [http://localhost:5173](http://localhost:5173) (default Vite port, may change if in use)
+- **Client**: [http://localhost:3000](http://localhost:3000)

@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+'use client'
+import { useState } from 'react'
 
 const Calender = ({ days }) => {
     const [selectedDay, setSelectedDay] = useState(days[0])

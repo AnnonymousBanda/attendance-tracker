@@ -1,6 +1,8 @@
+'use client'
+
 import React, { useState, useEffect } from 'react'
-import Calender from '../components/Calender'
-import Lecture from '../components/Lecture'
+import Calender from './../../../components/Calender'
+import Lecture from './../../../components/Lecture'
 
 const daysData = [
     { name: 'Mon', date: '7' },

@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react'
 import { Bar } from 'react-chartjs-2'
 import {
@@ -166,7 +168,7 @@ const Stats = () => {
                 <div className="w-full flex flex-col items-center gap-[1rem]">
                     <div className="flex w-full flex-col gap-[4rem]">
                         {courseData.map((data) => (
-                            <div className="flex flex-col justify-between w-full gap-[1.3rem] bg-primary">
+                            <div key={data.courseCode} className="flex flex-col justify-between w-full gap-[1.3rem] bg-primary">
                                 <h2 className="font-bold">
                                     {data.courseCode} - {data.courseName}
                                 </h2>
@@ -188,7 +190,7 @@ const Stats = () => {
                                     <p className="w-full">
                                         Medical Leaves requested: {data.medical}
                                     </p>
-                                    <p className='w-full'>
+                                    <p className="w-full">
                                         Your current attendance for the course{' '}
                                         <b>{data.courseCode}</b> is{' '}
                                         <b>{data.attendance}%</b>

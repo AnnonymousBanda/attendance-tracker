@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+'use client'
+
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
 const Home = () => {
     const [greeting, setGreeting] = useState('')
@@ -102,12 +104,11 @@ const Home = () => {
         setShowForm(false)
     }
 
-    const navigate = useNavigate()
-
     //controls the back button navigation
-    React.useEffect(() => {
+    const { push } = useRouter()
+    useEffect(() => {
         window.addEventListener('popstate', () => {
-            navigate('/')
+            push('/')
 
             history.replaceState(null, '', '/')
             history.pushState(null, '', '/')
@@ -119,7 +120,7 @@ const Home = () => {
             <div className="max-w-7xl mx-auto space-y-6">
                 {/* Header Section */}
                 <div className="animate-fade-in">
-                    <div className="text-2xl sm:text-3xl font-bold text-[#0E2C75] bg-clip-text text-transparent bg-gradient-to-r from-[#0E2C75] to-[#2563eb]">
+                    <div className="text-2xl sm:text-3xl font-bold text-[#0E2C75] bg-clip-text bg-gradient-to-r from-[#0E2C75] to-[#2563eb]">
                         {greeting}
                     </div>
                     <div className="text-gray-500 font-medium mt-1">
