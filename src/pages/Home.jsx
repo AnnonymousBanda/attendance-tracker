@@ -44,10 +44,10 @@ const Home = () => {
 
     const [summaryData, setSummaryData] = useState({
         labels: ['CE2201', 'CE2202', 'CE2203', 'CE2204', 'CE2205', 'IDE'],
-        data: [95, 80, 87, 76, 90, 60], // Sample data
+        data: [95, 80, 87, 76, 90, 60],
     })
 
-    // New state for extra class scheduling without credits
+
     const [newClass, setNewClass] = useState({
         code: '',
         name: '',
@@ -77,7 +77,7 @@ const Home = () => {
 
     const handleAddClass = (e) => {
         e.preventDefault()
-        // Validate required fields (credit option removed)
+        
         if (!newClass.code || !newClass.name || !newClass.time) {
             alert('Please fill all fields')
             return
@@ -86,8 +86,7 @@ const Home = () => {
         const newClassItem = {
             ...newClass,
             id: classes.length + 1,
-            // You can optionally set a default credit value if needed
-            // credits: 0,
+            
         }
 
         setClasses((prev) => [...prev, newClassItem])
@@ -104,7 +103,7 @@ const Home = () => {
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-6 font-Plus Jakarta Sans overflow-auto">
             <div className="max-w-7xl mx-auto space-y-6">
-                {/* Header Section */}
+                
                 <div className="animate-fade-in">
                     <div className="text-2xl sm:text-3xl font-bold text-[#0E2C75] bg-clip-text text-transparent bg-gradient-to-r from-[#0E2C75] to-[#2563eb]">
                         {greeting}
@@ -114,7 +113,7 @@ const Home = () => {
                     </div>
                 </div>
 
-                {/* Stats Grid */}
+                
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
                     <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100">
                         <div className="text-[#455068] font-medium mb-2">
@@ -151,7 +150,7 @@ const Home = () => {
                     </div>
                 </div>
 
-                {/* Form to add extra class schedule */}
+                
                 {showForm && (
                     <form
                         onSubmit={handleAddClass}
@@ -225,7 +224,7 @@ const Home = () => {
                     </form>
                 )}
 
-                {/* Classes Section */}
+               
                 <div className="space-y-6">
                     <div className="flex justify-between items-center">
                         <div className="text-2xl font-semibold text-gray-700">
@@ -236,7 +235,7 @@ const Home = () => {
                         </button>
                     </div>
 
-                    {/* Upcoming Classes */}
+                    
                     <div className="space-y-3">
                         <div className="text-xl font-medium text-gray-500 uppercase tracking-wider">
                             Upcoming
@@ -263,7 +262,7 @@ const Home = () => {
                             ))}
                     </div>
 
-                    {/* Past Classes */}
+                   
                     <div className="space-y-3">
                         <div className="text-xl font-medium text-gray-500 uppercase tracking-wider">
                             Past
@@ -297,7 +296,7 @@ const Home = () => {
                     </div>
                 </div>
 
-                {/* Summary Section */}
+                
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 space-y-4">
                     <div className="text-xl font-semibold text-gray-700">
                         Summary
@@ -345,7 +344,7 @@ const Home = () => {
                     ))}
                 </div>
             </div>
-            {/* Floating Plus Button */}
+            
             {/* <button
                 onClick={() => setShowForm(true)}
                 className="fixed z-30 bottom-20 right-6 bg-blue-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:bg-blue-600 transition"
