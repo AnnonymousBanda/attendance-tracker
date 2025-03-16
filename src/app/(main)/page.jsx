@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from 'react'
+'use client'
+
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
 const Home = () => {
     const [greeting, setGreeting] = useState('')
@@ -100,12 +103,23 @@ const Home = () => {
         setShowForm(false)
     }
 
+    //controls the back button navigation
+    const { push } = useRouter()
+    useEffect(() => {
+        window.addEventListener('popstate', () => {
+            push('/')
+
+            history.replaceState(null, '', '/')
+            history.pushState(null, '', '/')
+        })
+    })
+
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-6 font-Plus Jakarta Sans overflow-auto">
+        <div className="bg-primary p-[1rem] rounded-lg">
             <div className="max-w-7xl mx-auto space-y-6">
                 
                 <div className="animate-fade-in">
-                    <div className="text-2xl sm:text-3xl font-bold text-[#0E2C75] bg-clip-text text-transparent bg-gradient-to-r from-[#0E2C75] to-[#2563eb]">
+                    <div className="text-2xl sm:text-3xl font-bold text-[#0E2C75] bg-clip-text bg-gradient-to-r from-[#0E2C75] to-[#2563eb]">
                         {greeting}
                     </div>
                     <div className="text-gray-500 font-medium mt-1">
@@ -230,7 +244,10 @@ const Home = () => {
                         <div className="text-2xl font-semibold text-gray-700">
                             Today's Classes
                         </div>
-                        <button onClick={() => setShowForm(true)} className="text-blue-500 hover:text-blue-900  transition-colors text-4xl font-bold">
+                        <button
+                            onClick={() => setShowForm(true)}
+                            className="text-blue-500 hover:text-blue-900  transition-colors text-4xl font-bold"
+                        >
                             +
                         </button>
                     </div>

@@ -1,36 +1,31 @@
 # Attendance Tracker
 
+## Overview
+
+Attendance Tracker is a Progressive Web App (PWA) designed to help users monitor their attendance both overall and course-wise, ensuring they never fall short of the 75% requirement.
+
+## Tech Stack
+
+- **Frontend**: Next.js, TailwindCSS, Chart.js
+- **Backend**: Firebase
+- **Authentication**: OAuth with Microsoft for IITP students, JWT registration for outsiders
+
 ## Installation Guide
 
 To set up the project, install all dependencies from the root directory:
 
 ```bash
-npm run install-all
+npm i
 ```
-
-This command installs dependencies for both the client and server.
 
 ## Running Guide
 
-Before starting the development environment, **ensure that you have created a `.env` file** in the server directory and added the necessary environment variables.  
-
-To start the development environment, run the following command from the root directory:
+To start the development environment, run the following command:
 
 ```bash
 npm run dev
 ```
 
-This will launch both the client and server concurrently. The application will be accessible at:
+This will launch the application, which will be accessible at:
 
--   **Client**: [http://localhost:3000](http://localhost:3000)
--   **Server**: [http://localhost:8000](http://localhost:8000)
-
-To start either the client or server individually:
-
-```bash
-# Start the client
-npm run client
-
-# Start the server
-npm run server
-```
+- **Client**: [http://localhost:3000](http://localhost:3000)
