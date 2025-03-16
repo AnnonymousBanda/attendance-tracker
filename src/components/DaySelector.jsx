@@ -20,8 +20,8 @@ const DaySelector = ({ days }) => {
                     index === 0
                         ? 'rounded-[1rem] rounded-br-none'
                         : index === days.length - 1
-                          ? 'rounded-[1rem] rounded-bl-none'
-                          : 'rounded-[1rem]'
+                        ? 'rounded-[1rem] rounded-bl-none'
+                        : 'rounded-[1rem]'
                 } 
                 shadow-md`}
                 >
