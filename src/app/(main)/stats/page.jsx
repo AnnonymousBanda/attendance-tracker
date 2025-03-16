@@ -2,6 +2,11 @@
 
 import React from 'react'
 import { Bar } from 'react-chartjs-2'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import 'swiper/css'
+import 'swiper/css/pagination'
+import { Autoplay } from 'swiper/modules'
+
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -151,11 +156,9 @@ const Stats = () => {
     }
 
     return (
-        <div className="flex flex-col items-center p-[1rem] gap-[2rem] bg-primary rounded-lg">
-            <h2 className="font-[900] text-[#858699]">
-                Today, {formattedDate}
-            </h2>
-            <div className="flex flex-col items-center w-full gap-[1rem] border-[2px] border-solid border-[#f0f0f0] rounded-[1rem] p-[1rem]">
+        <div className="flex flex-col items-center p-4 gap-8 bg-primary rounded-lg">
+            <h2 className="font-bold text-gray-500">Today, {formattedDate}</h2>
+            <div className="flex flex-col items-center w-full gap-4 border-2 border-gray-200 rounded-lg p-4">
                 <h2 className="font-bold">Attendance Report</h2>
                 <div
                     className="w-full mx-auto"
@@ -164,29 +167,44 @@ const Stats = () => {
                     <Bar data={data} options={chartOptions} />
                 </div>
             </div>
-            <div className="flex flex-col items-center w-full gap-[1rem] border-[2px] border-solid border-[#f0f0f0] rounded-[1rem] px-[1.5rem] py-[1rem]">
+
+            <div className="flex flex-col items-center w-full gap-4 border-2 border-gray-200 rounded-lg px-6 py-4">
                 <h1 className="font-bold">Analysis</h1>
-                <div className="w-full flex flex-col items-center gap-[1rem]">
-                    <div className="flex w-full flex-col gap-[4rem]">
-                        {courseData.map((data) => (
-                            <div
-                                key={data.courseCode}
-                                className="flex flex-col justify-between items-center w-full gap-[1.3rem] bg-primary"
-                            >
-                                <h2 className="font-bold">
+                <Swiper
+                    spaceBetween={10}
+                    slidesPerView={1}
+                    modules={[Autoplay]}
+                    className="w-full"
+                    autoplay={{ delay: 2500, disableOnInteraction: false }}
+                    speed={1000}
+                >
+                    {courseData.map((data) => (
+                        <SwiperSlide key={data.courseCode}>
+                            <div className="flex flex-col items-center justify-evenly w-full min-h-[400px] bg-primary border-2 border-gray-200 rounded-lg p-[1rem]">
+                                <h2 className="font-bold text-center">
                                     {data.courseCode} - {data.courseName}
                                 </h2>
-                                <div className="flex justify-center items-center w-[250px] gap-[1rem]">
+                                <div className="flex justify-center items-center w-[250px] my-4">
                                     <PieChart courseData={data} />
                                 </div>
-                                <p>
-                                    Current attendance :{' '}
-                                    <span className={`font-bold p-[0.35rem] rounded-lg ${data.attendance >= 90 ? 'bg-[#4BFF6480]' : (data.attendance >= 75 ? 'bg-[FFCE5680]' : 'bg-[#FF638480]') }`}>{data.attendance}%</span>
+                                <p className="text-center">
+                                    Current attendance:{' '}
+                                    <span
+                                        className={`font-bold px-2 py-1 rounded-lg ${
+                                            data.attendance >= 90
+                                                ? 'bg-green-300'
+                                                : data.attendance >= 75
+                                                ? 'bg-yellow-300'
+                                                : 'bg-red-300'
+                                        }`}
+                                    >
+                                        {data.attendance}%
+                                    </span>
                                 </p>
                             </div>
-                        ))}
-                    </div>
-                </div>
+                        </SwiperSlide>
+                    ))}
+                </Swiper>
             </div>
         </div>
     )
