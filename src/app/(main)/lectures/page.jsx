@@ -33,8 +33,8 @@ const Timetable = () => {
     }, [selectedDay])
 
     return (
-        <div className=" bg-white flex flex-col">
-            <div className="px-[1rem] py-[1.2rem]">
+        <div className=" bg-primary flex flex-col h-auto">
+            <div className="p-[1rem]">
                 <Calender
                     days={daysData}
                     setSelectedDay={setSelectedDay}

@@ -21,7 +21,7 @@ const Schedule = () => {
     const [selectedDay, setSelectedDay] = useState(daysList[0])
 
     return (
-        <div className="min-h-screen flex flex-col bg-white px-[2rem] py-[1rem]">
+        <div className="h-auto flex flex-col bg-primary px-[1rem] py-[1rem]">
             <DaySelector
                 days={daysList}
                 setSelectedDay={setSelectedDay}
