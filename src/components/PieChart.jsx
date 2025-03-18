@@ -6,11 +6,11 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 ChartJS.register(ArcElement, Tooltip, Legend)
 
 const PieChart = ({ courseData }) => {
-    const labels = ['Attended', 'Absent', 'Medical']
+    const labels = ['Attended', 'Medical', 'Absent']
     const attendance = [
         courseData.attended,
-        courseData.total - courseData.attended - courseData.medical,
         courseData.medical,
+        courseData.total - courseData.attended - courseData.medical,
     ]
     const data = {
         labels: labels,
@@ -20,8 +20,8 @@ const PieChart = ({ courseData }) => {
                 data: attendance,
                 backgroundColor: [
                     'rgba(75, 192, 192, 0.5)',
-                    'rgba(255, 99, 132, 0.5)',
                     'rgba(255, 206, 86, 0.5)',
+                    'rgba(255, 99, 132, 0.5)',
                 ],
                 borderColor: '#ffffff',
                 borderWidth: 1.5,
