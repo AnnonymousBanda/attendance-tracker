@@ -16,7 +16,7 @@ import {
     Legend,
 } from 'chart.js'
 import annotationPlugin from 'chartjs-plugin-annotation'
-import { PieChart } from '@/components'
+import { PieChart, PredictionsBar } from '@/components'
 
 ChartJS.register(
     CategoryScale,
@@ -115,7 +115,7 @@ const Stats = () => {
         responsive: true,
         maintainAspectRatio: false,
         animation: {
-            duration: 1500,
+            duration: 1000,
             easing: 'easeInOutQuart',
         },
         plugins: {
@@ -205,6 +205,12 @@ const Stats = () => {
                         </SwiperSlide>
                     ))}
                 </Swiper>
+            </div>
+            <div className="flex flex-col items-center w-full gap-4 border-2 border-gray-200 rounded-lg px-6 py-4">
+                <h1 className="font-bold">Predictions</h1>
+                <div className='w-full mx-auto h-full'>
+                    <PredictionsBar courseData={courseData} />
+                </div>
             </div>
         </div>
     )
