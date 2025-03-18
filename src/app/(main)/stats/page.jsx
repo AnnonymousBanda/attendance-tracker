@@ -55,7 +55,7 @@ const Stats = () => {
             attended: 7,
             medical: 0,
             total: 10,
-            attendance: 80,
+            attendance: 70,
             prediction: 'You need to attend 1 more class to maintain 75%',
         },
         {
@@ -88,24 +88,24 @@ const Stats = () => {
     ]
 
     const labels = courseData.map((data) => data.courseCode)
-    const chartHeight = labels.length * 50
+    const chartHeight = labels.length * 45
     const values = courseData.map((data) => data.attendance)
 
     const data = {
         labels: labels,
         datasets: [
             {
-                label: 'Attendance Report',
+                label: 'Attendance',
                 data: values,
                 backgroundColor: (context) => {
                     const value = context.raw
-                    if (value >= 90) return 'rgba(75, 255, 100, 0.5)'
+                    if (value >= 90) return 'rgba(75, 192, 192, 0.5)'
                     if (value >= 75) return 'rgba(255, 206, 86, 0.5)'
                     return 'rgba(255, 99, 132, 0.5)'
                 },
                 borderColor: 'rgba(0, 0, 0, 0.5)',
                 borderWidth: 1,
-                barPercentage: 0.8,
+                barPercentage: 0.7,
             },
         ],
     }
@@ -120,20 +120,26 @@ const Stats = () => {
         },
         plugins: {
             legend: { display: false },
-            tooltip: { enabled: true },
+            tooltip: {
+                callbacks: {
+                    label: (context) => {
+                        return `${context.dataset.label}: ${context.raw}%`
+                    },
+                },
+            },
             annotation: {
                 annotations: {
                     line1: {
                         type: 'line',
                         scaleID: 'x',
                         value: 75,
-                        borderColor: 'red',
+                        borderColor: 'rgba(220, 53, 69)',
                         borderWidth: 1,
                         borderDash: [6, 6],
                         label: {
                             display: true,
                             content: '75%',
-                            backgroundColor: 'red',
+                            backgroundColor: 'rgba(220, 53, 69)',
                             color: 'white',
                             position: 'start',
                             xAdjust: 20,
@@ -159,7 +165,7 @@ const Stats = () => {
         <div className="flex flex-col items-center p-4 gap-8 bg-primary rounded-lg">
             <h2 className="font-bold text-gray-500">Today, {formattedDate}</h2>
             <div className="flex flex-col items-center w-full gap-4 border-2 border-gray-200 rounded-lg p-4">
-                <h2 className="font-bold">Attendance Report</h2>
+                <h2>Attendance Report</h2>
                 <div
                     className="w-full mx-auto"
                     style={{ height: `${chartHeight}px` }}
@@ -169,19 +175,19 @@ const Stats = () => {
             </div>
 
             <div className="flex flex-col items-center w-full gap-4 border-2 border-gray-200 rounded-lg px-6 py-4">
-                <h1 className="font-bold">Analysis</h1>
+                <h1>Analysis</h1>
                 <Swiper
                     spaceBetween={10}
                     slidesPerView={1}
                     modules={[Autoplay]}
                     className="w-full"
                     autoplay={{ delay: 2500, disableOnInteraction: false }}
-                    speed={1000}
+                    speed={800}
                 >
                     {courseData.map((data) => (
                         <SwiperSlide key={data.courseCode}>
                             <div className="flex flex-col items-center justify-evenly w-full min-h-[400px] bg-primary border-2 border-gray-200 rounded-lg p-[1rem]">
-                                <h2 className="font-bold text-center">
+                                <h2 className="text-center">
                                     {data.courseCode} - {data.courseName}
                                 </h2>
                                 <div className="flex justify-center items-center w-[250px] my-4">
@@ -206,11 +212,9 @@ const Stats = () => {
                     ))}
                 </Swiper>
             </div>
-            <div className="flex flex-col items-center w-full gap-4 border-2 border-gray-200 rounded-lg px-6 py-4">
-                <h1 className="font-bold">Predictions</h1>
-                <div className='w-full mx-auto h-full'>
-                    <PredictionsBar courseData={courseData} />
-                </div>
+            <div className="flex flex-col items-center w-full gap-[2.5rem] border-2 border-gray-200 rounded-lg px-6 py-4">
+                <h1>Predictions</h1>
+                <PredictionsBar courseData={courseData} />
             </div>
         </div>
     )
