@@ -103,7 +103,7 @@ const Home = () => {
         setShowForm(false)
     }
 
-    //controls the back button navigation
+    
     const { push } = useRouter()
     useEffect(() => {
         window.addEventListener('popstate', () => {
