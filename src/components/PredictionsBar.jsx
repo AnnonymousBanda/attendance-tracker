@@ -142,7 +142,7 @@ export default function PredictionsBar({ courseData }) {
         <>
             <div className="w-full">
                 <h3 className="w-full">
-                    Minimum classes to maintain 75%.
+                    Minimum classes to maintain 75%
                 </h3>
                 <div className="w-full">
                     <Bar
@@ -154,7 +154,7 @@ export default function PredictionsBar({ courseData }) {
             </div>
             <div className="w-full">
                 <h3 className="w-full">
-                    Predicted attendance if all remaining classes are attended.
+                    Maximum acheivable attendance
                 </h3>
                 <div className="w-full">
                     <Bar
