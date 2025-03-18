@@ -19,7 +19,7 @@ const PieChart = ({ courseData }) => {
                 label: 'Classes',
                 data: attendance,
                 backgroundColor: [
-                    'rgba(0, 255, 0, 0.4)',
+                    'rgba(75, 192, 192, 0.5)',
                     'rgba(255, 99, 132, 0.5)',
                     'rgba(255, 206, 86, 0.5)',
                 ],
@@ -35,8 +35,8 @@ const PieChart = ({ courseData }) => {
             legend: {
                 position: 'bottom',
                 labels: {
-                    boxWidth: 20, 
-                    borderWidth: 2, 
+                    boxWidth: 20,
+                    borderWidth: 2,
                     borderColor: 'black',
                 },
             },
