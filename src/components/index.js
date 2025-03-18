@@ -6,5 +6,6 @@ import Header from './Header'
 import ProfileDialog from './ProfileDialog'
 import PreventBrowserRefresh from './PreventBrowserRefresh'
 import PieChart from './PieChart'
+import PredictionsBar from './PredictionsBar'
 
-export { Calender, DaySelector, Header, Lecture, Navbar, ProfileDialog, PreventBrowserRefresh, PieChart }
+export { Calender, DaySelector, Header, Lecture, Navbar, ProfileDialog, PreventBrowserRefresh, PieChart, PredictionsBar }
