@@ -198,10 +198,10 @@ const Stats = () => {
                                     <span
                                         className={`font-bold px-2 py-1 rounded-lg ${
                                             data.attendance >= 90
-                                                ? 'bg-green-300'
+                                                ? 'bg-[#4BC0C0]'
                                                 : data.attendance >= 75
                                                 ? 'bg-yellow-300'
-                                                : 'bg-red-300'
+                                                : 'bg-[#FF6384]'
                                         }`}
                                     >
                                         {data.attendance}%
