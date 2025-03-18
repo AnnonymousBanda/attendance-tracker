@@ -2,6 +2,120 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { useForm } from 'react-hook-form'
+import { MdAdd } from 'react-icons/md'
+
+const OngoingClasses = ({ classes, onAttendanceUpdate }) => {
+    const [currentTime, setCurrentTime] = useState(new Date())
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentTime(new Date())
+        }, 60000)
+        return () => clearInterval(interval)
+    }, [])
+
+    const isOngoing = (classTime) => {
+        const [hours, minutes] = classTime.split(':').map(Number)
+        return (
+            hours === currentTime.getHours() &&
+            minutes <= currentTime.getMinutes() + 5 &&
+            minutes >= currentTime.getMinutes() - 5
+        )
+    }
+
+    const ongoingClasses = classes.filter((cls) => {
+        const [hours, minutes] = cls.time.split(':').map(Number)
+        const classTime = new Date()
+        classTime.setHours(hours, minutes, 0, 0)
+        const now = new Date()
+
+        return (
+            now >= new Date(classTime.getTime() - 5 * 60 * 1000) &&
+            now <= new Date(classTime.getTime() + 5 * 60 * 1000)
+        )
+    })
+
+    return (
+        <div className="space-y-3">
+            <h2 className="text-gray-700  tracking-wider">
+                Ongoing Class
+            </h2>
+            {ongoingClasses.length > 0 ? (
+                ongoingClasses.map((cls) => (
+                    <div
+                        key={cls.id}
+                        className="bg-white p-5 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 flex justify-between items-center border border-gray-100 hover:border-blue-100"
+                    >
+                        <div className="space-y-1">
+                            <h3 className="text-[#0E2C75] font-semibold">
+                                {cls.code}
+                            </h3>
+                            <h3 className="text-gray-700 font-medium">
+                                {cls.name}
+                            </h3>
+                        </div>
+
+                        <p className="text-gray-700 font-medium bg-gray-50 px-4 py-2 rounded-lg">
+                            {cls.time}
+                        </p>
+
+                        <div className="flex gap-4 flex-wrap">
+                            <button
+                                onClick={() =>
+                                    onAttendanceUpdate(cls.id, 'Present')
+                                }
+                                className="bg-green-100 text-green-700 font-medium py-2 px-6 rounded-lg hover:bg-green-200 transition-colors duration-200 cursor-pointer"
+                            >
+                                <p>Present</p>
+                            </button>
+                            <button
+                                onClick={() =>
+                                    onAttendanceUpdate(cls.id, 'Absent')
+                                }
+                                className="bg-red-100 text-red-700 font-medium py-2 px-6 rounded-lg hover:bg-red-200 transition-colors duration-200 cursor-pointer"
+                            >
+                                <p>Absent</p>
+                            </button>
+                            <button
+                                onClick={() =>
+                                    onAttendanceUpdate(cls.id, 'Sick')
+                                }
+                                className="bg-yellow-200 text-yellow-700 font-medium py-2 px-6 rounded-lg hover:bg-yellow-300 hover:text-yellow-700 transition-colors duration-200 cursor-pointer"
+                            >
+                                <p>Sick</p>
+                            </button>
+                        </div>
+                    </div>
+                ))
+            ) : (
+                <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 text-center">
+                    <div className="text-gray-400 mb-2">
+                        <svg
+                            className="w-16 h-16 mx-auto"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                        </svg>
+                    </div>
+                    <h3 className="text-gray-500 font-medium  mb-1">
+                        No Ongoing Classes
+                    </h3>
+                    <p className="text-gray-400 ">
+                        There are no classes scheduled at this time
+                    </p>
+                </div>
+            )}
+        </div>
+    )
+}
 
 const Home = () => {
     const [greeting, setGreeting] = useState('')
@@ -50,7 +164,6 @@ const Home = () => {
         data: [95, 80, 87, 76, 90, 60],
     })
 
-
     const [newClass, setNewClass] = useState({
         code: '',
         name: '',
@@ -61,12 +174,28 @@ const Home = () => {
 
     const [showForm, setShowForm] = useState(false)
 
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        reset,
+    } = useForm()
+    const { push } = useRouter()
+
     useEffect(() => {
         const hour = new Date().getHours()
         if (hour < 12) setGreeting('Good Morning')
         else if (hour < 18) setGreeting('Good Afternoon')
         else setGreeting('Good Evening')
     }, [])
+
+    useEffect(() => {
+        window.addEventListener('popstate', () => {
+            push('/')
+            history.replaceState(null, '', '/')
+            history.pushState(null, '', '/')
+        })
+    }, [push])
 
     const formatDate = (date) => {
         const options = {
@@ -78,185 +207,127 @@ const Home = () => {
         return date.toLocaleDateString('en-US', options).replace(',', '')
     }
 
-    const handleAddClass = (e) => {
-        e.preventDefault()
-        
-        if (!newClass.code || !newClass.name || !newClass.time) {
-            alert('Please fill all fields')
-            return
-        }
-
-        const newClassItem = {
-            ...newClass,
-            id: classes.length + 1,
-            
-        }
-
-        setClasses((prev) => [...prev, newClassItem])
-        setNewClass({
-            code: '',
-            name: '',
-            time: '',
-            status: '--',
-            type: 'upcoming',
-        })
-        setShowForm(false)
+    const handleAttendanceUpdate = (id, status) => {
+        setClasses((prev) =>
+            prev.map((cls) => (cls.id === id ? { ...cls, status } : cls))
+        )
     }
 
-    
-    const { push } = useRouter()
-    useEffect(() => {
-        window.addEventListener('popstate', () => {
-            push('/')
-
-            history.replaceState(null, '', '/')
-            history.pushState(null, '', '/')
-        })
-    })
+    const onSubmit = (data) => {
+        setClasses((prev) => [
+            ...prev,
+            { ...data, id: classes.length + 1, status: '--', type: 'upcoming' },
+        ])
+        reset()
+        setShowForm(false)
+    }
 
     return (
         <div className="bg-primary p-[1rem] rounded-lg">
             <div className="max-w-7xl mx-auto space-y-6">
-                
-                <div className="animate-fade-in">
-                    <div className="text-2xl sm:text-3xl font-bold text-[#0E2C75] bg-clip-text bg-gradient-to-r from-[#0E2C75] to-[#2563eb]">
-                        {greeting}
-                    </div>
-                    <div className="text-gray-500 font-medium mt-1">
+                <div className="animat-fade-in">
+                    <h1 className="font-bold text-[#0f318a] bg-clip-text bg-gradient-to-r from-[#0E2C75] to-[#2563eb]">
+                       <h1>{greeting}</h1> 
+                    </h1>
+                    <h3 className="text-gray-500 font-medium mt-1">
                         {formatDate(date)}
-                    </div>
+                    </h3>
                 </div>
 
-                
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
-                    <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100">
-                        <div className="text-[#455068] font-medium mb-2">
-                            Total Courses
-                        </div>
-                        <div className="text-3xl font-bold text-purple-800">
-                            06
-                        </div>
-                        <div className="text-sm text-gray-400 mt-1">
-                            1 Elective
-                        </div>
-                    </div>
-                    <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100">
-                        <div className="text-[#455068] font-medium mb-2">
-                            Attendance
-                        </div>
-                        <div className="text-3xl font-bold text-red-500">
-                            60%
-                        </div>
-                        <div className="text-sm text-gray-400 mt-1">
-                            24% Absent
-                        </div>
-                    </div>
-                    <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100">
-                        <div className="text-[#455068] font-medium mb-2">
-                            Requested Leaves
-                        </div>
-                        <div className="text-3xl font-bold text-blue-500">
-                            17
-                        </div>
-                        <div className="text-sm text-gray-400 mt-1">
-                            11 Approved
-                        </div>
-                    </div>
-                </div>
+                <OngoingClasses
+                    classes={classes}
+                    onAttendanceUpdate={handleAttendanceUpdate}
+                    className="animat-fade-in text-[#000000]"
+                />
 
-                
                 {showForm && (
                     <form
-                        onSubmit={handleAddClass}
-                        className="bg-white p-5 rounded-xl shadow-md mt-4 space-y-3 border"
+                        onSubmit={handleSubmit(onSubmit)}
+                        className="bg-white p-5 rounded-xl shadow-md mt-4 space-y-3"
                     >
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <input
-                                type="text"
-                                placeholder="Class Code"
-                                value={newClass.code}
-                                onChange={(e) =>
-                                    setNewClass({
-                                        ...newClass,
-                                        code: e.target.value,
-                                    })
-                                }
-                                className="border p-2 rounded-lg"
-                            />
-                            <input
-                                type="text"
-                                placeholder="Class Name"
-                                value={newClass.name}
-                                onChange={(e) =>
-                                    setNewClass({
-                                        ...newClass,
-                                        name: e.target.value,
-                                    })
-                                }
-                                className="border p-2 rounded-lg"
-                            />
-                            <input
-                                type="time"
-                                value={newClass.time}
-                                onChange={(e) =>
-                                    setNewClass({
-                                        ...newClass,
-                                        time: e.target.value,
-                                    })
-                                }
-                                className="border p-2 rounded-lg"
-                            />
-                            <select
-                                value={newClass.type}
-                                onChange={(e) =>
-                                    setNewClass({
-                                        ...newClass,
-                                        type: e.target.value,
-                                    })
-                                }
-                                className="border p-2 rounded-lg"
-                            >
-                                <option value="upcoming">Upcoming</option>
-                                <option value="past">Past</option>
-                            </select>
+                            <div>
+                                <input
+                                    type="text"
+                                    placeholder="Class Code"
+                                    {...register('code', {
+                                        required: 'Class Code is required',
+                                    })}
+                                    className="shadow-blue-100 p-2 rounded-lg w-full"
+                                />
+                                {errors.code && (
+                                    <p className="text-red-500 ">
+                                        {errors.code.message}
+                                    </p>
+                                )}
+                            </div>
+
+                            <div>
+                                <input
+                                    type="text"
+                                    placeholder="Class Name"
+                                    {...register('name', {
+                                        required: 'Class Name is required',
+                                    })}
+                                    className="shadow-blue-100 p-2 rounded-lg w-full"
+                                />
+                                {errors.name && (
+                                    <p className="text-red-500 ">
+                                        {errors.name.message}
+                                    </p>
+                                )}
+                            </div>
+                            <div>
+                                <input
+                                    type="time"
+                                    placeholder="Time"
+                                    {...register('time', {
+                                        required: 'Class Time is required',
+                                    })}
+                                    className="shadow-blue-100 p-2 rounded-lg w-full text-[#8c8c8c]"
+                                />
+                                {errors.time && (
+                                    <p className="text-red-500 ">
+                                        {errors.time.message}
+                                    </p>
+                                )}
+                            </div>
+                            <div>
+                                <select
+                                    {...register('type')}
+                                    className="shadow-blue-100 p-2 rounded-lg w-full"
+                                >
+                                    <option value="upcoming" ><p>Upcoming</p></option>
+                                    
+                                </select>
+                            </div>
                         </div>
-                        <div className="flex justify-end space-x-3 mt-3">
-                            <button
-                                type="button"
-                                onClick={() => setShowForm(false)}
-                                className="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                type="submit"
-                                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                            >
-                                Save
-                            </button>
-                        </div>
+                        <button
+                            type="submit"
+                            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                        >
+                            <p>Add Class</p>
+                        </button>
                     </form>
                 )}
 
-               
                 <div className="space-y-6">
                     <div className="flex justify-between items-center">
-                        <div className="text-2xl font-semibold text-gray-700">
+                        <h2 className="text-2xl font-semibold text-gray-700">
                             Today's Classes
-                        </div>
+                        </h2>
                         <button
                             onClick={() => setShowForm(true)}
                             className="text-blue-500 hover:text-blue-900  transition-colors text-4xl font-bold"
                         >
-                            +
+                            <MdAdd size={24} />
                         </button>
                     </div>
 
-                    
                     <div className="space-y-3">
-                        <div className="text-xl font-medium text-gray-500 uppercase tracking-wider">
+                        <h3 className="text-xl font-medium text-gray-500 uppercase tracking-wider">
                             Upcoming
-                        </div>
+                        </h3>
                         {classes
                             .filter((cls) => cls.type === 'upcoming')
                             .map((cls) => (
@@ -265,25 +336,24 @@ const Home = () => {
                                     className="bg-white p-5 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 flex justify-between items-center border border-gray-100 hover:border-blue-100"
                                 >
                                     <div className="space-y-1">
-                                        <div className="text-[#0E2C75] font-semibold">
+                                        <h3 className="text-[#0E2C75] font-semibold">
                                             {cls.code}
-                                        </div>
-                                        <div className="text-gray-700 font-medium">
+                                        </h3>
+                                        <h3 className="text-gray-700 font-medium">
                                             {cls.name}
-                                        </div>
+                                        </h3>
                                     </div>
-                                    <div className="text-gray-700 font-medium bg-gray-50 px-4 py-2 rounded-lg">
+                                    <p className="text-gray-700 font-medium bg-gray-50 px-4 py-2 rounded-lg">
                                         {cls.time}
-                                    </div>
+                                    </p>
                                 </div>
                             ))}
                     </div>
 
-                   
                     <div className="space-y-3">
-                        <div className="text-xl font-medium text-gray-500 uppercase tracking-wider">
+                        <h3 className="text-xl font-medium text-gray-500 uppercase tracking-wider">
                             Past
-                        </div>
+                        </h3>
                         {classes
                             .filter((cls) => cls.type === 'past')
                             .map((cls) => (
@@ -292,14 +362,14 @@ const Home = () => {
                                     className="bg-white p-5 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 flex justify-between items-center border border-gray-100"
                                 >
                                     <div className="space-y-1">
-                                        <div className="text-[#0E2C75] font-semibold">
+                                        <h3 className="text-[#0E2C75] font-semibold">
                                             {cls.code}
-                                        </div>
-                                        <div className="text-gray-700 font-medium">
+                                        </h3>
+                                        <h3 className="text-gray-700 font-medium">
                                             {cls.name}
-                                        </div>
+                                        </h3>
                                     </div>
-                                    <div
+                                    <p
                                         className={`px-4 py-2 rounded-lg font-medium ${
                                             cls.status === 'Attended'
                                                 ? 'text-green-500 bg-green-50'
@@ -307,17 +377,16 @@ const Home = () => {
                                         }`}
                                     >
                                         {cls.status}
-                                    </div>
+                                    </p>
                                 </div>
                             ))}
                     </div>
                 </div>
 
-                
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 space-y-4">
-                    <div className="text-xl font-semibold text-gray-700">
+                    <h2 className="text-xl font-semibold text-gray-700">
                         Summary
-                    </div>
+                    </h2>
                     {summaryData.labels.map((label, index) => (
                         <div key={index} className="flex items-center gap-2">
                             <div
@@ -354,20 +423,13 @@ const Home = () => {
                                     }}
                                 />
                             </div>
-                            <div className="text-gray-700 w-20 text-sm font-medium">
+                            <h3 className="text-gray-700 w-20 text-sm font-medium">
                                 {label}
-                            </div>
+                            </h3>
                         </div>
                     ))}
                 </div>
             </div>
-            
-            {/* <button
-                onClick={() => setShowForm(true)}
-                className="fixed z-30 bottom-20 right-6 bg-blue-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:bg-blue-600 transition"
-            >
-                +
-            </button> */}
         </div>
     )
 }

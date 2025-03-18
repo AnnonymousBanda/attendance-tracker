@@ -3,7 +3,7 @@ import { MdClose } from 'react-icons/md'
 
 const Lecture = ({ fro, to, sub_code, sub_name }) => {
     return (
-        <div className=" border-l-5 relative bg-[#F5F5F5] rounded-xl px-6 py-8 shadow-lg shadow-[#b1c1d5] font-[Plus Jakarta Sans] w-full  height-auto  transition-shadow">
+        <div className=" border-l-5 relative bg-[#F5F5F5] rounded-xl px-6 py-8 shadow-lg shadow-[#b1c1d5]  w-full  height-auto  transition-shadow">
             <div className="absolute left-[-55px] top-1/2 -translate-y-1/2 text-right space-y-1">
                 <p className=" font-bold text-gray-900">
                     {fro}
