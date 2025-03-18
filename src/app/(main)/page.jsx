@@ -227,7 +227,7 @@ const Home = () => {
             <div className="max-w-7xl mx-auto space-y-6">
                 <div className="animat-fade-in">
                     <h1 className="font-bold text-[#0f318a] bg-clip-text bg-gradient-to-r from-[#0E2C75] to-[#2563eb]">
-                       <h1>{greeting}</h1> 
+                    {greeting} 
                     </h1>
                     <h3 className="text-gray-500 font-medium mt-1">
                         {formatDate(date)}
