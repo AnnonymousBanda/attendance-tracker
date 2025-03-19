@@ -10,6 +10,36 @@
     --color-primary: #f3f8fa;
     --color-secondary: #29303d;
     --color-tertiary: #a3bbd6;
+    --color-green-100: #d6f6f6;
+    --color-green-200: #adeded;
+    --color-green-300: #85e3e3;
+    --color-green-400: #5cdad9;
+    --color-green-500: #4bc0c0;
+    --color-green-600: #3da0a0;
+    --color-green-700: #2e8080;
+    --color-green-800: #206060;
+    --color-green-900: #103030;
+    --color-red-100: #ffd6de;
+    --color-red-200: #ffadbd;
+    --color-red-300: #ff859d;
+    --color-red-400: #ff5c7c;
+    --color-red-500: #ff6384;
+    --color-red-600: #d6506c;
+    --color-red-700: #aa4057;
+    --color-red-800: #7f3042;
+    --color-red-900: #531f2d;
+    --color-yellow-100: #fff5d6;
+    --color-yellow-200: #ffebad;
+    --color-yellow-300: #ffe185;
+    --color-yellow-400: #ffd75c;
+    --color-yellow-500: #ffce56;
+    --color-yellow-600: #d6ab48;
+    --color-yellow-700: #aa893a;
+    --color-yellow-800: #7f672b;
+    --color-yellow-900: #53441d;
+    --color-green: #4bc0c0;
+    --color-red: #ff6384;
+    --color-yellow: #ffce56;
     --font-primary: 'Plus Jakarta Sans', sans-serif;
 }
 
@@ -31,7 +61,7 @@
     }
 
     h3 {
-        font-size: clamp(1.4rem, 1.2571rem + 0.4464vw, 1.6rem);
+        font-size: clamp(1.3rem, 1.1092rem + 0.5089vw, 1.5rem);
         line-height: 1.4;
     }
 
