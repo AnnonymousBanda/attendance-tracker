@@ -10,56 +10,60 @@ const Navbar = () => {
 
     return (
         <nav className="w-full bg-primary shadow-[0_-2px_4px_rgba(0,0,0,0.1)] py-[1.5rem]">
-            <div className="flex justify-evenly items-center max-container">
-                <Link
-                    href="/"
-                    className="flex flex-col justify-center items-center gap-[0.1rem]"
-                >
-                    <Image
-                        src={Home}
-                        alt="home"
-                        className={`h-[2.5rem] w-[2.5rem] ${
-                            isActive('/') ? '' : 'opacity-50'
-                        }`}
-                    />
-                    <p className={`${isActive('/') ? '' : 'opacity-50'}`}>
-                        Home
-                    </p>
-                </Link>
-                <Link
-                    href="/lectures"
-                    className="flex flex-col justify-center items-center gap-[0.1rem]"
-                >
-                    <Image
-                        src={Lectures}
-                        alt="lectures"
-                        className={`h-[2.5rem] w-[2.5rem] ${
-                            isActive('/lectures') ? '' : 'opacity-50'
-                        }`}
-                    />
-                    <p
-                        className={`${
-                            isActive('/lectures') ? '' : 'opacity-50'
-                        }`}
+            <div className="max-container">
+                <div className="flex justify-between items-center px-[3.5rem]">
+                    <Link
+                        href="/"
+                        className="flex flex-col justify-center items-center gap-[0.1rem]"
                     >
-                        Lectures
-                    </p>
-                </Link>
-                <Link
-                    href="/stats"
-                    className="flex flex-col justify-center items-center gap-[0.1rem]"
-                >
-                    <Image
-                        src={Stats}
-                        alt="stats"
-                        className={`h-[2.5rem] w-[2.5rem] ${
-                            isActive('/stats') ? '' : 'opacity-50'
-                        }`}
-                    />
-                    <p className={`${isActive('/stats') ? '' : 'opacity-50'}`}>
-                        Stats
-                    </p>
-                </Link>
+                        <Image
+                            src={Home}
+                            alt="home"
+                            className={`h-[2.5rem] w-[2.5rem] ${
+                                isActive('/') ? '' : 'opacity-50'
+                            }`}
+                        />
+                        <p className={`${isActive('/') ? '' : 'opacity-50'}`}>
+                            Home
+                        </p>
+                    </Link>
+                    <Link
+                        href="/lectures"
+                        className="flex flex-col justify-center items-center gap-[0.1rem]"
+                    >
+                        <Image
+                            src={Lectures}
+                            alt="lectures"
+                            className={`h-[2.5rem] w-[2.5rem] ${
+                                isActive('/lectures') ? '' : 'opacity-50'
+                            }`}
+                        />
+                        <p
+                            className={`${
+                                isActive('/lectures') ? '' : 'opacity-50'
+                            }`}
+                        >
+                            Lectures
+                        </p>
+                    </Link>
+                    <Link
+                        href="/stats"
+                        className="flex flex-col justify-center items-center gap-[0.1rem]"
+                    >
+                        <Image
+                            src={Stats}
+                            alt="stats"
+                            className={`h-[2.5rem] w-[2.5rem] ${
+                                isActive('/stats') ? '' : 'opacity-50'
+                            }`}
+                        />
+                        <p
+                            className={`${isActive('/stats') ? '' : 'opacity-50'}`}
+                        >
+                            Stats
+                        </p>
+                    </Link>
+                </div>
             </div>
         </nav>
     )
