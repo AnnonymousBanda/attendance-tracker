@@ -3,13 +3,15 @@ import { Bar } from 'react-chartjs-2'
 export default function PredictionsBar({ courseData }) {
     const labels = courseData.map((course) => course.courseCode)
     const chartHeight = courseData.length * 45
+    const minclasses = [4, 5, 12, 7, 10]
+    const maxValueClasses = Math.max(...minclasses)
 
     const totalClasses = {
         labels: labels,
         datasets: [
             {
                 label: 'Classes',
-                data: [4, 5, 12, 7, 10],
+                data: minclasses,
                 backgroundColor: 'rgba(54, 162, 235, 0.5)',
                 borderColor: 'rgba(0, 0, 0, 0.5)',
                 borderWidth: 1,
@@ -28,6 +30,11 @@ export default function PredictionsBar({ courseData }) {
         responsive: true,
         maintainAspectRatio: false,
         scales: {
+            x: {
+                beginAtZero: true,
+                max: maxValueClasses + 2,
+                ticks: { font: { size: 13 }, color: '#333' },
+            },
             y: {
                 beginAtZero: true,
             },
