@@ -27,21 +27,6 @@ const Navbar = () => {
                     </p>
                 </Link>
                 <Link
-                    href="/stats"
-                    className="flex flex-col justify-center items-center gap-[0.1rem]"
-                >
-                    <Image
-                        src={Stats}
-                        alt="stats"
-                        className={`h-[2.5rem] w-[2.5rem] ${
-                            isActive('/stats') ? '' : 'opacity-50'
-                        }`}
-                    />
-                    <p className={`${isActive('/stats') ? '' : 'opacity-50'}`}>
-                        Stats
-                    </p>
-                </Link>
-                <Link
                     href="/lectures"
                     className="flex flex-col justify-center items-center gap-[0.1rem]"
                 >
@@ -61,22 +46,18 @@ const Navbar = () => {
                     </p>
                 </Link>
                 <Link
-                    href="/schedule"
+                    href="/stats"
                     className="flex flex-col justify-center items-center gap-[0.1rem]"
                 >
                     <Image
-                        src={Schedule}
-                        alt="schedule"
+                        src={Stats}
+                        alt="stats"
                         className={`h-[2.5rem] w-[2.5rem] ${
-                            isActive('/schedule') ? '' : 'opacity-50'
+                            isActive('/stats') ? '' : 'opacity-50'
                         }`}
                     />
-                    <p
-                        className={`${
-                            isActive('/schedule') ? '' : 'opacity-50'
-                        }`}
-                    >
-                        Schedule
+                    <p className={`${isActive('/stats') ? '' : 'opacity-50'}`}>
+                        Stats
                     </p>
                 </Link>
             </div>
