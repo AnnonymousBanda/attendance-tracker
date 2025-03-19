@@ -74,29 +74,7 @@ const OngoingClasses = ({ classes }) => {
                     </div>
                 ))
             ) : (
-                <div className="bg-white p-[2rem] rounded-xl shadow-sm border border-gray-100 text-center">
-                    <div className="text-gray-400 mb-2">
-                        <svg
-                            className="w-[4rem] h-[4rem] mx-auto"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                            />
-                        </svg>
-                    </div>
-                    <h3 className="text-gray-500 font-medium  mb-1">
-                        No Ongoing Classes
-                    </h3>
-                    <p className="text-gray-400 ">
-                        There are no classes scheduled at this time
-                    </p>
-                </div>
+                <NoClasses message="There are no classes scheduled at this time" />
             )}
         </div>
     )
