@@ -1,8 +1,9 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import Calender from './../../../components/Calender'
 import Lecture from './../../../components/Lecture'
+import { CgAdd } from 'react-icons/cg'
+import { DaySelector } from '@/components'
 
 const daysData = [
     { name: 'Mon', date: '7' },
@@ -33,25 +34,30 @@ const Timetable = () => {
     }, [selectedDay])
 
     return (
-        <div className=" bg-primary flex flex-col h-auto">
+        <div className=" bg-primary flex flex-col  max-container">
             <div className="p-[1rem]">
-                <Calender
+                <DaySelector
                     days={daysData}
                     setSelectedDay={setSelectedDay}
                     selectedDay={selectedDay}
                 />
             </div>
 
-            <div className="flex flex-col pl-[7rem] gap-[2rem]  pt-[1rem] ">
-                {lectures.length > 0 ? (
-                    lectures.map((lecture, index) => (
-                        <Lecture key={index} {...lecture} />
-                    ))
-                ) : (
-                    <p className="text-gray-500 text-lg">
-                        No lectures scheduled for {selectedDay}
-                    </p>
-                )}
+            <div className="flex justify-between ">
+                <div className="flex flex-col pl-[7rem] gap-[2rem]  pt-[1rem] ">
+                    {lectures.length > 0 ? (
+                        lectures.map((lecture, index) => (
+                            <Lecture key={index} {...lecture} />
+                        ))
+                    ) : (
+                        <p className="text-gray-500 text-lg">
+                            No lectures scheduled for {selectedDay}
+                        </p>
+                    )}
+                </div>
+                <button className="fixed bottom-[12rem] right-[8rem] font-semibold cursor-pointer">
+                    <CgAdd size={45} />
+                </button>
             </div>
         </div>
     )

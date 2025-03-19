@@ -5,12 +5,12 @@ const DaySelector = ({ days }) => {
     const [selectedDay, setSelectedDay] = useState(days[0])
 
     return (
-        <div className="flex w-full bg-white gap-[0.2rem]">
+        <div className="flex w-full bg-[#F3F8FA] gap-[0.2rem]">
             {days.map((day, index) => (
                 <button
                     key={index}
                     onClick={() => setSelectedDay(day)}
-                    className={`flex-1 flex items-center justify-center h-[8rem] text-[1.8rem] font-bold transition-all min-w-0
+                    className={`flex flex-col flex-1 items-center justify-center h-[8rem] text-[1.8rem] font-bold transition-all min-w-0
                 ${
                     selectedDay === day
                         ? 'bg-[#6F8DBD] text-white'
@@ -25,7 +25,16 @@ const DaySelector = ({ days }) => {
                 } 
                 shadow-md`}
                 >
-                    {day}
+                    <span className="text-[1.8rem] font-bold">{day.name}</span>
+                    <span
+                        className={`text-[1.8rem] font-bold ${
+                            selectedDay.name === day.name
+                                ? 'text-black'
+                                : 'text-white'
+                        }`}
+                    >
+                        {day.date}
+                    </span>
                 </button>
             ))}
         </div>

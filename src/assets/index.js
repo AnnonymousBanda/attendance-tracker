@@ -7,6 +7,7 @@ import addIcon from './addIcon.png'
 import closeIcon from './closeIcon.png'
 import logo from './logo.svg'
 import ms_logo from './ms_logo.svg'
+import Plus from './plus.svg'
 
 export {
     Home,
@@ -18,4 +19,5 @@ export {
     closeIcon,
     logo,
     ms_logo,
+    Plus,
 }

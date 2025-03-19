@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import DaySelector from './../../../components/DaySelector'
 
-const daysList = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
+const daysList = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
 const sampleLectures = {
     Mon: [

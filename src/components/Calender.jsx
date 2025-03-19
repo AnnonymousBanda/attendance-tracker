@@ -5,7 +5,7 @@ const Calender = ({ days }) => {
     const [selectedDay, setSelectedDay] = useState(days[0])
 
     return (
-        <div className="flex w-full bg-[#A0B8D9] rounded-[0.5rem] items-center justify-between">
+        <div className="flex w-full bg-[#A0B8D9] items-center justify-between">
             {days.map((day, index) => (
                 <div
                     key={index}
@@ -17,7 +17,7 @@ const Calender = ({ days }) => {
                 >
                     <button
                         onClick={() => setSelectedDay(day)}
-                        className={`flex flex-col items-center w-full h-[5rem] justify-center rounded-[0.3rem] transition-all ${
+                        className={`flex flex-col items-center w-full h-[5rem] justify-center transition-all ${
                             selectedDay.name === day.name
                                 ? 'bg-white text-[#2E5D94] font-bold'
                                 : 'bg-[#A0B8D9] text-black'
