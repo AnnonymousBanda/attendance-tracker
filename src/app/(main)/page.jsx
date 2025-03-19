@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { MdAdd } from 'react-icons/md'
 import { SummaryBar } from '@/components'
+import { FaRegClock } from 'react-icons/fa6'
 
 const OngoingClasses = ({ classes }) => {
     const ongoingClasses = classes.filter((cls) => {
@@ -43,17 +44,29 @@ const OngoingClasses = ({ classes }) => {
 
                         <div className="flex gap-[1rem]">
                             <button
-                                className={`bg-green-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${cls.status === 'present' ? 'hover:cursor-default opacity-40' : ''}`}
+                                className={`bg-green-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${
+                                    cls.status === 'present'
+                                        ? 'hover:cursor-default opacity-40'
+                                        : ''
+                                }`}
                             >
                                 <p>present</p>
                             </button>
                             <button
-                                className={`bg-red-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${cls.status === 'absent' ? 'hover:cursor-default opacity-40' : ''}`}
+                                className={`bg-red-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${
+                                    cls.status === 'absent'
+                                        ? 'hover:cursor-default opacity-40'
+                                        : ''
+                                }`}
                             >
                                 <p>absent</p>
                             </button>
                             <button
-                                className={`bg-yellow-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${cls.status === 'sick' ? 'hover:cursor-default opacity-40' : ''}`}
+                                className={`bg-yellow-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${
+                                    cls.status === 'sick'
+                                        ? 'hover:cursor-default opacity-40'
+                                        : ''
+                                }`}
                             >
                                 <p>sick</p>
                             </button>
@@ -85,6 +98,99 @@ const OngoingClasses = ({ classes }) => {
                     </p>
                 </div>
             )}
+        </div>
+    )
+}
+
+const PastClasses = ({ classes }) => {
+    const pastClasses = classes.filter((cls) => {
+        const [to_hours, to_minutes] = cls.to.split(':').map(Number)
+        const to = new Date()
+        to.setHours(to_hours, to_minutes, 0, 0)
+        return to < new Date()
+    })
+
+    return (
+        <div className="space-y-3">
+            <h3 className="text-gray-500 uppercase">Past</h3>
+            {pastClasses.map((cls) => (
+                <div
+                    key={cls.courseCode + cls.from}
+                    className="bg-white p-5 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 flex justify-between items-center border border-gray-100"
+                >
+                    <div className="space-y-1">
+                        <h3 className="text-[#0E2C75] font-semibold">
+                            {cls.courseCode}
+                        </h3>
+                        <h3 className="text-gray-700 font-medium">
+                            {cls.courseName}
+                        </h3>
+                    </div>
+
+                    <div className="flex gap-[1rem]">
+                        <button
+                            className={`bg-green-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${
+                                cls.status === 'present'
+                                    ? 'hover:cursor-default opacity-40'
+                                    : ''
+                            }`}
+                        >
+                            <p>present</p>
+                        </button>
+                        <button
+                            className={`bg-red-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${
+                                cls.status === 'absent'
+                                    ? 'hover:cursor-default opacity-40'
+                                    : ''
+                            }`}
+                        >
+                            <p>absent</p>
+                        </button>
+                        <button
+                            className={`bg-yellow-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${
+                                cls.status === 'sick'
+                                    ? 'hover:cursor-default opacity-40'
+                                    : ''
+                            }`}
+                        >
+                            <p>sick</p>
+                        </button>
+                    </div>
+                </div>
+            ))}
+        </div>
+    )
+}
+
+const UpcomingClasses = ({ classes }) => {
+    const upcomingClasses = classes.filter((cls) => {
+        const [from_hours, from_minutes] = cls.from.split(':').map(Number)
+        const from = new Date()
+        from.setHours(from_hours, from_minutes, 0, 0)
+        return from > new Date()
+    })
+
+    return (
+        <div className="space-y-3">
+            <h3 className="text-gray-500 uppercase">Upcoming</h3>
+            {upcomingClasses.map((cls) => (
+                <div
+                    key={cls.courseCode + cls.from}
+                    className="bg-white p-5 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 flex justify-between items-center border border-gray-100"
+                >
+                    <div className="space-y-1">
+                        <h3 className="text-[#0E2C75] font-semibold">
+                            {cls.courseCode}
+                        </h3>
+                        <h3 className="text-gray-700 font-medium">
+                            {cls.courseName}
+                        </h3>
+                    </div>
+                    <p className="text-gray-700 font-medium bg-gray-200 px-[1rem] py-[0.5rem] w-fit rounded-lg">
+                        {cls.from} - {cls.to}
+                    </p>
+                </div>
+            ))}
         </div>
     )
 }
@@ -220,7 +326,9 @@ const Home = () => {
                         <h2 className="text-gray-700">Today's Classes</h2>
                         <button
                             onClick={() => setShowForm((prev) => !prev)}
-                            className={`text-blue-500 hover:text-blue-900 hover:cursor-pointer  transition-all duration-300 ${showForm ? 'rotate-45' : ''}`}
+                            className={`text-blue-500 hover:text-blue-900 hover:cursor-pointer  transition-all duration-300 ${
+                                showForm ? 'rotate-45' : ''
+                            }`}
                         >
                             <MdAdd size={30} />
                         </button>
@@ -324,83 +432,8 @@ const Home = () => {
                             </button>
                         </form>
                     )}
-
-                    <div className="space-y-3">
-                        <h3 className="text-gray-500 uppercase">Upcoming</h3>
-                        {classes
-                            .filter((cls) => {
-                                const [from_hours, from_minutes] = cls.from
-                                    .split(':')
-                                    .map(Number)
-                                const from = new Date()
-                                from.setHours(from_hours, from_minutes, 0, 0)
-                                return from > new Date()
-                            })
-                            .map((cls) => (
-                                <div
-                                    key={cls.courseCode + cls.from}
-                                    className="bg-white p-5 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 flex justify-between items-center border border-gray-100 hover:border-blue-100"
-                                >
-                                    <div className="space-y-1">
-                                        <h3 className="text-[#0E2C75] font-semibold">
-                                            {cls.courseCode}
-                                        </h3>
-                                        <h3 className="text-gray-700 font-medium">
-                                            {cls.courseName}
-                                        </h3>
-                                    </div>
-                                    <p className="text-gray-700 font-medium bg-gray-200 px-[1rem] py-[0.5rem] w-fit rounded-lg">
-                                        {cls.from} - {cls.to}
-                                    </p>
-                                </div>
-                            ))}
-                    </div>
-
-                    <div className="space-y-3">
-                        <h3 className="text-gray-500 uppercase">Past</h3>
-                        {classes
-                            .filter((cls) => {
-                                const [to_hours, to_minutes] = cls.to
-                                    .split(':')
-                                    .map(Number)
-                                const to = new Date()
-                                to.setHours(to_hours, to_minutes, 0, 0)
-                                return to < new Date()
-                            })
-                            .map((cls) => (
-                                <div
-                                    key={cls.courseCode + cls.from}
-                                    className="bg-white p-5 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 flex justify-between items-center border border-gray-100"
-                                >
-                                    <div className="space-y-1">
-                                        <h3 className="text-[#0E2C75] font-semibold">
-                                            {cls.courseCode}
-                                        </h3>
-                                        <h3 className="text-gray-700 font-medium">
-                                            {cls.courseName}
-                                        </h3>
-                                    </div>
-
-                                    <div className="flex gap-[1rem]">
-                                        <button
-                                            className={`bg-green-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${cls.status === 'present' ? 'hover:cursor-default opacity-40' : ''}`}
-                                        >
-                                            <p>present</p>
-                                        </button>
-                                        <button
-                                            className={`bg-red-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${cls.status === 'absent' ? 'hover:cursor-default opacity-40' : ''}`}
-                                        >
-                                            <p>absent</p>
-                                        </button>
-                                        <button
-                                            className={`bg-yellow-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${cls.status === 'sick' ? 'hover:cursor-default opacity-40' : ''}`}
-                                        >
-                                            <p>sick</p>
-                                        </button>
-                                    </div>
-                                </div>
-                            ))}
-                    </div>
+                    <UpcomingClasses classes={classes} />
+                    <PastClasses classes={classes} />
                 </div>
 
                 <SummaryBar summaryData={summaryData} />
