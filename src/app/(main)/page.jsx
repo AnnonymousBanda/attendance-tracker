@@ -113,51 +113,57 @@ const PastClasses = ({ classes }) => {
     return (
         <div className="space-y-3">
             <h3 className="text-gray-500 uppercase">Past</h3>
-            {pastClasses.map((cls) => (
-                <div
-                    key={cls.courseCode + cls.from}
-                    className="bg-white p-5 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 flex justify-between items-center border border-gray-100"
-                >
-                    <div className="space-y-1">
-                        <h3 className="text-[#0E2C75] font-semibold">
-                            {cls.courseCode}
-                        </h3>
-                        <h3 className="text-gray-700 font-medium">
-                            {cls.courseName}
-                        </h3>
-                    </div>
+            {pastClasses.length === 0 ? (
+                <NoClasses message="No past classes to diplay" />
+            ) : (
+                <>
+                    {pastClasses.map((cls) => (
+                        <div
+                            key={cls.courseCode + cls.from}
+                            className="bg-white p-5 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 flex justify-between items-center border border-gray-100"
+                        >
+                            <div className="space-y-1">
+                                <h3 className="text-[#0E2C75] font-semibold">
+                                    {cls.courseCode}
+                                </h3>
+                                <h3 className="text-gray-700 font-medium">
+                                    {cls.courseName}
+                                </h3>
+                            </div>
 
-                    <div className="flex gap-[1rem]">
-                        <button
-                            className={`bg-green-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${
-                                cls.status === 'present'
-                                    ? 'hover:cursor-default opacity-40'
-                                    : ''
-                            }`}
-                        >
-                            <p>present</p>
-                        </button>
-                        <button
-                            className={`bg-red-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${
-                                cls.status === 'absent'
-                                    ? 'hover:cursor-default opacity-40'
-                                    : ''
-                            }`}
-                        >
-                            <p>absent</p>
-                        </button>
-                        <button
-                            className={`bg-yellow-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${
-                                cls.status === 'sick'
-                                    ? 'hover:cursor-default opacity-40'
-                                    : ''
-                            }`}
-                        >
-                            <p>sick</p>
-                        </button>
-                    </div>
-                </div>
-            ))}
+                            <div className="flex gap-[1rem]">
+                                <button
+                                    className={`bg-green-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${
+                                        cls.status === 'present'
+                                            ? 'hover:cursor-default opacity-40'
+                                            : ''
+                                    }`}
+                                >
+                                    <p>present</p>
+                                </button>
+                                <button
+                                    className={`bg-red-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${
+                                        cls.status === 'absent'
+                                            ? 'hover:cursor-default opacity-40'
+                                            : ''
+                                    }`}
+                                >
+                                    <p>absent</p>
+                                </button>
+                                <button
+                                    className={`bg-yellow-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${
+                                        cls.status === 'sick'
+                                            ? 'hover:cursor-default opacity-40'
+                                            : ''
+                                    }`}
+                                >
+                                    <p>sick</p>
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </>
+            )}
         </div>
     )
 }
@@ -173,24 +179,30 @@ const UpcomingClasses = ({ classes }) => {
     return (
         <div className="space-y-3">
             <h3 className="text-gray-500 uppercase">Upcoming</h3>
-            {upcomingClasses.map((cls) => (
-                <div
-                    key={cls.courseCode + cls.from}
-                    className="bg-white p-5 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 flex justify-between items-center border border-gray-100"
-                >
-                    <div className="space-y-1">
-                        <h3 className="text-[#0E2C75] font-semibold">
-                            {cls.courseCode}
-                        </h3>
-                        <h3 className="text-gray-700 font-medium">
-                            {cls.courseName}
-                        </h3>
-                    </div>
-                    <p className="text-gray-700 font-medium bg-gray-200 px-[1rem] py-[0.5rem] w-fit rounded-lg">
-                        {cls.from} - {cls.to}
-                    </p>
-                </div>
-            ))}
+            {upcomingClasses.length === 0 ? (
+                <NoClasses message="No upcoming classes" />
+            ) : (
+                <>
+                    {upcomingClasses.map((cls) => (
+                        <div
+                            key={cls.courseCode + cls.from}
+                            className="bg-white p-5 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 flex justify-between items-center border border-gray-100"
+                        >
+                            <div className="space-y-1">
+                                <h3 className="text-[#0E2C75] font-semibold">
+                                    {cls.courseCode}
+                                </h3>
+                                <h3 className="text-gray-700 font-medium">
+                                    {cls.courseName}
+                                </h3>
+                            </div>
+                            <p className="text-gray-700 font-medium bg-gray-200 px-[1rem] py-[0.5rem] w-fit rounded-lg">
+                                {cls.from} - {cls.to}
+                            </p>
+                        </div>
+                    ))}
+                </>
+            )}
         </div>
     )
 }
