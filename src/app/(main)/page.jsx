@@ -36,13 +36,12 @@ const OngoingClasses = ({ classes }) => {
                             <h3 className="text-gray-700 font-medium">
                                 {cls.courseName}
                             </h3>
+                            <p className="text-gray-700 font-medium bg-gray-200 px-[1rem] py-[0.5rem] w-fit rounded-lg">
+                                {cls.from} - {cls.to}
+                            </p>
                         </div>
 
-                        <p className="text-gray-700 font-medium bg-gray-200 px-[1rem] py-[0.5rem] w-fit rounded-lg">
-                            {cls.from} - {cls.to}
-                        </p>
-
-                        <div className="flex gap-[1rem] sm-row flex-col">
+                        <div className="flex gap-[1rem]">
                             <button
                                 className={`bg-green-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${cls.status === 'present' ? 'hover:cursor-default opacity-40' : ''}`}
                             >
@@ -274,7 +273,7 @@ const Home = () => {
                                             htmlFor="from"
                                             className="block mb-1"
                                         >
-                                            <p className='w-[4rem]'>From:</p>
+                                            <p className="w-[4rem]">From:</p>
                                         </label>
                                         <input
                                             id="from"
@@ -297,7 +296,7 @@ const Home = () => {
                                             htmlFor="to"
                                             className="block mb-1 mt-2"
                                         >
-                                            <p className='w-[4rem]'>To:</p>
+                                            <p className="w-[4rem]">To:</p>
                                         </label>
                                         <input
                                             id="to"
