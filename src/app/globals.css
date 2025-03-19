@@ -95,6 +95,15 @@
     }
 }
 
+@layer utilities {
+    @media (min-width: 450px) {
+        .sm-row {
+            flex-direction: row;
+        }
+    }
+  }
+
+
 ::-webkit-scrollbar {
     display: none;
 }

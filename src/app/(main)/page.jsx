@@ -6,92 +6,66 @@ import { useForm } from 'react-hook-form'
 import { MdAdd } from 'react-icons/md'
 import { SummaryBar } from '@/components'
 
-const OngoingClasses = ({ classes, onAttendanceUpdate }) => {
-    const [currentTime, setCurrentTime] = useState(new Date())
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setCurrentTime(new Date())
-        }, 60000)
-        return () => clearInterval(interval)
-    }, [])
-
-    const isOngoing = (classTime) => {
-        const [hours, minutes] = classTime.split(':').map(Number)
-        return (
-            hours === currentTime.getHours() &&
-            minutes <= currentTime.getMinutes() + 5 &&
-            minutes >= currentTime.getMinutes() - 5
-        )
-    }
-
+const OngoingClasses = ({ classes }) => {
     const ongoingClasses = classes.filter((cls) => {
-        const [hours, minutes] = cls.time.split(':').map(Number)
-        const classTime = new Date()
-        classTime.setHours(hours, minutes, 0, 0)
+        const [from_hours, from_minutes] = cls.from.split(':').map(Number)
+        const from = new Date()
+        from.setHours(from_hours, from_minutes, 0, 0)
+
+        const [to_hours, to_minutes] = cls.to.split(':').map(Number)
+        const to = new Date()
+        to.setHours(to_hours, to_minutes, 0, 0)
         const now = new Date()
 
-        return (
-            now >= new Date(classTime.getTime() - 5 * 60 * 1000) &&
-            now <= new Date(classTime.getTime() + 5 * 60 * 1000)
-        )
+        return from <= now && to >= now
     })
 
     return (
         <div className="space-y-3">
-            <h2 className="text-gray-700  tracking-wider">Ongoing Class</h2>
+            <h2 className="text-gray-700">Ongoing Class</h2>
             {ongoingClasses.length > 0 ? (
                 ongoingClasses.map((cls) => (
                     <div
-                        key={cls.id}
-                        className="bg-white p-5 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 flex justify-between items-center border border-gray-100 hover:border-blue-100"
+                        key={cls.courseCode}
+                        className="bg-white p-5 rounded-xl shadow-sm flex justify-between items-center gap-[1rem] border border-gray-100"
                     >
                         <div className="space-y-1">
                             <h3 className="text-[#0E2C75] font-semibold">
-                                {cls.code}
+                                {cls.courseCode}
                             </h3>
                             <h3 className="text-gray-700 font-medium">
-                                {cls.name}
+                                {cls.courseName}
                             </h3>
                         </div>
 
-                        <p className="text-gray-700 font-medium bg-gray-50 px-4 py-2 rounded-lg">
-                            {cls.time}
+                        <p className="text-gray-700 font-medium bg-gray-200 px-[1rem] py-[0.5rem] w-fit rounded-lg">
+                            {cls.from} - {cls.to}
                         </p>
 
-                        <div className="flex gap-4 flex-wrap">
+                        <div className="flex gap-[1rem] sm-row flex-col">
                             <button
-                                onClick={() =>
-                                    onAttendanceUpdate(cls.id, 'Present')
-                                }
-                                className="bg-green-100 text-green-700 font-medium py-2 px-6 rounded-lg hover:bg-green-200 transition-colors duration-200 cursor-pointer"
+                                className={`bg-green-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${cls.status === 'present' ? 'hover:cursor-default opacity-40' : ''}`}
                             >
-                                <p>Present</p>
+                                <p>present</p>
                             </button>
                             <button
-                                onClick={() =>
-                                    onAttendanceUpdate(cls.id, 'Absent')
-                                }
-                                className="bg-red-100 text-red-700 font-medium py-2 px-6 rounded-lg hover:bg-red-200 transition-colors duration-200 cursor-pointer"
+                                className={`bg-red-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${cls.status === 'attended' ? 'hover:cursor-default opacity-40' : ''}`}
                             >
-                                <p>Absent</p>
+                                <p>absent</p>
                             </button>
                             <button
-                                onClick={() =>
-                                    onAttendanceUpdate(cls.id, 'Sick')
-                                }
-                                className="bg-yellow-200 text-yellow-700 font-medium py-2 px-6 rounded-lg hover:bg-yellow-300 hover:text-yellow-700 transition-colors duration-200 cursor-pointer"
+                                className={`bg-yellow-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${cls.status === 'sick' ? 'hover:cursor-default opacity-40' : ''}`}
                             >
-                                <p>Sick</p>
+                                <p>sick</p>
                             </button>
                         </div>
                     </div>
                 ))
             ) : (
-                <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 text-center">
+                <div className="bg-white p-[2rem] rounded-xl shadow-sm border border-gray-100 text-center">
                     <div className="text-gray-400 mb-2">
                         <svg
-                            className="w-16 h-16 mx-auto"
+                            className="w-[4rem] h-[4rem] mx-auto"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -117,62 +91,6 @@ const OngoingClasses = ({ classes, onAttendanceUpdate }) => {
 }
 
 const Home = () => {
-    const [greeting, setGreeting] = useState('')
-    const [date, setDate] = useState(new Date())
-    const [classes, setClasses] = useState([
-        {
-            id: 1,
-            code: 'CE2205',
-            name: 'Numerical',
-            time: '04:00 PM',
-            status: '--',
-            credits: 3,
-            type: 'upcoming',
-        },
-        {
-            id: 2,
-            code: 'CE2202',
-            name: 'Soil Mechanics',
-            time: '05:00 PM',
-            status: '--',
-            credits: 4,
-            type: 'upcoming',
-        },
-        {
-            id: 3,
-            code: 'CE2201',
-            name: 'Structural Analysis',
-            time: '01:00 PM',
-            status: 'Attended',
-            credits: 4,
-            type: 'past',
-        },
-        {
-            id: 4,
-            code: 'CE2204',
-            name: 'Water Resource',
-            time: '02:00 PM',
-            status: 'Attended',
-            credits: 3,
-            type: 'past',
-        },
-    ])
-
-    const summaryData = {
-        labels: ['CS2201', 'CS2202', 'CS2203', 'CS2204', 'CS2205', 'CS2207'],
-        data: [95, 80, 87, 76, 100, 60],
-    }
-
-    const [newClass, setNewClass] = useState({
-        code: '',
-        name: '',
-        time: '',
-        status: '--',
-        type: 'upcoming',
-    })
-
-    const [showForm, setShowForm] = useState(false)
-
     const {
         register,
         handleSubmit,
@@ -180,6 +98,71 @@ const Home = () => {
         reset,
     } = useForm()
     const { push } = useRouter()
+
+    const [greeting, setGreeting] = useState('')
+    const [showForm, setShowForm] = useState(false)
+
+    const [classes, setClasses] = useState([
+        {
+            courseCode: 'CE2205',
+            courseName: 'Numerical',
+            date: '19/03/2025',
+            from: '8:00',
+            to: '9:00',
+            status: null,
+        },
+        {
+            courseCode: 'CE2202',
+            courseName: 'Soil Mechanics',
+            from: '12:00',
+            to: '01:00',
+            status: 'present',
+        },
+        {
+            courseCode: 'CE2201',
+            courseName: 'Structural Analysis',
+            from: '10:00',
+            to: '11:00',
+            status: 'absent',
+        },
+        {
+            courseCode: 'CE2204',
+            courseName: 'Water Resource',
+            from: '14:00',
+            to: '15:00',
+            status: 'sick',
+        },
+    ])
+    const [summaryData, setSummaryData] = useState({
+        labels: ['CE2201', 'CE2202', 'CE2203', 'CE2204', 'CE2205', 'IDE'],
+        data: [95, 80, 87, 76, 90, 60],
+    })
+    const [courses, setCourses] = useState([
+        {
+            courseCode: 'CE2201',
+            courseName: 'Structural Analysis',
+        },
+        {
+            courseCode: 'CE2202',
+            courseName: 'Soil Mechanics',
+        },
+        {
+            courseCode: 'CE2203',
+            courseName: 'Fluid Mechanics',
+        },
+        {
+            courseCode: 'CE2204',
+            courseName: 'Water Resource',
+        },
+        {
+            courseCode: 'CE2205',
+            courseName: 'Numerical',
+        },
+        {
+            courseCode: 'CS2207',
+            courseName: 'Introductio to Data Science',
+        },
+    ])
 
     useEffect(() => {
         const hour = new Date().getHours()
@@ -206,17 +189,17 @@ const Home = () => {
         return date.toLocaleDateString('en-US', options).replace(',', '')
     }
 
-    const handleAttendanceUpdate = (id, status) => {
-        setClasses((prev) =>
-            prev.map((cls) => (cls.id === id ? { ...cls, status } : cls))
-        )
-    }
-
     const onSubmit = (data) => {
-        setClasses((prev) => [
-            ...prev,
-            { ...data, id: classes.length + 1, status: '--', type: 'upcoming' },
-        ])
+        data = {
+            courseCode: data.course.split(' - ')[0],
+            courseName: data.course.split(' - ')[1],
+            from: data.from,
+            to: data.to,
+            status: null,
+        }
+
+        console.log(data)
+
         reset()
         setShowForm(false)
     }
@@ -225,159 +208,185 @@ const Home = () => {
         <div className="bg-primary p-[1rem] rounded-lg">
             <div className="max-w-7xl mx-auto space-y-6">
                 <div className="animat-fade-in">
-                    <h1 className="font-bold text-[#0f318a] bg-clip-text bg-gradient-to-r from-[#0E2C75] to-[#2563eb]">
+                    <h1 className="text-[#0f318a] bg-clip-text bg-gradient-to-r from-[#0E2C75] to-[#2563eb]">
                         {greeting}
                     </h1>
-                    <h3 className="text-gray-500 font-medium mt-1">
-                        {formatDate(date)}
-                    </h3>
+                    <h3 className="text-gray-500">{formatDate(new Date())}</h3>
                 </div>
 
-                <OngoingClasses
-                    classes={classes}
-                    onAttendanceUpdate={handleAttendanceUpdate}
-                    className="animat-fade-in text-[#000000]"
-                />
-
-                {showForm && (
-                    <form
-                        onSubmit={handleSubmit(onSubmit)}
-                        className="bg-white p-5 rounded-xl shadow-md mt-4 space-y-3"
-                    >
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <input
-                                    type="text"
-                                    placeholder="Class Code"
-                                    {...register('code', {
-                                        required: 'Class Code is required',
-                                    })}
-                                    className="shadow-blue-100 p-2 rounded-lg w-full"
-                                />
-                                {errors.code && (
-                                    <p className="text-red-500 ">
-                                        {errors.code.message}
-                                    </p>
-                                )}
-                            </div>
-
-                            <div>
-                                <input
-                                    type="text"
-                                    placeholder="Class Name"
-                                    {...register('name', {
-                                        required: 'Class Name is required',
-                                    })}
-                                    className="shadow-blue-100 p-2 rounded-lg w-full"
-                                />
-                                {errors.name && (
-                                    <p className="text-red-500 ">
-                                        {errors.name.message}
-                                    </p>
-                                )}
-                            </div>
-                            <div>
-                                <input
-                                    type="time"
-                                    placeholder="Time"
-                                    {...register('time', {
-                                        required: 'Class Time is required',
-                                    })}
-                                    className="shadow-blue-100 p-2 rounded-lg w-full text-[#8c8c8c]"
-                                />
-                                {errors.time && (
-                                    <p className="text-red-500 ">
-                                        {errors.time.message}
-                                    </p>
-                                )}
-                            </div>
-                            <div>
-                                <select
-                                    {...register('type')}
-                                    className="shadow-blue-100 p-2 rounded-lg w-full"
-                                >
-                                    <option value="upcoming">
-                                        <p>Upcoming</p>
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                        <button
-                            type="submit"
-                            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
-                        >
-                            <p>Add Class</p>
-                        </button>
-                    </form>
-                )}
+                <OngoingClasses classes={classes} />
 
                 <div className="space-y-6">
                     <div className="flex justify-between items-center">
-                        <h2 className="text-2xl font-semibold text-gray-700">
-                            Today's Classes
-                        </h2>
+                        <h2 className="text-gray-700">Today's Classes</h2>
                         <button
-                            onClick={() => setShowForm(true)}
-                            className="text-blue-500 hover:text-blue-900  transition-colors text-4xl font-bold"
+                            onClick={() => setShowForm((prev) => !prev)}
+                            className={`text-blue-500 hover:text-blue-900 hover:cursor-pointer  transition-all duration-300 ${showForm ? 'rotate-45' : ''}`}
                         >
-                            <MdAdd size={24} />
+                            <MdAdd size={30} />
                         </button>
                     </div>
 
+                    {showForm && (
+                        <form
+                            onSubmit={handleSubmit(onSubmit)}
+                            className="bg-white p-[1.25rem] rounded-xl shadow-md mt-[1rem] space-y-3"
+                        >
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label
+                                        htmlFor="course"
+                                        className="block mb-1"
+                                    >
+                                        <p>Select Course:</p>
+                                    </label>
+                                    <select
+                                        id="course"
+                                        className="border rounded-lg p-2 w-full text-[1rem] text-[#8c8c8c] "
+                                        {...register('course', {
+                                            required:
+                                                'Course selection is required',
+                                        })}
+                                    >
+                                        <option value="">
+                                            Select a course
+                                        </option>{' '}
+                                        {courses.map((course) => (
+                                            <option
+                                                key={course.courseCode}
+                                                value={`${course.courseCode} - ${course.courseName}`}
+                                            >
+                                                {course.courseCode} -{' '}
+                                                {course.courseName}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    {errors.course && (
+                                        <p className="text-red-500">
+                                            {errors.course.message}
+                                        </p>
+                                    )}
+                                </div>
+
+                                <div>
+                                    <div>
+                                        <input
+                                            type="time"
+                                            placeholder="from"
+                                            {...register('from', {
+                                                required:
+                                                    'Start time is required',
+                                            })}
+                                            className="shadow-blue-100 p-2 rounded-lg w-full text-[#8c8c8c] text-[1rem]"
+                                        />
+                                        {errors.from && (
+                                            <p className="text-red-500">
+                                                {errors.from.message}
+                                            </p>
+                                        )}
+                                    </div>
+
+                                    <div>
+                                        <input
+                                            type="time"
+                                            placeholder="to"
+                                            {...register('to', {
+                                                required:
+                                                    'End time is required',
+                                            })}
+                                            className="shadow-blue-100 p-2 rounded-lg w-full text-[#8c8c8c] text-[1rem]"
+                                        />
+                                        {errors.to && (
+                                            <p className="text-red-500">
+                                                {errors.to.message}
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button
+                                type="submit"
+                                className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 hover:cursor-pointer transition-colors"
+                            >
+                                <p>Add Class</p>
+                            </button>
+                        </form>
+                    )}
+
                     <div className="space-y-3">
-                        <h3 className="text-xl font-medium text-gray-500 uppercase tracking-wider">
-                            Upcoming
-                        </h3>
+                        <h3 className="text-gray-500 uppercase">Upcoming</h3>
                         {classes
-                            .filter((cls) => cls.type === 'upcoming')
+                            .filter((cls) => {
+                                const [from_hours, from_minutes] = cls.from
+                                    .split(':')
+                                    .map(Number)
+                                const from = new Date()
+                                from.setHours(from_hours, from_minutes, 0, 0)
+                                return from > new Date()
+                            })
                             .map((cls) => (
                                 <div
-                                    key={cls.id}
+                                    key={cls.courseCode + cls.from}
                                     className="bg-white p-5 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 flex justify-between items-center border border-gray-100 hover:border-blue-100"
                                 >
                                     <div className="space-y-1">
                                         <h3 className="text-[#0E2C75] font-semibold">
-                                            {cls.code}
+                                            {cls.courseCode}
                                         </h3>
                                         <h3 className="text-gray-700 font-medium">
-                                            {cls.name}
+                                            {cls.courseName}
                                         </h3>
                                     </div>
-                                    <p className="text-gray-700 font-medium bg-gray-50 px-4 py-2 rounded-lg">
-                                        {cls.time}
+                                    <p className="text-gray-700 font-medium bg-gray-200 px-[1rem] py-[0.5rem] w-fit rounded-lg">
+                                        {cls.from} - {cls.to}
                                     </p>
                                 </div>
                             ))}
                     </div>
 
                     <div className="space-y-3">
-                        <h3 className="text-xl font-medium text-gray-500 uppercase tracking-wider">
-                            Past
-                        </h3>
+                        <h3 className="text-gray-500 uppercase">Past</h3>
                         {classes
-                            .filter((cls) => cls.type === 'past')
+                            .filter((cls) => {
+                                const [to_hours, to_minutes] = cls.to
+                                    .split(':')
+                                    .map(Number)
+                                const to = new Date()
+                                to.setHours(to_hours, to_minutes, 0, 0)
+                                return to < new Date()
+                            })
                             .map((cls) => (
                                 <div
-                                    key={cls.id}
+                                    key={cls.courseCode + cls.from}
                                     className="bg-white p-5 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 flex justify-between items-center border border-gray-100"
                                 >
                                     <div className="space-y-1">
                                         <h3 className="text-[#0E2C75] font-semibold">
-                                            {cls.code}
+                                            {cls.courseCode}
                                         </h3>
                                         <h3 className="text-gray-700 font-medium">
-                                            {cls.name}
+                                            {cls.courseName}
                                         </h3>
                                     </div>
-                                    <p
-                                        className={`px-4 py-2 rounded-lg font-medium ${
-                                            cls.status === 'Attended'
-                                                ? 'text-green-500 bg-green-50'
-                                                : 'text-red-500 bg-red-50'
-                                        }`}
-                                    >
-                                        {cls.status}
-                                    </p>
+
+                                    <div className="flex gap-[1rem]">
+                                        <button
+                                            className={`bg-green-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${cls.status === 'present' ? 'hover:cursor-default opacity-40' : ''}`}
+                                        >
+                                            <p>present</p>
+                                        </button>
+                                        <button
+                                            className={`bg-red-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${cls.status === 'attended' ? 'hover:cursor-default opacity-40' : ''}`}
+                                        >
+                                            <p>absent</p>
+                                        </button>
+                                        <button
+                                            className={`bg-yellow-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${cls.status === 'sick' ? 'hover:cursor-default opacity-40' : ''}`}
+                                        >
+                                            <p>sick</p>
+                                        </button>
+                                    </div>
                                 </div>
                             ))}
                     </div>
