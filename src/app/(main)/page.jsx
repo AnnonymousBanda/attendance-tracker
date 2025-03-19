@@ -242,7 +242,7 @@ const Home = () => {
                                     </label>
                                     <select
                                         id="course"
-                                        className="border rounded-lg p-2 w-full text-[1rem] text-[#8c8c8c] "
+                                        className="border rounded-lg p-2 w-full text-[1rem] text-[#8c8c8c]"
                                         {...register('course', {
                                             required:
                                                 'Course selection is required',
@@ -250,7 +250,7 @@ const Home = () => {
                                     >
                                         <option value="">
                                             Select a course
-                                        </option>{' '}
+                                        </option>
                                         {courses.map((course) => (
                                             <option
                                                 key={course.courseCode}
@@ -269,10 +269,16 @@ const Home = () => {
                                 </div>
 
                                 <div>
-                                    <div>
+                                    <div className="flex gap-[0.5rem] items-center">
+                                        <label
+                                            htmlFor="from"
+                                            className="block mb-1"
+                                        >
+                                            <p>From:</p>
+                                        </label>
                                         <input
+                                            id="from"
                                             type="time"
-                                            placeholder="from"
                                             {...register('from', {
                                                 required:
                                                     'Start time is required',
@@ -286,10 +292,16 @@ const Home = () => {
                                         )}
                                     </div>
 
-                                    <div>
+                                    <div className="flex gap-[0.5rem] items-center">
+                                        <label
+                                            htmlFor="to"
+                                            className="block mb-1 mt-2"
+                                        >
+                                            <p>To:</p>
+                                        </label>
                                         <input
+                                            id="to"
                                             type="time"
-                                            placeholder="to"
                                             {...register('to', {
                                                 required:
                                                     'End time is required',
