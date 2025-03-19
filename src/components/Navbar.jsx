@@ -10,7 +10,7 @@ const Navbar = () => {
 
     return (
         <nav className="w-full bg-primary shadow-[0_-2px_4px_rgba(0,0,0,0.1)] py-[1.5rem]">
-            <div className="flex justify-between items-center max-container">
+            <div className="flex justify-evenly items-center max-container">
                 <Link
                     href="/"
                     className="flex flex-col justify-center items-center gap-[0.1rem]"
