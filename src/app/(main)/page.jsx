@@ -195,6 +195,17 @@ const UpcomingClasses = ({ classes }) => {
     )
 }
 
+const NoClasses = ({ message }) => {
+    return (
+        <div className="bg-white p-[2rem] rounded-xl shadow-sm border border-gray-100 text-center">
+            <div className="text-gray-400 mb-2 flex flex-col items-center gap-[1rem]">
+                <FaRegClock size={30} />
+                <h3 className="">{message}</h3>
+            </div>
+        </div>
+    )
+}
+
 const Home = () => {
     const {
         register,
