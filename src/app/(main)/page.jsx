@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { MdAdd } from 'react-icons/md'
+import { SummaryBar } from '@/components'
 
 const OngoingClasses = ({ classes, onAttendanceUpdate }) => {
     const [currentTime, setCurrentTime] = useState(new Date())
@@ -38,9 +39,7 @@ const OngoingClasses = ({ classes, onAttendanceUpdate }) => {
 
     return (
         <div className="space-y-3">
-            <h2 className="text-gray-700  tracking-wider">
-                Ongoing Class
-            </h2>
+            <h2 className="text-gray-700  tracking-wider">Ongoing Class</h2>
             {ongoingClasses.length > 0 ? (
                 ongoingClasses.map((cls) => (
                     <div
@@ -159,10 +158,10 @@ const Home = () => {
         },
     ])
 
-    const [summaryData, setSummaryData] = useState({
-        labels: ['CE2201', 'CE2202', 'CE2203', 'CE2204', 'CE2205', 'IDE'],
-        data: [95, 80, 87, 76, 90, 60],
-    })
+    const summaryData = {
+        labels: ['CS2201', 'CS2202', 'CS2203', 'CS2204', 'CS2205', 'CS2207'],
+        data: [95, 80, 87, 76, 100, 60],
+    }
 
     const [newClass, setNewClass] = useState({
         code: '',
@@ -227,7 +226,7 @@ const Home = () => {
             <div className="max-w-7xl mx-auto space-y-6">
                 <div className="animat-fade-in">
                     <h1 className="font-bold text-[#0f318a] bg-clip-text bg-gradient-to-r from-[#0E2C75] to-[#2563eb]">
-                    {greeting} 
+                        {greeting}
                     </h1>
                     <h3 className="text-gray-500 font-medium mt-1">
                         {formatDate(date)}
@@ -297,8 +296,9 @@ const Home = () => {
                                     {...register('type')}
                                     className="shadow-blue-100 p-2 rounded-lg w-full"
                                 >
-                                    <option value="upcoming" ><p>Upcoming</p></option>
-                                    
+                                    <option value="upcoming">
+                                        <p>Upcoming</p>
+                                    </option>
                                 </select>
                             </div>
                         </div>
@@ -383,52 +383,7 @@ const Home = () => {
                     </div>
                 </div>
 
-                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 space-y-4">
-                    <h2 className="text-xl font-semibold text-gray-700">
-                        Summary
-                    </h2>
-                    {summaryData.labels.map((label, index) => (
-                        <div key={index} className="flex items-center gap-2">
-                            <div
-                                className={`text-white px-3 py-1.5 rounded-lg text-sm font-medium min-w-[60px] text-center
-                  ${
-                      summaryData.data[index] < 75
-                          ? 'bg-red-500'
-                          : 'bg-green-500'
-                  }`}
-                            >
-                                {summaryData.data[index]}%
-                            </div>
-                            <div className="flex-grow h-7 bg-gray-100 rounded-lg relative overflow-hidden">
-                                <div
-                                    className={`absolute top-0 left-0 h-full transition-all duration-500 ease-out
-                    ${
-                        summaryData.data[index] < 75
-                            ? 'bg-red-500'
-                            : 'bg-green-500'
-                    }`}
-                                    style={{
-                                        width: `${summaryData.data[index]}%`,
-                                    }}
-                                />
-                                <div
-                                    className="absolute top-0 right-0 h-full"
-                                    style={{
-                                        width: `${
-                                            100 - summaryData.data[index]
-                                        }%`,
-                                        backgroundImage:
-                                            'repeating-linear-gradient(45deg, #f3f4f6 0, #f3f4f6 1px, transparent 1px, transparent 4px)',
-                                        backgroundColor: '#f9fafb',
-                                    }}
-                                />
-                            </div>
-                            <h3 className="text-gray-700 w-20 text-sm font-medium">
-                                {label}
-                            </h3>
-                        </div>
-                    ))}
-                </div>
+                <SummaryBar summaryData={summaryData} />
             </div>
         </div>
     )
