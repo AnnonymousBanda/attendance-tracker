@@ -13,7 +13,7 @@ export default function SummaryBar({ summaryData }) {
                                 summaryData.data[index] > 75
                                     ? 'bg-green'
                                     : 'bg-red'
-                            } p-[0.3rem] w-[4rem] text-center text-white font-bold rounded-lg flex-none`}
+                            } p-[0.3rem] w-[5rem] text-center text-white font-bold rounded-lg flex-none`}
                         >
                             {summaryData.data[index]}%
                         </h3>
