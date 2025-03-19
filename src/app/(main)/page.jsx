@@ -274,7 +274,7 @@ const Home = () => {
                                             htmlFor="from"
                                             className="block mb-1"
                                         >
-                                            <p>From:</p>
+                                            <p className='w-[4rem]'>From:</p>
                                         </label>
                                         <input
                                             id="from"
@@ -297,7 +297,7 @@ const Home = () => {
                                             htmlFor="to"
                                             className="block mb-1 mt-2"
                                         >
-                                            <p>To:</p>
+                                            <p className='w-[4rem]'>To:</p>
                                         </label>
                                         <input
                                             id="to"
