@@ -6,6 +6,9 @@ import { useForm } from 'react-hook-form'
 import { MdAdd } from 'react-icons/md'
 import { SummaryBar } from '@/components'
 import { FaRegClock } from 'react-icons/fa6'
+import axios from 'axios'
+
+
 
 const OngoingClasses = ({ classes }) => {
     const ongoingClasses = classes.filter((cls) => {
@@ -239,6 +242,36 @@ const Home = () => {
             status: 'sick',
         },
     ])
+    
+    // const Datafetching = () => {
+    //     const [classes, setClasses] = useState([]);
+    
+    //     useEffect(() => {
+    //         axios.get('/api/classes')
+    //             .then((res) => {
+    //                 console.log(res.data); 
+    //                 setClasses(res.data);
+    //             })
+    //             .catch((err) => {
+    //                 console.error(err);
+    //             });
+    //     }, []);
+    
+    //     return (
+    //         <div>
+    //             <ul>
+    //                 {classes.map((item) => (
+    //                     <li key={item.courseCode}>
+    //                         {item.courseCode} - {item.courseName} ({item.from} - {item.to}) - {item.status || }
+    //                     </li>
+    //                 ))}
+    //             </ul>
+    //         </div>
+    //     );
+    // };
+    
+            
+
     const [summaryData, setSummaryData] = useState({
         labels: ['CE2201', 'CE2202', 'CE2203', 'CE2204', 'CE2205', 'IDE'],
         data: [95, 80, 87, 76, 90, 60],
