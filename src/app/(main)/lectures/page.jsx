@@ -323,7 +323,7 @@ const Timetable = () => {
     }
 
     return (
-        <div className="bg-primary flex flex-col h-full p-[1rem] relative">
+        <div className="bg-primary flex flex-col h-full p-[1rem] relative rounded-lg">
             <div className="mb-[1rem]">
                 <DaySelector daysDate={daysDate} />
             </div>
@@ -359,7 +359,7 @@ const Timetable = () => {
                     )}
                 </div>
             </div>
-            <button className="absolute bottom-[1rem] right-[1rem] cursor-pointer bg-[#6F8DBD] rounded-full border-[0.2rem]">
+            <button className="absolute bottom-[1rem] right-[1rem] cursor-pointer bg-[#A0B8D9] rounded-full border-[0.1rem]">
                 <IoAdd size={35} />
             </button>
         </div>
