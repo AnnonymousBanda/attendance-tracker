@@ -1,9 +1,9 @@
-function Button({cls}) {
+function Button({lecture}) {
     return (
         <div className="flex gap-[1rem]">
             <button
                 className={`bg-green-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${
-                    cls.status === 'present'
+                    lecture.status === 'present'
                         ? 'hover:cursor-default opacity-40'
                         : ''
                 }`}
@@ -12,7 +12,7 @@ function Button({cls}) {
             </button>
             <button
                 className={`bg-red-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${
-                    cls.status === 'absent'
+                    lecture.status === 'absent'
                         ? 'hover:cursor-default opacity-40'
                         : ''
                 }`}
@@ -21,7 +21,7 @@ function Button({cls}) {
             </button>
             <button
                 className={`bg-yellow-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${
-                    cls.status === 'sick'
+                    lecture.status === 'sick'
                         ? 'hover:cursor-default opacity-40'
                         : ''
                 }`}

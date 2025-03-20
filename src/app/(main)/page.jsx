@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { MdAdd } from 'react-icons/md'
-import { SummaryBar } from '@/components'
+import { Button, SummaryBar } from '@/components'
 import { FaRegClock } from 'react-icons/fa6'
 
 const OngoingClasses = ({ classes }) => {
@@ -42,35 +42,7 @@ const OngoingClasses = ({ classes }) => {
                             </p>
                         </div>
 
-                        <div className="flex gap-[1rem]">
-                            <button
-                                className={`bg-green-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${
-                                    cls.status === 'present'
-                                        ? 'hover:cursor-default opacity-40'
-                                        : ''
-                                }`}
-                            >
-                                <p>present</p>
-                            </button>
-                            <button
-                                className={`bg-red-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${
-                                    cls.status === 'absent'
-                                        ? 'hover:cursor-default opacity-40'
-                                        : ''
-                                }`}
-                            >
-                                <p>absent</p>
-                            </button>
-                            <button
-                                className={`bg-yellow-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${
-                                    cls.status === 'sick'
-                                        ? 'hover:cursor-default opacity-40'
-                                        : ''
-                                }`}
-                            >
-                                <p>sick</p>
-                            </button>
-                        </div>
+                        <Button lecture={cls} />
                     </div>
                 ))
             ) : (
@@ -109,35 +81,7 @@ const PastClasses = ({ classes }) => {
                                 </h3>
                             </div>
 
-                            <div className="flex gap-[1rem]">
-                                <button
-                                    className={`bg-green-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${
-                                        cls.status === 'present'
-                                            ? 'hover:cursor-default opacity-40'
-                                            : ''
-                                    }`}
-                                >
-                                    <p>present</p>
-                                </button>
-                                <button
-                                    className={`bg-red-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${
-                                        cls.status === 'absent'
-                                            ? 'hover:cursor-default opacity-40'
-                                            : ''
-                                    }`}
-                                >
-                                    <p>absent</p>
-                                </button>
-                                <button
-                                    className={`bg-yellow-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${
-                                        cls.status === 'sick'
-                                            ? 'hover:cursor-default opacity-40'
-                                            : ''
-                                    }`}
-                                >
-                                    <p>sick</p>
-                                </button>
-                            </div>
+                            <Button lecture={cls} />
                         </div>
                     ))}
                 </>
