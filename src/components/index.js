@@ -8,6 +8,7 @@ import PreventBrowserRefresh from './PreventBrowserRefresh'
 import PieChart from './PieChart'
 import PredictionsBar from './PredictionsBar'
 import SummaryBar from './SummaryBar'
+import Button from './Button'
 
 export {
     Calender,
@@ -20,4 +21,5 @@ export {
     PieChart,
     PredictionsBar,
     SummaryBar,
+    Button,
 }
