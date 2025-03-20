@@ -6,4 +6,22 @@ class AppError extends Error {
 	}
 }
 
-module.exports = { AppError }
+const catchAsync = (fn) => {
+	return (...params) => {
+		try {
+			return fn(...params)
+		} catch (error) {
+			return globalErrorHandler(error)
+		}
+	}
+}
+
+const globalErrorHandler = (error) => {
+	return {
+		status: error.status || 500,
+		message: error.message || 'Internal server error',
+		stack: error.stack || null,
+	}
+}
+
+module.exports = { AppError, catchAsync }

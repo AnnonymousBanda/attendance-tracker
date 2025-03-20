@@ -8,8 +8,8 @@ import {
     getDoc,
 } from 'firebase/firestore'
 
-import { app } from './firebase.config.js'
-import { AppError } from './firebase.error.js'
+import { app } from '../firebase.config.js'
+import { AppError, catchAsync } from '../firebase.error.js'
 
 const db = getFirestore(app)
 
@@ -37,55 +37,39 @@ const updateUser = async (userID, user) => {
     }
 }
 
-const getLectures = async (userID, semester, date) => {
-    try {
-        const userRef = doc(USER, userID)
-        const user = await getDoc(userRef)
+const getLectures = catchAsync(async (userID, semester, date) => {
+    const userRef = doc(USER, userID)
+    const user = await getDoc(userRef)
 
-        if (!user.exists()) throw new AppError('User not found', 404)
+    if (!user.exists()) throw new AppError('User not found', 404)
 
-        const lectures = user.data().lectures[semester][date] || [] // get all lectures of the day
+    const lectures = user.data().lectures || {} // get all lectures of the day
 
-        return {
-            status: 200,
-            message: 'Lectures fetched successfully',
-            data: lectures,
-        }
-    } catch (error) {
-        return {
-            status: error.code || 500,
-            message: error.message || 'Internal server error',
-            stack: error.stack || null,
-        }
+    return {
+        status: 200,
+        message: 'Lectures fetched successfully',
+        data: lectures[semester][date] || [],
     }
-}
+})
 
-const addExtraLecture = async (userID, lecture, semester, date) => {
-    try {
-        const userRef = doc(USER, userID)
-        const user = await getDoc(userRef)
+const addExtraLecture = catchAsync(async (userID, lecture, semester, date) => {
+    const userRef = doc(USER, userID)
+    const user = await getDoc(userRef)
 
-        if (!user.exists()) throw new AppError('User not found', 404)
+    if (!user.exists()) throw new AppError('User not found', 404)
 
-        const lectures = user.data().lectures || {} // get all lectures of the day
+    const lectures = user.data().lectures || {} // get all lectures of the day
 
-        await updateDoc(userRef, {
-            [`lectures.${semester}.${date}`]: arrayUnion(lecture),
-        })
+    await updateDoc(userRef, {
+        [`lectures.${semester}.${date}`]: arrayUnion(lecture),
+    })
 
-        return {
-            status: 200,
-            message: 'Lecture added successfully',
-            data: lectures,
-        }
-    } catch (error) {
-        return {
-            status: error.code || 500,
-            message: error.message || 'Internal server error',
-            stack: error.stack || null,
-        }
+    return {
+        status: 200,
+        message: 'Lecture added successfully',
+        data: lectures,
     }
-}
+})
 
 const modifyAttendance = async (userID, to, from, date, courseCode, status) => {
     try {
