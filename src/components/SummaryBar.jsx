@@ -31,7 +31,7 @@ export default function SummaryBar({ summaryData }) {
                                 }}
                             />
                         </div>
-                        <h3 className="ml-[1rem] min-w-[6rem] text-center">
+                        <h3 className="lg:ml-[0.5rem] min-w-[6rem] text-center">
                             {data}
                         </h3>
                     </div>
