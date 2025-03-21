@@ -163,7 +163,7 @@ const getAttendanceReport = catchAsync(async (userID, semester) => {
                     ((course.total - course.absent) / course.total).toFixed(2)
                 ) * 100,
             minimumLecturesToAttend: Math.floor(
-                course.total * 0.75 - course.present + course.medical
+                course.total * 0.75 - (course.present + course.medical)
             ),
         }))
         .sort((a, b) => a.courseCode.localeCompare(b.courseCode))
