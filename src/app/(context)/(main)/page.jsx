@@ -10,7 +10,7 @@ import {
     Loader,
     SummaryBar,
 } from '@/components'
-import { getLectures } from '@/firebase/api'
+import { getAttendanceReport, getLectures } from '@/firebase/api'
 import { FaRegClock } from 'react-icons/fa6'
 
 const Home = () => {
@@ -92,7 +92,7 @@ const Home = () => {
         return date.toLocaleDateString('en-US', options).replace(',', '')
     }
 
-    const onSubmit = (data) => {
+    const onSubmit = async (data) => {
         data = {
             courseCode: data.course.split(' - ')[0],
             courseName: data.course.split(' - ')[1],
@@ -101,7 +101,20 @@ const Home = () => {
             status: null,
         }
 
-        console.log(data)
+        try {
+            const res = await addExtraLecture(
+                '1',
+                data,
+                '4',
+                new Date().toLocaleDateString('en-GB').split('/').join('_')
+            )
+            if (res.status !== 200) throw new Error('kuch toh gadbad hai')
+
+            setClasses(res.data)
+            alert(res.message)
+        } catch (error) {
+            console.log(error)
+        }
 
         reset()
         setShowForm(false)
