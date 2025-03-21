@@ -43,7 +43,7 @@ const OngoingClasses = ({ classes }) => {
                             </p>
                         </div>
 
-                        <Button lecture={cls} />
+                        <AttendanceButton lecture={cls} />
                         <CancelClassButton lecture={cls} />
                     </div>
                 ))
