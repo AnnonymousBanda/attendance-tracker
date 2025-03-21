@@ -1,12 +1,12 @@
 import React from 'react'
 import { AttendanceButton, CancelClassButton } from '.'
 
-const Lecture = ({ fro, to, courseCode, courseName, status }) => {
+const Lecture = ({ from, to, courseCode, courseName, status }) => {
     return (
         <div className="flex flex-row gap-[1rem]">
             <div className="flex flex-col justify-center items-center gap-[0.5rem]">
                 <h3 className=" font-bold text-gray-900 w-[4.5rem] text-right">
-                    {fro}
+                    {from}
                 </h3>
                 <h3 className="block text-gray-600 w-[4.5rem] text-right">
                     {to}
@@ -18,7 +18,7 @@ const Lecture = ({ fro, to, courseCode, courseName, status }) => {
                     {courseCode}: {courseName}
                 </h2>
                 <AttendanceButton
-                    lecture={{ courseCode, courseName, fro, to, status }}
+                    lecture={{ courseCode, courseName, from, to, status }}
                 />
             </div>
         </div>
