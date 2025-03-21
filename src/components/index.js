@@ -11,6 +11,7 @@ import SummaryBar from './SummaryBar'
 import AttendanceButton from './AttendanceButton'
 import CancelClassButton from './CancelClassButton'
 import Loader from './Loader'
+import LecturesSkeleton from './LecturesSkeleton'
 
 export {
     Calender,
@@ -26,4 +27,5 @@ export {
     AttendanceButton,
     CancelClassButton,
     Loader,
+    LecturesSkeleton,
 }
