@@ -26,9 +26,12 @@ const Home = () => {
     const [showForm, setShowForm] = useState(false)
 
     const [classes, setClasses] = useState([])
+    const [summaryData, setSummaryData] = useState([])
     const [loading, setLoading] = useState(true)
+    const [courses] = useState([])
+
     useEffect(() => {
-        const todaySchedule = async () => {
+        const fetch = async () => {
             try {
                 const user = {
                     name: 'Ankit Bhagat',
@@ -38,29 +41,31 @@ const Home = () => {
                     semester: '4',
                     branch: 'Computer Science',
                 }
-                const rest = await getLectures(
+                let res = await getLectures(
                     user.userID,
                     user.semester,
                     new Date().toLocaleDateString('en-GB').split('/').join('_')
                 )
-                if (rest.status === 200) {
-                    setLoading(false)
-                    setClasses(rest.data)
-                } else {
-                    throw new Error('kuch toh gadbad hai')
-                }
+
+                if (res.status !== 200)
+                    throw new Error(res.error || 'Something went wrong!')
+
+                setClasses(res.data)
+
+                res = await getAttendanceReport(user.userID, user.semester)
+
+                if (res.status !== 200)
+                    throw new Error(res.error || 'Something went wrong!')
+
+                setSummaryData(res.data)
+
+                setLoading(false)
             } catch (error) {
                 console.log(error)
             }
         }
-        todaySchedule()
+        fetch()
     }, [])
-
-    const [summaryData, setSummaryData] = useState({
-        labels: ['CE2201', 'CE2202', 'CE2203', 'CE2204', 'CE2205', 'IDE'],
-        data: [95, 80, 87, 76, 90, 60],
-    })
-    const [courses] = useState([])
 
     useEffect(() => {
         const hour = new Date().getHours()
