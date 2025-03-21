@@ -8,9 +8,9 @@ ChartJS.register(ArcElement, Tooltip, Legend)
 const PieChart = ({ courseData }) => {
     const labels = ['Attended', 'Medical', 'Absent']
     const attendance = [
-        courseData.attended,
+        courseData.present,
         courseData.medical,
-        courseData.total - courseData.attended - courseData.medical,
+        courseData.absent,
     ]
     const data = {
         labels: labels,

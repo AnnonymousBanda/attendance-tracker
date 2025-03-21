@@ -3,15 +3,21 @@ import { Bar } from 'react-chartjs-2'
 export default function PredictionsBar({ courseData }) {
     const labels = courseData.map((course) => course.courseCode)
     const chartHeight = courseData.length * 45
-    const minclasses = [4, 5, 12, 7, 10]
-    const maxValueClasses = Math.max(...minclasses)
+    const minLectureData = courseData.map(
+        (course) => course.minimumLecturesToAttend || 0
+    )
+    const maxValueClasses = Math.max(...minLectureData)
+
+    const maxAchievableAttendance = courseData.map(
+        (course) => course.maximumAchievableAttendance
+    )
 
     const totalClasses = {
         labels: labels,
         datasets: [
             {
                 label: 'Classes',
-                data: minclasses,
+                data: minLectureData,
                 backgroundColor: 'rgba(54, 162, 235, 0.5)',
                 borderColor: 'rgba(0, 0, 0, 0.5)',
                 borderWidth: 1,
@@ -64,7 +70,7 @@ export default function PredictionsBar({ courseData }) {
         datasets: [
             {
                 label: 'Predicted Attendance',
-                data: [60, 70, 80, 90, 100],
+                data: maxAchievableAttendance,
                 backgroundColor: (context) => {
                     const value = context.raw
                     if (value >= 75) return 'rgba(75, 192, 192, 0.5)'
@@ -148,9 +154,7 @@ export default function PredictionsBar({ courseData }) {
     return (
         <>
             <div className="w-full">
-                <h3 className="w-full">
-                    Minimum classes to maintain 75%
-                </h3>
+                <h3 className="w-full">Minimum classes to maintain 75%</h3>
                 <div className="w-full">
                     <Bar
                         data={totalClasses}
@@ -160,9 +164,7 @@ export default function PredictionsBar({ courseData }) {
                 </div>
             </div>
             <div className="w-full">
-                <h3 className="w-full">
-                    Maximum acheivable attendance
-                </h3>
+                <h3 className="w-full">Maximum acheivable attendance</h3>
                 <div className="w-full">
                     <Bar
                         data={totalPrediction}
