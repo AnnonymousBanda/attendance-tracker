@@ -10,6 +10,7 @@ import PredictionsBar from './PredictionsBar'
 import SummaryBar from './SummaryBar'
 import AttendanceButton from './AttendanceButton'
 import CancelClassButton from './CancelClassButton'
+import Loader from './Loader'
 
 export {
     Calender,
@@ -24,4 +25,5 @@ export {
     SummaryBar,
     AttendanceButton,
     CancelClassButton,
+    Loader,
 }
