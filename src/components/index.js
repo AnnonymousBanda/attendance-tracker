@@ -8,7 +8,8 @@ import PreventBrowserRefresh from './PreventBrowserRefresh'
 import PieChart from './PieChart'
 import PredictionsBar from './PredictionsBar'
 import SummaryBar from './SummaryBar'
-import Button from './Button'
+import AttendanceButton from './AttendanceButton'
+import CancelClassButton from './CancelClassButton'
 
 export {
     Calender,
@@ -21,5 +22,6 @@ export {
     PieChart,
     PredictionsBar,
     SummaryBar,
-    Button,
+    AttendanceButton,
+    CancelClassButton,
 }

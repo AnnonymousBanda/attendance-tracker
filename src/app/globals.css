@@ -40,7 +40,7 @@
     --color-green: #4bc0c0;
     --color-red: #ff6384;
     --color-yellow: #ffce56;
-    --font-primary: 'Plus Jakarta Sans', sans-serif;
+    --font-primary: 'Plus Jakarta Sans', monospace;
 }
 
 @layer base {

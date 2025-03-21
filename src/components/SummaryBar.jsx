@@ -17,9 +17,7 @@ export default function SummaryBar({ summaryData }) {
                         >
                             {summaryData.data[index]}%
                         </h3>
-                        <div
-                            className="flex-grow w-full h-[2.5rem] bg-gray-100 rounded-lg relative overflow-hidden"
-                        >
+                        <div className="flex-grow w-full h-[2.5rem] bg-gray-100 rounded-lg relative overflow-hidden">
                             <div
                                 className={`absolute top-0 left-0 h-full transition-all duration-500 ease-out ${
                                     summaryData.data[index] < 75
@@ -31,12 +29,12 @@ export default function SummaryBar({ summaryData }) {
                                 }}
                             />
                         </div>
-                        <h3 className="lg:ml-[0.5rem] min-w-[6rem] text-center">
+                        <h3 className="lg:ml-[0.5rem] min-w-[6rem] text-right">
                             {data}
                         </h3>
                     </div>
                 ))}
             </div>
         </div>
-    );
+    )
 }
