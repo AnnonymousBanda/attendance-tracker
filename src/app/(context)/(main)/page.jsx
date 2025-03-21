@@ -124,6 +124,7 @@ const UpcomingClasses = ({ classes }) => {
                             <p className="text-gray-700 font-medium bg-gray-200 px-[1rem] py-[0.5rem] w-[10.5rem] text-center rounded-lg">
                                 {cls.from} - {cls.to}
                             </p>
+                            <CancelClassButton lecture={cls} />
                         </div>
                     ))}
                 </>
@@ -160,8 +161,8 @@ const Home = () => {
             courseCode: 'CE2205',
             courseName: 'Numerical',
             date: '19/03/2025',
-            from: '8:00',
-            to: '9:00',
+            from: '23:00',
+            to: '24:00',
             status: null,
         },
         {
@@ -179,8 +180,7 @@ const Home = () => {
             status: 'absent',
         },
         {
-            courseCode: 'CE2204'
-            ,
+            courseCode: 'CE2204',
             courseName: 'Water Resource',
             from: '00:00',
             to: '00:09',
