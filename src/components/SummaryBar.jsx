@@ -13,7 +13,7 @@ export default function SummaryBar({ summaryData }) {
                                 summaryData.data[index] > 75
                                     ? 'bg-green'
                                     : 'bg-red'
-                            } p-[0.3rem] w-[5rem] text-center text-white font-bold rounded-lg flex-none`}
+                            } p-[0.3rem] w-[5rem] font-charts text-center text-white font-bold rounded-lg flex-none`}
                         >
                             {summaryData.data[index]}%
                         </h3>
@@ -29,7 +29,7 @@ export default function SummaryBar({ summaryData }) {
                                 }}
                             />
                         </div>
-                        <h3 className="lg:ml-[0.5rem] min-w-[6rem] text-right">
+                        <h3 className="lg:ml-[0.5rem] min-w-[6rem] text-right font-charts">
                             {data}
                         </h3>
                     </div>

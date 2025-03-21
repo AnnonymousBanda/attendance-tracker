@@ -22,6 +22,7 @@ export default function PredictionsBar({ courseData }) {
                 borderColor: 'rgba(0, 0, 0, 0.5)',
                 borderWidth: 1,
                 barPercentage: 0.7,
+                fontFamily: 'Roboto Mono',
             },
         ],
         plugins: {
@@ -39,10 +40,23 @@ export default function PredictionsBar({ courseData }) {
             x: {
                 beginAtZero: true,
                 max: maxValueClasses + 2,
-                ticks: { font: { size: 13 }, color: '#333' },
+                ticks: {
+                    font: {
+                        size: 13,
+                        family: 'Roboto Mono',
+                    },
+                    color: '#333',
+                },
             },
             y: {
                 beginAtZero: true,
+                ticks: {
+                    font: {
+                        size: 13,
+                        family: 'Roboto Mono',
+                    },
+                    color: '#333',
+                },
             },
         },
         plugins: {
@@ -52,7 +66,7 @@ export default function PredictionsBar({ courseData }) {
             datalabels: {
                 color: '#fff',
                 font: {
-                    weight: 'bold',
+                    family: 'Roboto Mono',
                 },
             },
             tooltip: {
@@ -93,8 +107,20 @@ export default function PredictionsBar({ courseData }) {
         responsive: true,
         maintainAspectRatio: false,
         scales: {
+            x: {
+                beginAtZero: true,
+                max: 100,
+                ticks: {
+                    font: { size: 13, family: 'Roboto Mono' },
+                    color: '#333',
+                },
+            },
             y: {
                 beginAtZero: true,
+                ticks: {
+                    font: { size: 13, family: 'Roboto Mono' },
+                    color: '#333',
+                },
             },
         },
         plugins: {
@@ -105,6 +131,7 @@ export default function PredictionsBar({ courseData }) {
                 color: '#fff',
                 font: {
                     weight: 'bold',
+                    family: 'Roboto Mono',
                 },
                 formatter: (value) => {
                     return `${value}%`
@@ -126,7 +153,6 @@ export default function PredictionsBar({ courseData }) {
                             color: 'white',
                             position: 'start',
                             xAdjust: 20,
-                            zAjust: 20,
                         },
                     },
                 },
@@ -136,16 +162,6 @@ export default function PredictionsBar({ courseData }) {
                     label: (context) => {
                         return `${context.dataset.label}: ${context.raw}%`
                     },
-                },
-            },
-            scales: {
-                x: {
-                    beginAtZero: true,
-                    max: 100,
-                    ticks: { font: { size: 13 }, color: '#333' },
-                },
-                y: {
-                    ticks: { font: { size: 12 }, color: '#333' },
                 },
             },
         },

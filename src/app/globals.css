@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import '@fontsource/plus-jakarta-sans';
+@import '@fontsource/roboto-mono';
 
 @layer theme, base, components, utilities;
 @import 'tailwindcss/theme.css' layer(theme);
@@ -40,7 +41,8 @@
     --color-green: #4bc0c0;
     --color-red: #ff6384;
     --color-yellow: #ffce56;
-    --font-primary: 'Plus Jakarta Sans', monospace;
+    --font-primary: 'Plus Jakarta Sans', sans-serif;
+    --font-charts: 'Roboto Mono', monospace;
 }
 
 @layer base {
@@ -101,8 +103,7 @@
             flex-direction: row;
         }
     }
-  }
-
+}
 
 ::-webkit-scrollbar {
     display: none;

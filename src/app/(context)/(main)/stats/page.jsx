@@ -135,10 +135,16 @@ const Stats = () => {
             x: {
                 beginAtZero: true,
                 max: 100,
-                ticks: { font: { size: 13 }, color: '#333' },
+                ticks: {
+                    font: { size: 13, family: 'Roboto Mono' },
+                    color: '#333',
+                },
             },
             y: {
-                ticks: { font: { size: 12 }, color: '#333' },
+                ticks: {
+                    font: { size: 13, family: 'Roboto Mono' },
+                    color: '#333',
+                },
             },
         },
     }
