@@ -4,7 +4,14 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { MdAdd } from 'react-icons/md'
-import { AttendanceButton, CancelClassButton, SummaryBar } from '@/components'
+import {
+    AttendanceButton,
+    CancelClassButton,
+    Loader,
+    SummaryBar,
+} from '@/components'
+import { getLectures } from '@/firebase/api'
+import { FaRegClock } from 'react-icons/fa6'
 
 const Home = () => {
     const {
@@ -18,68 +25,42 @@ const Home = () => {
     const [greeting, setGreeting] = useState('')
     const [showForm, setShowForm] = useState(false)
 
-    const [classes, setClasses] = useState([
-        {
-            courseCode: 'CE2205',
-            courseName: 'Numerical',
-            date: '19/03/2025',
-            from: '23:00',
-            to: '24:00',
-            status: null,
-        },
-        {
-            courseCode: 'CE2202',
-            courseName: 'Soil Mechanics',
-            from: '12:00',
-            to: '01:00',
-            status: 'present',
-        },
-        {
-            courseCode: 'CE2201',
-            courseName: 'Structural Analysis',
-            from: '10:00',
-            to: '11:00',
-            status: 'absent',
-        },
-        {
-            courseCode: 'CE2204',
-            courseName: 'Water Resource',
-            from: '00:00',
-            to: '00:09',
-            status: 'sick',
-        },
-    ])
+    const [classes, setClasses] = useState([])
+    const [loading, setLoading] = useState(true)
+    useEffect(() => {
+        const todaySchedule = async () => {
+            try {
+                const user = {
+                    name: 'Ankit Bhagat',
+                    userID: '1',
+                    email: 'ankit_2301ce03@iitp.ac.in',
+                    roll: '2301CE03',
+                    semester: '4',
+                    branch: 'Computer Science',
+                }
+                const rest = await getLectures(
+                    user.userID,
+                    user.semester,
+                    new Date().toLocaleDateString('en-GB').split('/').join('_')
+                )
+                if (rest.status === 200) {
+                    setLoading(false)
+                    setClasses(rest.data)
+                } else {
+                    throw new Error('kuch toh gadbad hai')
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        todaySchedule()
+    }, [])
 
     const [summaryData, setSummaryData] = useState({
         labels: ['CE2201', 'CE2202', 'CE2203', 'CE2204', 'CE2205', 'IDE'],
         data: [95, 80, 87, 76, 90, 60],
     })
-    const [courses, setCourses] = useState([
-        {
-            courseCode: 'CE2201',
-            courseName: 'Structural Analysis',
-        },
-        {
-            courseCode: 'CE2202',
-            courseName: 'Soil Mechanics',
-        },
-        {
-            courseCode: 'CE2203',
-            courseName: 'Fluid Mechanics',
-        },
-        {
-            courseCode: 'CE2204',
-            courseName: 'Water Resource',
-        },
-        {
-            courseCode: 'CE2205',
-            courseName: 'Numerical',
-        },
-        {
-            courseCode: 'CS2207',
-            courseName: 'Introductio to Data Science',
-        },
-    ])
+    const [courses] = useState([])
 
     useEffect(() => {
         const hour = new Date().getHours()
@@ -257,7 +238,9 @@ const Home = () => {
         )
     }
 
-    return (
+    return loading ? (
+        <Loader />
+    ) : (
         <div className="bg-primary p-[1rem] rounded-lg">
             <div className="max-w-7xl mx-auto space-y-6">
                 <div className="animat-fade-in">
