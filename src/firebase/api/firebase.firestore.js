@@ -35,12 +35,15 @@ const getLectures = catchAsync(async (userID, semester, date) => {
 
     if (!user.exists()) throw new AppError('User not found', 404)
 
-    const lectures = user.data().lectures || {} // get all lectures of the day
+    let lectures = user.data().lectures || {} // get all lectures of the day
+    lectures = lectures[semester][date].filter(
+        (lecture) => lecture.status !== 'cancelled'
+    )
 
     return {
         status: 200,
         message: 'Lectures fetched successfully',
-        data: lectures[semester][date] || [],
+        data: lectures || [],
     }
 })
 
@@ -64,7 +67,7 @@ const addExtraLecture = catchAsync(async (userID, lecture, semester, date) => {
 })
 
 const modifyAttendance = catchAsync(
-    async (userID, to, from, date, courseCode, status) => {
+    async (userID, semester, to, from, date, courseCode, status) => {
         if (!['present', 'absent', 'medical', 'cancelled'].includes(status))
             throw new AppError('Invalid status', 400)
 
@@ -76,23 +79,49 @@ const modifyAttendance = catchAsync(
 
         if (!user.exists()) throw new AppError('User not found', 404)
 
-        let lectures = user.data().lectures || [] // get all lectures of the day
+        console.log(user.data())
+
+        // Get lectures for the specified date
+        let lectures = user.data().lectures?.[semester]?.[date] || []
+        let preStatus = null
 
         lectures = lectures.map((lecture) => {
             if (
                 lecture.to === to &&
                 lecture.from === from &&
-                lecture.date === date &&
                 lecture.courseCode === courseCode
-            )
-                lecture.status = status
-
+            ) {
+                preStatus = lecture.status
+                return {
+                    ...lecture,
+                    status,
+                }
+            }
             return lecture
         })
 
         await updateDoc(userRef, {
-            lectures: arrayUnion(lectures),
+            [`lectures.${semester}.${date}`]: lectures,
         })
+
+        let courses = user.data().courses?.[semester] || []
+
+        courses = courses.map((course) => {
+            if (course.courseCode === courseCode) {
+                if (preStatus && course[preStatus] !== undefined)
+                    course[preStatus]--
+                if (status === 'cancelled') course['total']--
+                else if (course[status] !== undefined) course[status]++
+                return { ...course }
+            }
+            return course
+        })
+
+        await updateDoc(userRef, {
+            [`courses.${semester}`]: courses,
+        })
+
+        lectures = lectures.filter((lecture) => lecture.status !== 'cancelled')
 
         return {
             status: 200,
