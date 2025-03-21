@@ -179,10 +179,11 @@ const Home = () => {
             status: 'absent',
         },
         {
-            courseCode: 'CE2204',
+            courseCode: 'CE2204'
+            ,
             courseName: 'Water Resource',
-            from: '14:00',
-            to: '15:00',
+            from: '00:00',
+            to: '00:09',
             status: 'sick',
         },
     ])
