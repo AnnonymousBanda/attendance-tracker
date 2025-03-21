@@ -5,144 +5,6 @@ import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { MdAdd } from 'react-icons/md'
 import { AttendanceButton, CancelClassButton, SummaryBar } from '@/components'
-import { FaRegClock } from 'react-icons/fa6'
-// import axios from 'axios'
-
-const OngoingClasses = ({ classes }) => {
-    const ongoingClasses = classes.filter((cls) => {
-        const [from_hours, from_minutes] = cls.from.split(':').map(Number)
-        const from = new Date()
-        from.setHours(from_hours, from_minutes, 0, 0)
-
-        const [to_hours, to_minutes] = cls.to.split(':').map(Number)
-        const to = new Date()
-        to.setHours(to_hours, to_minutes, 0, 0)
-        const now = new Date()
-
-        return from <= now && to >= now
-    })
-
-    return (
-        <div className="space-y-3">
-            <h2 className="text-gray-700">Ongoing Class</h2>
-            {ongoingClasses.length > 0 ? (
-                ongoingClasses.map((cls) => (
-                    <div
-                        key={cls.courseCode}
-                        className="bg-white px-[1rem] pt-[3.5rem] pb-[3rem] rounded-xl shadow-sm flex justify-between items-center border border-gray-100 relative"
-                    >
-                        <div className="space-y-1">
-                            <h3 className="text-[#0E2C75] font-semibold">
-                                {cls.courseCode}
-                            </h3>
-                            <h3 className="text-gray-700 font-medium">
-                                {cls.courseName}
-                            </h3>
-                            <p className="text-gray-700 font-medium bg-gray-200 px-[1rem] py-[0.5rem] w-[10.5rem] text-center rounded-lg">
-                                {cls.from} - {cls.to}
-                            </p>
-                        </div>
-
-                        <AttendanceButton lecture={cls} />
-                        <CancelClassButton lecture={cls} />
-                    </div>
-                ))
-            ) : (
-                <NoClasses message="There are no classes scheduled at this time" />
-            )}
-        </div>
-    )
-}
-
-const PastClasses = ({ classes }) => {
-    const pastClasses = classes.filter((cls) => {
-        const [to_hours, to_minutes] = cls.to.split(':').map(Number)
-        const to = new Date()
-        to.setHours(to_hours, to_minutes, 0, 0)
-        return to < new Date()
-    })
-
-    return (
-        <div className="space-y-3">
-            <h3 className="text-gray-500 uppercase">Past</h3>
-            {pastClasses.length === 0 ? (
-                <NoClasses message="No past classes to diplay" />
-            ) : (
-                <>
-                    {pastClasses.map((cls) => (
-                        <div
-                            key={cls.courseCode + cls.from}
-                            className="bg-white px-[1rem] pt-[3.5rem] pb-[3rem] rounded-xl shadow-sm flex justify-between items-center border border-gray-100 relative"
-                        >
-                            <div>
-                                <h3 className="text-[#0E2C75] font-semibold">
-                                    {cls.courseCode}
-                                </h3>
-                                <h3 className="text-gray-700 font-medium">
-                                    {cls.courseName}
-                                </h3>
-                            </div>
-
-                            <AttendanceButton lecture={cls} />
-                            <CancelClassButton lecture={cls} />
-                        </div>
-                    ))}
-                </>
-            )}
-        </div>
-    )
-}
-
-const UpcomingClasses = ({ classes }) => {
-    const upcomingClasses = classes.filter((cls) => {
-        const [from_hours, from_minutes] = cls.from.split(':').map(Number)
-        const from = new Date()
-        from.setHours(from_hours, from_minutes, 0, 0)
-        return from > new Date()
-    })
-
-    return (
-        <div className="space-y-3">
-            <h3 className="text-gray-500 uppercase">Upcoming</h3>
-            {upcomingClasses.length === 0 ? (
-                <NoClasses message="No upcoming classes" />
-            ) : (
-                <>
-                    {upcomingClasses.map((cls) => (
-                        <div
-                            key={cls.courseCode + cls.from}
-                            className="bg-white px-[1rem] pt-[3.5rem] pb-[3rem] rounded-xl shadow-sm flex justify-between items-center border border-gray-100 relative"
-                        >
-                            <div className="space-y-1">
-                                <h3 className="text-[#0E2C75] font-semibold">
-                                    {cls.courseCode}
-                                </h3>
-                                <h3 className="text-gray-700 font-medium">
-                                    {cls.courseName}
-                                </h3>
-                            </div>
-                            <p className="text-gray-700 font-medium bg-gray-200 px-[1rem] py-[0.5rem] w-[10.5rem] text-center rounded-lg">
-                                {cls.from} - {cls.to}
-                            </p>
-                            <CancelClassButton lecture={cls} />
-                        </div>
-                    ))}
-                </>
-            )}
-        </div>
-    )
-}
-
-const NoClasses = ({ message }) => {
-    return (
-        <div className="bg-white p-[2rem] rounded-xl shadow-sm border border-gray-100 text-center">
-            <div className="text-gray-400 mb-2 flex flex-col items-center gap-[1rem]">
-                <FaRegClock size={30} />
-                <h3 className="">{message}</h3>
-            </div>
-        </div>
-    )
-}
 
 const Home = () => {
     const {
@@ -187,33 +49,6 @@ const Home = () => {
             status: 'sick',
         },
     ])
-
-    // const Datafetching = () => {
-    //     const [classes, setClasses] = useState([]);
-
-    //     useEffect(() => {
-    //         axios.get('/api/classes')
-    //             .then((res) => {
-    //                 console.log(res.data);
-    //                 setClasses(res.data);
-    //             })
-    //             .catch((err) => {
-    //                 console.error(err);
-    //             });
-    //     }, []);
-
-    //     return (
-    //         <div>
-    //             <ul>
-    //                 {classes.map((item) => (
-    //                     <li key={item.courseCode}>
-    //                         {item.courseCode} - {item.courseName} ({item.from} - {item.to}) - {item.status || }
-    //                     </li>
-    //                 ))}
-    //             </ul>
-    //         </div>
-    //     );
-    // };
 
     const [summaryData, setSummaryData] = useState({
         labels: ['CE2201', 'CE2202', 'CE2203', 'CE2204', 'CE2205', 'IDE'],
@@ -286,6 +121,142 @@ const Home = () => {
         setShowForm(false)
     }
 
+    const OngoingClasses = () => {
+        const ongoingClasses = classes.filter((cls) => {
+            const [from_hours, from_minutes] = cls.from.split(':').map(Number)
+            const from = new Date()
+            from.setHours(from_hours, from_minutes, 0, 0)
+
+            const [to_hours, to_minutes] = cls.to.split(':').map(Number)
+            const to = new Date()
+            to.setHours(to_hours, to_minutes, 0, 0)
+            const now = new Date()
+
+            return from <= now && to >= now
+        })
+
+        return (
+            <div className="space-y-3">
+                <h2 className="text-gray-700">Ongoing Class</h2>
+                {ongoingClasses.length > 0 ? (
+                    ongoingClasses.map((cls) => (
+                        <div
+                            key={cls.courseCode}
+                            className="bg-white px-[1rem] pt-[3.5rem] pb-[3rem] rounded-xl shadow-sm flex justify-between items-center border border-gray-100 relative"
+                        >
+                            <div className="space-y-1">
+                                <h3 className="text-[#0E2C75] font-semibold">
+                                    {cls.courseCode}
+                                </h3>
+                                <h3 className="text-gray-700 font-medium">
+                                    {cls.courseName}
+                                </h3>
+                                <p className="text-gray-700 font-medium bg-gray-200 px-[1rem] py-[0.5rem] w-fit text-center rounded-lg">
+                                    {cls.from} - {cls.to}
+                                </p>
+                            </div>
+
+                            <AttendanceButton lecture={cls} />
+                            <CancelClassButton lecture={cls} />
+                        </div>
+                    ))
+                ) : (
+                    <NoClasses message="There are no classes scheduled at this time" />
+                )}
+            </div>
+        )
+    }
+
+    const PastClasses = () => {
+        const pastClasses = classes.filter((cls) => {
+            const [to_hours, to_minutes] = cls.to.split(':').map(Number)
+            const to = new Date()
+            to.setHours(to_hours, to_minutes, 0, 0)
+            return to < new Date()
+        })
+
+        return (
+            <div className="space-y-3">
+                <h3 className="text-gray-500 uppercase">Past</h3>
+                {pastClasses.length === 0 ? (
+                    <NoClasses message="No past classes to diplay" />
+                ) : (
+                    <>
+                        {pastClasses.map((cls) => (
+                            <div
+                                key={cls.courseCode + cls.from}
+                                className="bg-white px-[1rem] pt-[3.5rem] pb-[3rem] rounded-xl shadow-sm flex justify-between items-center border border-gray-100 relative"
+                            >
+                                <div>
+                                    <h3 className="text-[#0E2C75] font-semibold">
+                                        {cls.courseCode}
+                                    </h3>
+                                    <h3 className="text-gray-700 font-medium">
+                                        {cls.courseName}
+                                    </h3>
+                                </div>
+
+                                <AttendanceButton lecture={cls} />
+                                <CancelClassButton lecture={cls} />
+                            </div>
+                        ))}
+                    </>
+                )}
+            </div>
+        )
+    }
+
+    const UpcomingClasses = () => {
+        const upcomingClasses = classes.filter((cls) => {
+            const [from_hours, from_minutes] = cls.from.split(':').map(Number)
+            const from = new Date()
+            from.setHours(from_hours, from_minutes, 0, 0)
+            return from > new Date()
+        })
+
+        return (
+            <div className="space-y-3">
+                <h3 className="text-gray-500 uppercase">Upcoming</h3>
+                {upcomingClasses.length === 0 ? (
+                    <NoClasses message="No upcoming classes" />
+                ) : (
+                    <>
+                        {upcomingClasses.map((cls) => (
+                            <div
+                                key={cls.courseCode + cls.from}
+                                className="bg-white px-[1rem] py-[3rem] rounded-xl shadow-sm flex justify-between items-center border border-gray-100 relative"
+                            >
+                                <div className="space-y-1">
+                                    <h3 className="text-[#0E2C75] font-semibold">
+                                        {cls.courseCode}
+                                    </h3>
+                                    <h3 className="text-gray-700 font-medium">
+                                        {cls.courseName}
+                                    </h3>
+                                </div>
+                                <p className="text-gray-700 font-medium bg-gray-200 px-[1rem] py-[0.5rem] w-fit text-center rounded-lg">
+                                    {cls.from} - {cls.to}
+                                </p>
+                                <CancelClassButton lecture={cls} />
+                            </div>
+                        ))}
+                    </>
+                )}
+            </div>
+        )
+    }
+
+    const NoClasses = ({ message }) => {
+        return (
+            <div className="bg-white p-[2rem] rounded-xl shadow-sm border border-gray-100 text-center">
+                <div className="text-gray-400 mb-2 flex flex-col items-center gap-[1rem]">
+                    <FaRegClock size={30} />
+                    <h3 className="">{message}</h3>
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div className="bg-primary p-[1rem] rounded-lg">
             <div className="max-w-7xl mx-auto space-y-6">
@@ -296,7 +267,7 @@ const Home = () => {
                     <h3 className="text-gray-500">{formatDate(new Date())}</h3>
                 </div>
 
-                <OngoingClasses classes={classes} />
+                <OngoingClasses />
 
                 <div className="space-y-6">
                     <div className="flex justify-between items-center">
@@ -409,8 +380,8 @@ const Home = () => {
                             </button>
                         </form>
                     )}
-                    <UpcomingClasses classes={classes} />
-                    <PastClasses classes={classes} />
+                    <UpcomingClasses />
+                    <PastClasses />
                 </div>
 
                 <SummaryBar summaryData={summaryData} />
