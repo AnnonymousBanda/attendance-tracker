@@ -18,6 +18,7 @@ import {
 import annotationPlugin from 'chartjs-plugin-annotation'
 import { Loader, PieChart, PredictionsBar } from '@/components'
 import { getAttendanceReport } from '@/firebase/api'
+import { MdOutlineQueryStats } from 'react-icons/md'
 
 ChartJS.register(
     CategoryScale,
@@ -27,6 +28,17 @@ ChartJS.register(
     Legend,
     annotationPlugin
 )
+
+const NoPie = () => {
+    return (
+        <div className="flex flex-col items-center justify-center w-full flex-1 rounded-lg p-[1rem] gap-[2rem]">
+            <MdOutlineQueryStats className="w-[5rem] h-[5rem] text-gray-500" />
+            <h3 className="text-center text-gray-500">
+                Start marking your attendance to see the stats
+            </h3>
+        </div>
+    )
+}
 
 const Stats = () => {
     const [courseData, setCourseData] = useState([])
@@ -165,32 +177,46 @@ const Stats = () => {
                         >
                             {courseData.map((data) => (
                                 <SwiperSlide key={data.courseCode}>
-                                    <div className="flex flex-col items-center justify-evenly w-full min-h-[400px] bg-primary border-2 border-gray-200 rounded-lg p-[1rem]">
-                                        <h2 className="text-center">
+                                    <div className="flex flex-col items-center justify-between w-full min-h-[400px] bg-primary border-2 border-gray-200 rounded-lg p-[1rem]">
+                                        <h2 className="text-center mt-[1rem]">
                                             {data.courseCode} -{' '}
                                             {data.courseName}
                                         </h2>
-                                        <div className="flex justify-center items-center w-[250px] my-4">
-                                            <PieChart courseData={data} />
-                                        </div>
-                                        <p className="text-center">
-                                            Current attendance:{' '}
-                                            <span
-                                                className={`font-bold px-2 py-1 rounded-lg ${
-                                                    data.presentPercentage >= 90
-                                                        ? 'bg-[#4BC0C0]'
-                                                        : data.presentPercentage >=
-                                                          75
-                                                        ? 'bg-yellow-300'
-                                                        : 'bg-[#FF6384]'
-                                                }`}
-                                            >
-                                                {Math.floor(
-                                                    data.presentPercentage || 0
-                                                )}
-                                                %
-                                            </span>
-                                        </p>
+                                        <>
+                                            {data.present === 0 &&
+                                            data.absent === 0 &&
+                                            data.medical === 0 ? (
+                                                <NoPie />
+                                            ) : (
+                                                <>
+                                                    <div className="flex justify-center items-center w-[250px] my-4">
+                                                        <PieChart
+                                                            courseData={data}
+                                                        />
+                                                    </div>
+                                                    <h3 className="text-center">
+                                                        Current attendance:{' '}
+                                                        <span
+                                                            className={`font-bold px-2 py-1 rounded-lg ${
+                                                                data.presentPercentage >=
+                                                                90
+                                                                    ? 'bg-[#4BC0C0]'
+                                                                    : data.presentPercentage >=
+                                                                      75
+                                                                    ? 'bg-yellow-300'
+                                                                    : 'bg-[#FF6384]'
+                                                            }`}
+                                                        >
+                                                            {Math.floor(
+                                                                data.presentPercentage ||
+                                                                    0
+                                                            )}
+                                                            %
+                                                        </span>
+                                                    </h3>
+                                                </>
+                                            )}
+                                        </>
                                     </div>
                                 </SwiperSlide>
                             ))}
