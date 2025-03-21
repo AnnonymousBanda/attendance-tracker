@@ -1,13 +1,40 @@
 'use client'
-import { useState } from 'react'
+import { modifyAttendance } from '@/firebase/api'
+import { useEffect, useState } from 'react'
 import { MdOutlineSick, MdSick } from 'react-icons/md'
-import { PiHandPalmBold, PiHandPalmDuotone } from 'react-icons/pi'
+import { PiHandPalmDuotone } from 'react-icons/pi'
 import { RxCrossCircled } from 'react-icons/rx'
 
-function AttendanceButton({ lecture }) {
+function AttendanceButton({ lecture, date, setLecture }) {
     const [status, setStatus] = useState(lecture.status)
-    const handleClick = (status) => {
-        setStatus(status)
+
+    useEffect(() => {
+        setStatus(lecture.status)
+    }, [lecture])
+
+    const handleClick = async (status) => {
+        try {
+            const res = await modifyAttendance(
+                '1',
+                '4',
+                lecture.to,
+                lecture.from,
+                date,
+                lecture.courseCode,
+                status
+            )
+
+            if (!res) throw new Error('Failed to cancel class')
+
+            if (res.status !== 200) throw new Error(res.message)
+
+            setStatus(status)
+            setLecture(res.data)
+
+            console.log(res)
+        } catch (error) {
+            console.log(error.message)
+        }
     }
 
     return (

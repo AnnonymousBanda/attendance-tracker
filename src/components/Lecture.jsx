@@ -1,24 +1,30 @@
 import React from 'react'
 import { AttendanceButton, CancelClassButton } from '.'
 
-const Lecture = ({ from, to, courseCode, courseName, status }) => {
+const Lecture = ({ lecture, date, setLecture }) => {
     return (
         <div className="flex flex-row gap-[1rem]">
             <div className="flex flex-col justify-center items-center gap-[0.5rem]">
                 <h3 className=" font-bold text-gray-900 w-[4.5rem] text-right">
-                    {from}
+                    {lecture.from}
                 </h3>
                 <h3 className="block text-gray-600 w-[4.5rem] text-right">
-                    {to}
+                    {lecture.to}
                 </h3>
             </div>
             <div className="relative border-2 border-gray-200 border-l-black border-l-[0.3rem] bg-primary rounded-xl  px-[2.5rem] py-[3rem] w-full  flex flex-col gap-[2.5rem]">
-                <CancelClassButton />
+                <CancelClassButton
+                    lecture={lecture}
+                    date={date}
+                    setLecture={setLecture}
+                />
                 <h2>
-                    {courseCode}: {courseName}
+                    {lecture.courseCode}: {lecture.courseName}
                 </h2>
                 <AttendanceButton
-                    lecture={{ courseCode, courseName, from, to, status }}
+                    lecture={lecture}
+                    date={date}
+                    setLecture={setLecture}
                 />
             </div>
         </div>

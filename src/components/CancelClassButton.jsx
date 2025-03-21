@@ -1,8 +1,29 @@
+import { getLectures, modifyAttendance } from '@/firebase/api'
+
 const { MdClose } = require('react-icons/md')
 
-const AttendanceButton = ({ lecture }) => {
-    const handleClick = () => {
-        console.log('Cancel class button clicked')
+const AttendanceButton = ({ lecture, date, setLecture }) => {
+    const handleClick = async () => {
+        try {
+            const res = await modifyAttendance(
+                '1',
+                '4',
+                lecture.to,
+                lecture.from,
+                date,
+                lecture.courseCode,
+                'cancelled'
+            )
+
+            if (!res) throw new Error('Failed to cancel class')
+
+            if (res.status !== 200) throw new Error(res.message)
+
+            console.log(res)
+            setLecture([...res.data])
+        } catch (error) {
+            console.log(error.message)
+        }
     }
 
     return (

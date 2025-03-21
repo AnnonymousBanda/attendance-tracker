@@ -1,6 +1,6 @@
 'use client'
 
-import { Lecture } from '@/components'
+import { Lecture, Loader } from '@/components'
 import React, { useEffect, useState } from 'react'
 import { IoAdd } from 'react-icons/io5'
 import { getLectures } from '@/firebase/api'
@@ -56,7 +56,10 @@ const Timetable = () => {
                 const res = await getLectures(
                     user.userID,
                     user.semester,
-                    selectedDay.date.toLocaleDateString('en-GB')
+                    selectedDay.date
+                        .toLocaleDateString('en-GB')
+                        .split('/')
+                        .join('_')
                 )
 
                 if (res.status === 200) {
@@ -136,8 +139,8 @@ const Timetable = () => {
                 <DaySelector daysDate={daysDate} />
             </div>
             {loading ? (
-                <div className="flex-1 flex items-center justify-center">
-                    <h1 className="">Loader</h1>
+                <div className="relative h-full">
+                    <Loader />
                 </div>
             ) : (
                 <div
@@ -146,7 +149,15 @@ const Timetable = () => {
                     <div className="flex flex-col gap-[2rem] h-auto">
                         {lecture.length > 0 ? (
                             lecture.map((lec, index) => (
-                                <Lecture key={index} {...lec} />
+                                <Lecture
+                                    key={index}
+                                    lecture={lec}
+                                    setLecture={setLecture}
+                                    date={selectedDay.date
+                                        .toLocaleDateString('en-GB')
+                                        .split('/')
+                                        .join('_')}
+                                />
                             ))
                         ) : (
                             <div className="p-[2rem] h-full rounded-xl border-gray-100 flex justify-center items-center flex-col gap-[1rem]">
