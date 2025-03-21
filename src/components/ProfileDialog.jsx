@@ -7,6 +7,7 @@ import { IoCalendar } from 'react-icons/io5'
 import { MdBugReport, MdLogout, MdOutlineDeveloperMode } from 'react-icons/md'
 import { BiSolidBookBookmark } from 'react-icons/bi'
 import Image from 'next/image'
+import Link from 'next/link'
 
 export default function ProfileDialog({ setisDialogOpen, profile }) {
     const handleClose = () => {
@@ -78,12 +79,12 @@ export default function ProfileDialog({ setisDialogOpen, profile }) {
                                     <p className="font-bold">Developers</p>
                                 </div>
                             </div>
-                            <div className=" w-full flex justify-center items-center bg-primary p-[1rem] gap-[1rem] rounded-lg">
+                            <Link href='https://forms.gle/DjoRKfTt6NNjepzU9' target='#' className=" w-full flex justify-center items-center bg-primary p-[1rem] gap-[1rem] rounded-lg">
                                 <MdBugReport className="w-[3rem] h-[4rem]" />
                                 <div className="flex flex-col w-full justify-center">
                                     <p className="font-bold">Report a Bug</p>
                                 </div>
-                            </div>
+                            </Link>
                             <div className=" w-full flex justify-center items-center bg-[#fca5a5] p-[1rem] gap-[1rem] rounded-lg">
                                 <MdLogout className="w-[3rem] h-[4rem]" />
                                 <div className="flex flex-col w-full justify-center">

@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { logo, ms_logo } from '../../assets'
+import { logo, ms_logo } from '../../../assets'
 
 const Login = () => {
     return (

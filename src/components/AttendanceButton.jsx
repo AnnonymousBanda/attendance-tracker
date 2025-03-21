@@ -4,7 +4,7 @@ import { MdOutlineSick, MdSick } from 'react-icons/md'
 import { PiHandPalmBold, PiHandPalmDuotone } from 'react-icons/pi'
 import { RxCrossCircled } from 'react-icons/rx'
 
-function Button({ lecture }) {
+function AttendanceButton({ lecture }) {
     const [status, setStatus] = useState(lecture.status)
     const handleClick = (status) => {
         setStatus(status)
@@ -23,8 +23,8 @@ function Button({ lecture }) {
                 <div className="flex p-[0.3rem] justify-center items-center">
                     <PiHandPalmDuotone
                         strokeWidth={5}
-                        stroke="#d6f6f6"
-                        fill="#d6f6f6"
+                        stroke="#000"
+                        fill="#000"
                         className="w-[2rem] h-[2rem]"
                     />
                 </div>
@@ -38,9 +38,9 @@ function Button({ lecture }) {
                 <div className="flex  p-[0.3rem] justify-center items-center">
                     <RxCrossCircled
                         strokeWidth={0.8}
-                        stroke="#d6f6f6"
-                        color="#d6f6f6"
-                        fill="#d6f6f6"
+                        stroke="#000"
+                        color="#000"
+                        fill="#000"
                         className="w-[2rem] h-[2rem]"
                     />
                 </div>
@@ -48,14 +48,16 @@ function Button({ lecture }) {
             <button
                 onClick={() => handleClick('medical')}
                 className={`bg-yellow text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${
-                    status === 'medical' ? 'hover:cursor-default opacity-40' : ''
+                    status === 'medical'
+                        ? 'hover:cursor-default opacity-40'
+                        : ''
                 }`}
             >
                 <div className="flex  p-[0.3rem] justify-center items-center">
                     <MdOutlineSick
                         strokeWidth={0.01}
-                        stroke="#d6f6f6"
-                        color="#d6f6f6"
+                        stroke="#000"
+                        color="#000"
                         className="w-[2rem] h-[2rem]"
                     />
                 </div>
@@ -64,4 +66,4 @@ function Button({ lecture }) {
     )
 }
 
-export default Button
+export default AttendanceButton

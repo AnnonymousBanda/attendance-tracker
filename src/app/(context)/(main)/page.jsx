@@ -4,11 +4,9 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { MdAdd } from 'react-icons/md'
-import { Button, SummaryBar } from '@/components'
+import { AttendanceButton, CancelClassButton, SummaryBar } from '@/components'
 import { FaRegClock } from 'react-icons/fa6'
-import axios from 'axios'
-
-
+// import axios from 'axios'
 
 const OngoingClasses = ({ classes }) => {
     const ongoingClasses = classes.filter((cls) => {
@@ -31,7 +29,7 @@ const OngoingClasses = ({ classes }) => {
                 ongoingClasses.map((cls) => (
                     <div
                         key={cls.courseCode}
-                        className="bg-white p-5 rounded-xl shadow-sm flex justify-between items-center gap-[1rem] border border-gray-100"
+                        className="bg-white px-[1rem] py-[3rem] rounded-xl shadow-sm flex justify-between items-center border border-gray-100 relative"
                     >
                         <div className="space-y-1">
                             <h3 className="text-[#0E2C75] font-semibold">
@@ -46,6 +44,7 @@ const OngoingClasses = ({ classes }) => {
                         </div>
 
                         <Button lecture={cls} />
+                        <CancelClassButton lecture={cls} />
                     </div>
                 ))
             ) : (
@@ -73,9 +72,9 @@ const PastClasses = ({ classes }) => {
                     {pastClasses.map((cls) => (
                         <div
                             key={cls.courseCode + cls.from}
-                            className="bg-white p-5 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 flex justify-between items-center border border-gray-100"
+                            className="bg-white px-[1rem] py-[3rem] rounded-xl shadow-sm flex justify-between items-center border border-gray-100 relative"
                         >
-                            <div className="space-y-1">
+                            <div>
                                 <h3 className="text-[#0E2C75] font-semibold">
                                     {cls.courseCode}
                                 </h3>
@@ -84,7 +83,8 @@ const PastClasses = ({ classes }) => {
                                 </h3>
                             </div>
 
-                            <Button lecture={cls} />
+                            <AttendanceButton lecture={cls} />
+                            <CancelClassButton lecture={cls} />
                         </div>
                     ))}
                 </>
@@ -111,7 +111,7 @@ const UpcomingClasses = ({ classes }) => {
                     {upcomingClasses.map((cls) => (
                         <div
                             key={cls.courseCode + cls.from}
-                            className="bg-white p-5 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 flex justify-between items-center border border-gray-100"
+                            className="bg-white px-[1rem] py-[3rem] rounded-xl shadow-sm flex justify-between items-center border border-gray-100 relative"
                         >
                             <div className="space-y-1">
                                 <h3 className="text-[#0E2C75] font-semibold">
@@ -121,7 +121,7 @@ const UpcomingClasses = ({ classes }) => {
                                     {cls.courseName}
                                 </h3>
                             </div>
-                            <p className="text-gray-700 font-medium bg-gray-200 px-[1rem] py-[0.5rem] w-fit rounded-lg">
+                            <p className="text-gray-700 font-medium bg-gray-200 px-[1rem] py-[0.5rem] w-[10.5rem] text-center rounded-lg">
                                 {cls.from} - {cls.to}
                             </p>
                         </div>
@@ -187,21 +187,21 @@ const Home = () => {
             status: 'sick',
         },
     ])
-    
+
     // const Datafetching = () => {
     //     const [classes, setClasses] = useState([]);
-    
+
     //     useEffect(() => {
     //         axios.get('/api/classes')
     //             .then((res) => {
-    //                 console.log(res.data); 
+    //                 console.log(res.data);
     //                 setClasses(res.data);
     //             })
     //             .catch((err) => {
     //                 console.error(err);
     //             });
     //     }, []);
-    
+
     //     return (
     //         <div>
     //             <ul>
@@ -214,8 +214,6 @@ const Home = () => {
     //         </div>
     //     );
     // };
-    
-            
 
     const [summaryData, setSummaryData] = useState({
         labels: ['CE2201', 'CE2202', 'CE2203', 'CE2204', 'CE2205', 'IDE'],
