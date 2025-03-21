@@ -1,6 +1,6 @@
 'use client'
 
-import { Lecture, Loader } from '@/components'
+import { Lecture, LecturesSkeleton, Loader } from '@/components'
 import React, { useEffect, useState } from 'react'
 import { IoAdd } from 'react-icons/io5'
 import { getLectures } from '@/firebase/api'
@@ -91,8 +91,8 @@ const Timetable = () => {
                             index === 0
                                 ? 'rounded-[1rem] rounded-br-none'
                                 : index === daysDate.length - 1
-                                  ? 'rounded-[1rem] rounded-bl-none'
-                                  : 'rounded-[1rem]'
+                                ? 'rounded-[1rem] rounded-bl-none'
+                                : 'rounded-[1rem]'
                         } `}
                     >
                         <h3
@@ -105,8 +105,8 @@ const Timetable = () => {
                     index === 0
                         ? 'rounded-[1rem] rounded-br-none'
                         : index === daysDate.length - 1
-                          ? 'rounded-[1rem] rounded-bl-none'
-                          : 'rounded-[1rem]'
+                        ? 'rounded-[1rem] rounded-bl-none'
+                        : 'rounded-[1rem]'
                 } `}
                         >
                             {day}
@@ -121,8 +121,8 @@ const Timetable = () => {
                     index === 0
                         ? 'rounded-[1rem] rounded-br-none'
                         : index === daysDate.length - 1
-                          ? 'rounded-[1rem] rounded-bl-none'
-                          : 'rounded-[1rem]'
+                        ? 'rounded-[1rem] rounded-bl-none'
+                        : 'rounded-[1rem]'
                 } `}
                         >
                             {date.getDate()}
@@ -140,11 +140,15 @@ const Timetable = () => {
             </div>
             {loading ? (
                 <div className="relative h-full">
-                    <Loader />
+                    <LecturesSkeleton />
                 </div>
             ) : (
                 <div
-                    className={`p-[1rem] flex-1 overflow-auto flex ${lecture.length > 0 ? 'flex-col' : 'items-center justify-center'}`}
+                    className={`p-[1rem] flex-1 overflow-auto flex ${
+                        lecture.length > 0
+                            ? 'flex-col'
+                            : 'items-center justify-center'
+                    }`}
                 >
                     <div className="flex flex-col gap-[2rem] h-auto">
                         {lecture.length > 0 ? (
