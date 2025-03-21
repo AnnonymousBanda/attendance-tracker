@@ -16,7 +16,7 @@ import {
     Legend,
 } from 'chart.js'
 import annotationPlugin from 'chartjs-plugin-annotation'
-import { Loader, PieChart, PredictionsBar } from '@/components'
+import { Loader, PieChart, PredictionsBar, StatsSkeleton } from '@/components'
 import { getAttendanceReport } from '@/firebase/api'
 import { MdOutlineQueryStats } from 'react-icons/md'
 
@@ -152,7 +152,7 @@ const Stats = () => {
     return (
         <>
             {loading ? (
-                <Loader />
+                <StatsSkeleton />
             ) : (
                 <div className="flex flex-col items-center p-4 gap-8 bg-primary rounded-lg">
                     <h2 className="font-bold text-gray-500">
