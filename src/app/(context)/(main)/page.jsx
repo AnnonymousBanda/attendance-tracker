@@ -29,7 +29,7 @@ const OngoingClasses = ({ classes }) => {
                 ongoingClasses.map((cls) => (
                     <div
                         key={cls.courseCode}
-                        className="bg-white px-[1rem] py-[3rem] rounded-xl shadow-sm flex justify-between items-center border border-gray-100 relative"
+                        className="bg-white px-[1rem] pt-[3.5rem] pb-[3rem] rounded-xl shadow-sm flex justify-between items-center border border-gray-100 relative"
                     >
                         <div className="space-y-1">
                             <h3 className="text-[#0E2C75] font-semibold">
@@ -38,7 +38,7 @@ const OngoingClasses = ({ classes }) => {
                             <h3 className="text-gray-700 font-medium">
                                 {cls.courseName}
                             </h3>
-                            <p className="text-gray-700 font-medium bg-gray-200 px-[1rem] py-[0.5rem] w-fit rounded-lg">
+                            <p className="text-gray-700 font-medium bg-gray-200 px-[1rem] py-[0.5rem] w-[10.5rem] text-center rounded-lg">
                                 {cls.from} - {cls.to}
                             </p>
                         </div>
@@ -72,7 +72,7 @@ const PastClasses = ({ classes }) => {
                     {pastClasses.map((cls) => (
                         <div
                             key={cls.courseCode + cls.from}
-                            className="bg-white px-[1rem] py-[3rem] rounded-xl shadow-sm flex justify-between items-center border border-gray-100 relative"
+                            className="bg-white px-[1rem] pt-[3.5rem] pb-[3rem] rounded-xl shadow-sm flex justify-between items-center border border-gray-100 relative"
                         >
                             <div>
                                 <h3 className="text-[#0E2C75] font-semibold">
@@ -111,7 +111,7 @@ const UpcomingClasses = ({ classes }) => {
                     {upcomingClasses.map((cls) => (
                         <div
                             key={cls.courseCode + cls.from}
-                            className="bg-white px-[1rem] py-[3rem] rounded-xl shadow-sm flex justify-between items-center border border-gray-100 relative"
+                            className="bg-white px-[1rem] pt-[3.5rem] pb-[3rem] rounded-xl shadow-sm flex justify-between items-center border border-gray-100 relative"
                         >
                             <div className="space-y-1">
                                 <h3 className="text-[#0E2C75] font-semibold">
