@@ -10,7 +10,11 @@ import {
     Loader,
     SummaryBar,
 } from '@/components'
-import { getAttendanceReport, getLectures } from '@/firebase/api'
+import {
+    addExtraLecture,
+    getAttendanceReport,
+    getLectures,
+} from '@/firebase/api'
 import { FaRegClock } from 'react-icons/fa6'
 
 const Home = () => {
@@ -28,7 +32,7 @@ const Home = () => {
     const [classes, setClasses] = useState([])
     const [summaryData, setSummaryData] = useState([])
     const [loading, setLoading] = useState(true)
-    const [courses] = useState([])
+    const [courses, setCourses] = useState([])
 
     useEffect(() => {
         const fetch = async () => {
@@ -58,7 +62,15 @@ const Home = () => {
                     throw new Error(res.error || 'Something went wrong!')
 
                 setSummaryData(res.data)
-                console.log(res.data)
+
+                res.data.map((course) => {
+                    return {
+                        courseCode: course.courseCode,
+                        courseName: course.courseName,
+                    }
+                })
+
+                setCourses(res.data)
 
                 setLoading(false)
             } catch (error) {
@@ -75,13 +87,13 @@ const Home = () => {
         else setGreeting('Good Evening')
     }, [])
 
-    useEffect(() => {
-        window.addEventListener('popstate', () => {
-            push('/')
-            history.replaceState(null, '', '/')
-            history.pushState(null, '', '/')
-        })
-    }, [push])
+    // useEffect(() => {
+    //     window.addEventListener('popstate', () => {
+    //         push('/')
+    //         history.replaceState(null, '', '/')
+    //         history.pushState(null, '', '/')
+    //     })
+    // }, [push])
 
     const formatDate = (date) => {
         const options = {
@@ -112,13 +124,11 @@ const Home = () => {
             if (res.status !== 200) throw new Error('kuch toh gadbad hai')
 
             setClasses(res.data)
-            alert(res.message)
+            reset()
+            setShowForm(false)
         } catch (error) {
-            console.log(error)
+            console.log(error.message)
         }
-
-        reset()
-        setShowForm(false)
     }
 
     const OngoingClasses = () => {
