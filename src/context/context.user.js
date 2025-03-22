@@ -1,8 +1,10 @@
+import { Loader } from '@/components'
 import { createContext, useContext, useState, useEffect } from 'react'
 
 const UserContext = createContext()
 
 const UserProvider = ({ children }) => {
+    const [loading, setLoading] = useState(true)
     const [user, setUser] = useState(null)
 
     useEffect(() => {
@@ -16,6 +18,7 @@ const UserProvider = ({ children }) => {
                 branch: 'Computer Science',
             }
             setUser(userData)
+            setLoading(false)
         }
 
         fetchUser()
@@ -25,7 +28,7 @@ const UserProvider = ({ children }) => {
 
     return (
         <UserContext.Provider value={{ user, setUser, logout }}>
-            {children}
+            {loading ? <Loader /> : children}
         </UserContext.Provider>
     )
 }
