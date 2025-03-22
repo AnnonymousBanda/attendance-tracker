@@ -11,9 +11,9 @@ export default function SummaryBar({ summaryData }) {
                         <h3
                             className={`${
                                 data.presentPercentage > 75
-                                    ? 'bg-green'
-                                    : 'bg-red'
-                            } p-[0.3rem] w-[5rem] font-charts text-center text-white font-bold rounded-lg flex-none`}
+                                    ? 'bg-green-400'
+                                    : 'bg-red-400'
+                            } p-[0.3rem] w-[5rem] font-charts text-center text-black rounded-lg flex-none`}
                         >
                             {data.presentPercentage}%
                         </h3>
