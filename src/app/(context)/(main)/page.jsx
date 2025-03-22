@@ -166,7 +166,14 @@ const Home = () => {
                                 </p>
                             </div>
 
-                            <AttendanceButton lecture={cls} />
+                            <AttendanceButton
+                                lecture={cls}
+                                date={new Date()
+                                    .toLocaleDateString('en-GB')
+                                    .split('/')
+                                    .join('_')}
+                                setLecture={setClasses}
+                            />
                             <CancelClassButton lecture={cls} />
                         </div>
                     ))
@@ -189,7 +196,7 @@ const Home = () => {
             <div className="space-y-3">
                 <h3 className="text-gray-500 uppercase">Past</h3>
                 {pastClasses.length === 0 ? (
-                    <NoClasses message="No past classes to diplay" />
+                    <NoClasses message="No past classes to display" />
                 ) : (
                     <>
                         {pastClasses.map((cls) => (
@@ -206,7 +213,14 @@ const Home = () => {
                                     </h3>
                                 </div>
 
-                                <AttendanceButton lecture={cls} />
+                                <AttendanceButton
+                                    lecture={cls}
+                                    date={new Date()
+                                        .toLocaleDateString('en-GB')
+                                        .split('/')
+                                        .join('_')}
+                                    setLecture={setClasses}
+                                />
                                 <CancelClassButton lecture={cls} />
                             </div>
                         ))}
