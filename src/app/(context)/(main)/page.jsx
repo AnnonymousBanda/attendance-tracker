@@ -75,6 +75,23 @@ const Home = () => {
     }, [])
 
     useEffect(() => {
+        const fetchSummary = async () => {
+            try {
+                const res = await getAttendanceReport(
+                    user.userID,
+                    user.semester
+                )
+                if (res.status !== 200) throw new Error(res.message)
+
+                setSummaryData(res.data)
+            } catch (error) {
+                toast.error(error.message, { className: 'toast-error' })
+            }
+        }
+        fetchSummary()
+    }, [classes])
+
+    useEffect(() => {
         const hour = new Date().getHours()
         if (hour < 12) setGreeting('Good Morning')
         else if (hour < 18) setGreeting('Good Afternoon')
@@ -170,7 +187,7 @@ const Home = () => {
                                     .toLocaleDateString('en-GB')
                                     .split('/')
                                     .join('_')}
-                                setLecture={setClasses}
+                                setLectures={setClasses}
                             />
                             <CancelClassButton
                                 lecture={cls}
@@ -178,7 +195,7 @@ const Home = () => {
                                     .toLocaleDateString('en-GB')
                                     .split('/')
                                     .join('_')}
-                                setLecture={setClasses}
+                                setLectures={setClasses}
                             />
                         </div>
                     ))
@@ -224,7 +241,7 @@ const Home = () => {
                                         .toLocaleDateString('en-GB')
                                         .split('/')
                                         .join('_')}
-                                    setLecture={setClasses}
+                                    setLectures={setClasses}
                                 />
                                 <CancelClassButton
                                     lecture={cls}
@@ -232,7 +249,7 @@ const Home = () => {
                                         .toLocaleDateString('en-GB')
                                         .split('/')
                                         .join('_')}
-                                    setLecture={setClasses}
+                                    setLectures={setClasses}
                                 />
                             </div>
                         ))}
