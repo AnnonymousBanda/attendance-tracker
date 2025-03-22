@@ -7,7 +7,7 @@ import { MdAdd } from 'react-icons/md'
 import {
     AttendanceButton,
     CancelClassButton,
-    Loader,
+    HomeSkeleton,
     SummaryBar,
 } from '@/components'
 import {
@@ -268,7 +268,7 @@ const Home = () => {
     }
 
     return loading ? (
-        <Loader />
+        <HomeSkeleton />
     ) : (
         <div className="bg-primary p-[1rem] rounded-lg">
             <div className="max-w-7xl mx-auto space-y-6">
