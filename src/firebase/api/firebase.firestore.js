@@ -53,7 +53,10 @@ const addExtraLecture = catchAsync(async (userID, lecture, semester, date) => {
 
     if (!user.exists()) throw new AppError('User not found', 404)
 
-    const lectures = user.data().lectures || {} // get all lectures of the day
+    let lectures = user.data().lectures || {} // get all lectures of the day
+    lectures = lectures[semester][date].filter(
+        (lecture) => lecture.status !== 'cancelled'
+    )
 
     await updateDoc(userRef, {
         [`lectures.${semester}.${date}`]: arrayUnion(lecture),
