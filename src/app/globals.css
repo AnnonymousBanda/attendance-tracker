@@ -133,7 +133,7 @@
 }
 
 .toast-present {
-    background: rgba(92, 218, 217, 0.8) !important;
+    background: var(--color-green-400) !important;
     color: var(--color-secondary) !important;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.3);
@@ -145,8 +145,8 @@
 }
 
 .toast-absent {
-    background: rgba(239, 68, 68, 0.8) !important;
-    color: var(--color-secondary) !important;
+    background: var(--color-red-400) !important;
+    color: var(--color-primary) !important;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.3);
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
@@ -157,7 +157,7 @@
 }
 
 .toast-medical {
-    background: rgba(234, 179, 8, 0.8) !important;
+    background: var(--color-yellow-400) !important;
     color: var(--color-secondary) !important;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.3);
@@ -169,7 +169,7 @@
 }
 
 .toast-cancelled {
-    background: rgba(92, 218, 217, 0.8) !important;
+    background: var(--color-green-400) !important;
     color: var(--color-secondary) !important;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.3);
@@ -181,8 +181,8 @@
 }
 
 .toast-error {
-    background: rgba(239, 68, 68, 0.8) !important;
-    color: var(--color-secondary) !important;
+    background: var(--color-red-400) !important;
+    color: var(--color-primary) !important;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.3);
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
