@@ -20,6 +20,12 @@ function LecturesSkeleton() {
             <LecturesCard />
             <LecturesCard />
             <LecturesCard />
+            <LecturesCard />
+            <LecturesCard />
+            <LecturesCard />
+            <LecturesCard />
+            <LecturesCard />
+            <LecturesCard />
         </div>
     )
 }

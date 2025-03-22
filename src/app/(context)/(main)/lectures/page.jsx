@@ -134,14 +134,16 @@ const Timetable = () => {
     }
 
     return (
-        <div className="bg-primary flex flex-col h-full p-[1rem] relative rounded-lg">
+        <div
+            className={`bg-primary flex flex-col h-full p-[1rem] relative rounded-lg ${
+                loading ? 'overflow-hidden' : ''
+            }`}
+        >
             <div className="mb-[1rem]">
                 <DaySelector daysDate={daysDate} />
             </div>
             {loading ? (
-                <div className="relative h-full">
-                    <LecturesSkeleton />
-                </div>
+                <LecturesSkeleton />
             ) : (
                 <div
                     className={`p-[1rem] flex-1 overflow-auto flex ${
