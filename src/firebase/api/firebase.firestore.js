@@ -48,19 +48,34 @@ const getLectures = catchAsync(async (userID, semester, date) => {
 })
 
 const addExtraLecture = catchAsync(async (userID, lecture, semester, date) => {
+    const { to, from, courseCode, courseName } = lecture
+    if (
+        !to ||
+        !from ||
+        !date ||
+        !semester ||
+        !userID ||
+        !courseCode ||
+        !courseName
+    )
+        throw new AppError('Please, provide all the required fields', 400)
+
+    if (to <= from) throw new AppError('Invalid time', 400)
+
     const userRef = doc(USER, userID)
     const user = await getDoc(userRef)
 
     if (!user.exists()) throw new AppError('User not found', 404)
 
-    let lectures = user.data().lectures || {} // get all lectures of the day
-    lectures = lectures[semester][date].filter(
-        (lecture) => lecture.status !== 'cancelled'
-    )
-
     await updateDoc(userRef, {
         [`lectures.${semester}.${date}`]: arrayUnion(lecture),
     })
+
+    let lectures = user.data().lectures || {}
+    lectures = lectures[semester]?.[date] || []
+    lectures = lectures
+        .filter((lec) => lec.status !== 'cancelled')
+        .concat(lecture)
 
     return {
         status: 200,

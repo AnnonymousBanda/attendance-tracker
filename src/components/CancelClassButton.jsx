@@ -1,6 +1,7 @@
 'use client'
 import { getLectures, modifyAttendance } from '@/firebase/api'
 import { useState } from 'react'
+import toast from 'react-hot-toast'
 import { MdClose } from 'react-icons/md'
 import { TiCancel } from 'react-icons/ti'
 
@@ -57,9 +58,14 @@ const CancelDialog = ({ lecture, date, setLecture, setDialog }) => {
             setLecture([...res.data])
             setDialog(false)
             setLoading(false)
+            toast.success('Class cancelled successfully', {
+                className: 'toast-cancelled',
+            })
         } catch (error) {
-            console.error(error)
             setLoading(false)
+            toast.error(error.message, {
+                className: 'toast-error',
+            })
         }
     }
 
@@ -70,10 +76,9 @@ const CancelDialog = ({ lecture, date, setLecture, setDialog }) => {
         >
             <div
                 onClick={(e) => e.stopPropagation()}
-                className="flex flex-col items-center justify-center rounded-lg p-[2rem] gap-[2rem] bg-primary shadow-lg max-w-[35rem]"
+                className="flex flex-col items-center justify-center rounded-lg p-[2rem] gap-[2rem] bg-primary shadow-lg w-[85%] lg:max-w-[35rem]"
             >
                 <div className="flex flex-col items-center gap-[1rem]">
-                    {/* <TiCancel className="w-[5rem] h-[5rem] text-gray-500" /> */}
                     <h2 className="text-center text-gray-800 font-semibold">
                         Are you sure you want to cancel this class?
                     </h2>

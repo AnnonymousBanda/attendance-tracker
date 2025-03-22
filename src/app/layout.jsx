@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import './globals.css'
+import { Toaster } from 'react-hot-toast'
 
 export default function RootLayout({ children }) {
     useEffect(() => {
@@ -138,7 +139,30 @@ export default function RootLayout({ children }) {
 
                 <title>AttTrack</title>
             </head>
-            <body>{children}</body>
+            <body>
+                <Toaster
+                    position="top-center"
+                    reverseOrder={false}
+                    toastOptions={{
+                        success: {
+                            iconTheme: {
+                                secondary: '#fff',
+                            },
+                        },
+                        error: {
+                            iconTheme: {
+                                secondary: '#fff',
+                            },
+                        },
+                        style: {
+                            padding: '1rem',
+                            borderRadius: '0.8rem',
+                            fontSize: '1.4rem',
+                        },
+                    }}
+                />
+                {children}
+            </body>
         </html>
     )
 }

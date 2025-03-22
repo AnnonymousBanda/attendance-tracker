@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { MdOutlineSick, MdSick } from 'react-icons/md'
 import { PiHandPalmDuotone } from 'react-icons/pi'
 import { RxCrossCircled } from 'react-icons/rx'
+import { toast } from 'react-hot-toast'
 
 function AttendanceButton({ lecture, date, setLecture }) {
     const [status, setStatus] = useState(lecture.status)
@@ -30,10 +31,23 @@ function AttendanceButton({ lecture, date, setLecture }) {
 
             setStatus(status)
             setLecture(res.data)
+            const messageMap = {
+                present: 'Class marked present',
+                absent: 'Class marked absent',
+                medical: 'Medical leave marked',
+            }
 
-            console.log(res)
+            const toastStatusMap = {
+                present: 'toast-present',
+                absent: 'toast-absent',
+                medical: 'toast-medical',
+            }
+
+            toast.success(messageMap[status], {
+                className: toastStatusMap[status],
+            })
         } catch (error) {
-            console.log(error.message)
+            toast.error('Something went wrong!', { className: 'toast-error' })
         }
     }
 
