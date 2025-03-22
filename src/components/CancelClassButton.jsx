@@ -81,7 +81,7 @@ const CancelDialog = ({ lecture, date, setLecture, setDialog }) => {
                 <div className="flex w-full justify-center gap-[3rem]">
                     <button
                         onClick={handleClose}
-                        className="bg-red p-[1rem] rounded-lg cursor-pointer"
+                        className="bg-red p-[1rem] rounded-lg cursor-pointer hover:bg-red-600 transition-colors duration-300"
                     >
                         <p className="text-gray-800 uppercase font-bold">
                             Cancel
@@ -89,7 +89,7 @@ const CancelDialog = ({ lecture, date, setLecture, setDialog }) => {
                     </button>
                     <button
                         onClick={handleSubmit}
-                        className="bg-green p-[1rem] rounded-lg cursor-pointer"
+                        className="bg-green p-[1rem] rounded-lg cursor-pointer hover:bg-green-600 transition-colors duration-300"
                     >
                         <p
                             className={`text-gray-800 uppercase font-bold ${
