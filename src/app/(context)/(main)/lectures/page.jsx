@@ -14,12 +14,15 @@ import toast from 'react-hot-toast'
 
 const Timetable = () => {
     const [selectedDay, setSelectedtDay] = useState(() => {
-        const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat']
+        const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
         const today = new Date()
-        const todayIndex = today.getDay() === 0 ? 0 : today.getDay() - 1
+        const todayIndex = today.getDay() // === 0 ? 0 : today.getDay() - 1
+        const todayDate = new Date(today)
+        // todayDate.setDate(today.getDate() + (!todayIndex ? 1 : 0))
+
         return {
             day: days[todayIndex],
-            date: new Date(),
+            date: todayDate,
         }
     })
 
@@ -31,7 +34,7 @@ const Timetable = () => {
         const monday = new Date()
         monday.setDate(today.getDate() - daysToMonday)
 
-        const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat']
+        const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
         return days.map((day, index) => {
             const dateObj = new Date(monday)
             dateObj.setDate(monday.getDate() + index)
@@ -57,6 +60,8 @@ const Timetable = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                console.log(user)
+
                 const res = await getLectures(
                     user.userID,
                     user.semester,
@@ -65,30 +70,33 @@ const Timetable = () => {
                         .split('/')
                         .join('_')
                 )
-                if (res.status === 200) setLectures(res.data)
+                if (res.status !== 200) throw new Error(res.message)
+
+                setLectures(res.data)
 
                 const attendanceRes = await getAttendanceReport(
                     user.userID,
                     user.semester
                 )
-                if (attendanceRes.status === 200) {
-                    setCourses(
-                        attendanceRes.data.map((course) => ({
-                            courseCode: course.courseCode,
-                            courseName: course.courseName,
-                        }))
-                    )
-                }
+                if (attendanceRes.status !== 200)
+                    throw new Error(attendanceRes.message)
+
+                setCourses(
+                    attendanceRes.data.map((course) => ({
+                        courseCode: course.courseCode,
+                        courseName: course.courseName,
+                    }))
+                )
                 setLoading(false)
             } catch (error) {
-                toast.error('Something went wrong! Please try again later', {
+                toast.error(error.message, {
                     className: 'toast-error',
                 })
                 setLoading(false)
             }
         }
         fetchData()
-    }, [selectedDay, user])
+    }, [selectedDay])
 
     const DaySelector = ({ daysDate }) => {
         return (
@@ -106,8 +114,8 @@ const Timetable = () => {
                             index === 0
                                 ? 'rounded-[1rem] rounded-br-none'
                                 : index === daysDate.length - 1
-                                ? 'rounded-[1rem] rounded-bl-none'
-                                : 'rounded-[1rem]'
+                                  ? 'rounded-[1rem] rounded-bl-none'
+                                  : 'rounded-[1rem]'
                         } `}
                     >
                         <h3
@@ -165,7 +173,7 @@ const Timetable = () => {
     }
 
     return (
-        <div className="bg-primary flex flex-col h-full p-[1rem] relative rounded-[1rem]">
+        <div className="bg-primary flex flex-col h-full p-[1rem] relative rounded-lg">
             <div className="mb-[1rem]">
                 <DaySelector daysDate={daysDate} />
             </div>
@@ -220,37 +228,49 @@ const Timetable = () => {
             )}
 
             <button
-                className="absolute bottom-[1rem] right-[1rem] cursor-pointer bg-[#A0B8D9] rounded-full border-[0.1rem] p-[1rem] shadow-lg hover:bg-[#6F8DBD]"
+                className="absolute bottom-[1rem] right-[1rem] cursor-pointer bg-[#A0B8D9] rounded-full border-[0.1rem] hover:bg-[#6F8DBD] transition-colors duration-150"
                 onClick={() => setIsModalOpen(true)}
             >
                 <IoAdd size="3.5rem" />
             </button>
             {isModalOpen && (
-                <div className="fixed inset-0 flex items-center justify-center  bg-opacity-40  backdrop-blur-md z-100">
-                    <div className="bg-white p-[1.5rem] rounded-[1rem] shadow-2xl w-[25rem]">
-                        <h2 className="text-[1.5rem] font-bold text-[#6F8DBD] mb-[1rem] text-center uppercase">
+                <div
+                    className="fixed w-full z-50 inset-0 bg-[rgba(0,0,0,0.5)] backdrop-blur-[5px] flex justify-center items-center"
+                    onClick={() => {
+                        setIsModalOpen(false)
+                        reset()
+                    }}
+                >
+                    <div
+                        className="bg-white p-[2rem] rounded-lg max-w-[50rem] w-auto flex gap-[1rem] flex-col"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <h2 className="text-center text-gray-800 font-semibold">
                             Add New Lecture
                         </h2>
 
                         <form
                             onSubmit={handleSubmit(handleAddLecture)}
-                            className="space-y-[1rem]"
+                            className="space-y-[1rem] flex flex-col gap-[1rem]"
                         >
                             <div>
-                                <label className="block mb-[0.5rem] text-[1rem]">
-                                    COURSE
+                                <label className="block mb-[0.5rem]">
+                                    <h3>COURSE</h3>
                                 </label>
                                 <select
                                     {...register('course', {
                                         required: 'REQUIRED FIELD',
                                     })}
-                                    className="w-full p-[0.5rem] border rounded-[0.5rem] text-[1rem] text-[#8c8c8c]"
+                                    className="w-full p-[0.5rem] border rounded-[0.5rem] text-[1.4rem] text-[#8c8c8c]"
                                 >
-                                    <option value="">SELECT COURSE</option>
+                                    <option value="" className="text-[1.4rem]">
+                                        SELECT COURSE
+                                    </option>
                                     {courses.map((course) => (
                                         <option
                                             key={course.courseCode}
                                             value={`${course.courseCode} - ${course.courseName}`}
+                                            className="text-[1.4rem]"
                                         >
                                             {course.courseCode} -{' '}
                                             {course.courseName}
@@ -267,14 +287,14 @@ const Timetable = () => {
                             <div className="flex gap-[0.5rem] items-center">
                                 <div className="flex-1">
                                     <label className="block mb-[0.5rem] text-[1rem]">
-                                        FROM
+                                        <h3>FROM</h3>
                                     </label>
                                     <input
                                         type="time"
                                         {...register('from', {
                                             required: 'REQUIRED FIELD',
                                         })}
-                                        className="w-full p-[0.5rem] border rounded-[0.5rem] text-[1rem] text-[#8c8c8c]"
+                                        className="w-full p-[0.5rem] border rounded-[0.5rem] text-[1.4rem] text-[#8c8c8c]"
                                     />
                                     {errors.from && (
                                         <p className="text-red-500 text-[0.875rem] mt-[0.25rem]">
@@ -285,14 +305,14 @@ const Timetable = () => {
 
                                 <div className="flex-1">
                                     <label className="block mb-[0.5rem] text-[1rem]">
-                                        TO
+                                        <h3>TO</h3>
                                     </label>
                                     <input
                                         type="time"
                                         {...register('to', {
                                             required: 'REQUIRED FIELD',
                                         })}
-                                        className="w-full p-[0.5rem] border rounded-[0.5rem] text-[1rem] text-[#8c8c8c]"
+                                        className="w-full p-[0.5rem] border rounded-[0.5rem] text-[1.4rem] text-[#8c8c8c]"
                                     />
                                     {errors.to && (
                                         <p className="text-red-500 text-[0.875rem] mt-[0.25rem]">
@@ -309,15 +329,19 @@ const Timetable = () => {
                                         setIsModalOpen(false)
                                         reset()
                                     }}
-                                    className="px-[1rem] py-[0.8rem] bg-[#FF6384] text-[0.875rem] rounded-lg hover:bg-gray-400 hover:text-white"
+                                    className="bg-red p-[1rem] rounded-lg cursor-pointer hover:bg-red-600 transition-colors duration-150"
                                 >
-                                    CANCEL
+                                    <p className="text-gray-800 uppercase font-bold">
+                                        CANCEL
+                                    </p>
                                 </button>
                                 <button
                                     type="submit"
-                                    className="px-[1rem] py-[0.8rem] bg-[#4BC0C0] text-white text-[0.875rem] rounded-lg hover:bg-blue-600 hover:text-black"
+                                    className="bg-green p-[1rem] rounded-lg cursor-pointer hover:bg-green-600 transition-colors duration-150"
                                 >
-                                    CONFIRM
+                                    <p className="text-gray-800 uppercase font-bold">
+                                        CONFIRM
+                                    </p>
                                 </button>
                             </div>
                         </form>
