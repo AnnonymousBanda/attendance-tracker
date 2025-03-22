@@ -40,6 +40,8 @@ const getLectures = catchAsync(async (userID, semester, date) => {
         (lecture) => lecture.status !== 'cancelled'
     )
 
+    lectures.sort((a, b) => a.from.localeCompare(b.from))
+
     return {
         status: 200,
         message: 'Lectures fetched successfully',
@@ -76,6 +78,8 @@ const addExtraLecture = catchAsync(async (userID, lecture, semester, date) => {
     lectures = lectures
         .filter((lec) => lec.status !== 'cancelled')
         .concat(lecture)
+
+    lectures.sort((a, b) => a.from.localeCompare(b.from))
 
     return {
         status: 200,
@@ -140,6 +144,8 @@ const modifyAttendance = catchAsync(
         })
 
         lectures = lectures.filter((lecture) => lecture.status !== 'cancelled')
+
+        lectures.sort((a, b) => a.from.localeCompare(b.from))
 
         return {
             status: 200,
