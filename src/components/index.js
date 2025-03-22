@@ -13,6 +13,7 @@ import CancelClassButton from './CancelClassButton'
 import Loader from './Loader'
 import LecturesSkeleton from './LecturesSkeleton'
 import StatsSkeleton from './StatsSkeleton'
+import HomeSkeleton from './HomeSkeleton'
 
 export {
     Calender,
@@ -29,5 +30,6 @@ export {
     CancelClassButton,
     Loader,
     LecturesSkeleton,
-    StatsSkeleton
+    StatsSkeleton,
+    HomeSkeleton,
 }

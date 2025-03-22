@@ -7,10 +7,14 @@ import { MdAdd } from 'react-icons/md'
 import {
     AttendanceButton,
     CancelClassButton,
-    Loader,
+    HomeSkeleton,
     SummaryBar,
 } from '@/components'
-import { getAttendanceReport, getLectures } from '@/firebase/api'
+import {
+    addExtraLecture,
+    getAttendanceReport,
+    getLectures,
+} from '@/firebase/api'
 import { FaRegClock } from 'react-icons/fa6'
 
 const Home = () => {
@@ -28,7 +32,7 @@ const Home = () => {
     const [classes, setClasses] = useState([])
     const [summaryData, setSummaryData] = useState([])
     const [loading, setLoading] = useState(true)
-    const [courses] = useState([])
+    const [courses, setCourses] = useState([])
 
     useEffect(() => {
         const fetch = async () => {
@@ -59,6 +63,15 @@ const Home = () => {
 
                 setSummaryData(res.data)
 
+                res.data.map((course) => {
+                    return {
+                        courseCode: course.courseCode,
+                        courseName: course.courseName,
+                    }
+                })
+
+                setCourses(res.data)
+
                 setLoading(false)
             } catch (error) {
                 console.log(error)
@@ -74,13 +87,13 @@ const Home = () => {
         else setGreeting('Good Evening')
     }, [])
 
-    useEffect(() => {
-        window.addEventListener('popstate', () => {
-            push('/')
-            history.replaceState(null, '', '/')
-            history.pushState(null, '', '/')
-        })
-    }, [push])
+    // useEffect(() => {
+    //     window.addEventListener('popstate', () => {
+    //         push('/')
+    //         history.replaceState(null, '', '/')
+    //         history.pushState(null, '', '/')
+    //     })
+    // }, [push])
 
     const formatDate = (date) => {
         const options = {
@@ -111,13 +124,11 @@ const Home = () => {
             if (res.status !== 200) throw new Error('kuch toh gadbad hai')
 
             setClasses(res.data)
-            alert(res.message)
+            reset()
+            setShowForm(false)
         } catch (error) {
-            console.log(error)
+            console.log(error.message)
         }
-
-        reset()
-        setShowForm(false)
     }
 
     const OngoingClasses = () => {
@@ -257,7 +268,7 @@ const Home = () => {
     }
 
     return loading ? (
-        <Loader />
+        <HomeSkeleton />
     ) : (
         <div className="bg-primary p-[1rem] rounded-lg">
             <div className="max-w-7xl mx-auto space-y-6">

@@ -112,9 +112,7 @@ const Timetable = () => {
                 <DaySelector daysDate={daysDate} />
             </div>
             {loading ? (
-                <div className="relative h-full">
-                    <LecturesSkeleton />
-                </div>
+                <LecturesSkeleton />
             ) : (
                 <div className={`p-[1rem] flex-1 overflow-auto flex ${lecture.length > 0 ? 'flex-col' : 'items-center justify-center'}`}>
                     <div className="flex flex-col gap-[2rem] h-auto">

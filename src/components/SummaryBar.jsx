@@ -10,22 +10,22 @@ export default function SummaryBar({ summaryData }) {
                     >
                         <h3
                             className={`${
-                                summaryData.presentPercentage > 75
-                                    ? 'bg-green'
-                                    : 'bg-red'
-                            } p-[0.3rem] w-[5rem] font-charts text-center text-white font-bold rounded-lg flex-none`}
+                                data.presentPercentage > 75
+                                    ? 'bg-green-400'
+                                    : 'bg-red-400'
+                            } p-[0.3rem] w-[5rem] font-charts text-center text-black rounded-lg flex-none`}
                         >
-                            {summaryData.presentPercentage}%
+                            {data.presentPercentage || 0}%
                         </h3>
                         <div className="flex-grow w-full h-[2.5rem] bg-gray-100 rounded-lg relative overflow-hidden">
                             <div
                                 className={`absolute top-0 left-0 h-full transition-all duration-500 ease-out ${
-                                    summaryData.presentPercentage < 75
+                                    data.presentPercentage < 75
                                         ? 'bg-red-400'
                                         : 'bg-green-400'
                                 }`}
                                 style={{
-                                    width: `${summaryData.presentPercentage}%`,
+                                    width: `${data.presentPercentage}%`,
                                 }}
                             />
                         </div>
