@@ -47,15 +47,13 @@ const Home = () => {
                     new Date().toLocaleDateString('en-GB').split('/').join('_')
                 )
 
-                if (res.status !== 200)
-                    throw new Error(res.error || 'Something went wrong!')
+                if (res.status !== 200) throw new Error(res.message)
 
                 setClasses(res.data)
 
                 res = await getAttendanceReport(user.userID, user.semester)
 
-                if (res.status !== 200)
-                    throw new Error(res.error || 'Something went wrong!')
+                if (res.status !== 200) throw new Error(res.message)
 
                 setSummaryData(res.data)
 
@@ -117,7 +115,7 @@ const Home = () => {
                 '4',
                 new Date().toLocaleDateString('en-GB').split('/').join('_')
             )
-            if (res.status !== 200) throw new Error('kuch toh gadbad hai')
+            if (res.status !== 200) throw new Error(res.message)
 
             setClasses(res.data)
             console.log(res.data)
