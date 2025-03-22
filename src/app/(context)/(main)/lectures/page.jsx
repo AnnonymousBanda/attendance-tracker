@@ -2,7 +2,7 @@
 
 import { Lecture, LecturesSkeleton, Loader } from '@/components'
 import React, { useEffect, useState } from 'react'
-import { IoAdd } from 'react-icons/io5'
+import { IoAdd, IoClose } from 'react-icons/io5'
 import { getLectures } from '@/firebase/api'
 import { useUser } from '@/context'
 
@@ -56,10 +56,7 @@ const Timetable = () => {
                 const res = await getLectures(
                     user.userID,
                     user.semester,
-                    selectedDay.date
-                        .toLocaleDateString('en-GB')
-                        .split('/')
-                        .join('_')
+                    selectedDay.date.toLocaleDateString('en-GB').split('/').join('_')
                 )
 
                 if (res.status === 200) {
@@ -74,6 +71,9 @@ const Timetable = () => {
         }
         fetchLectures()
     }, [selectedDay])
+
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    const [newLecture, setNewLecture] = useState({ courseCode: '', from: '', to: '' })
 
     const DaySelector = ({ daysDate }) => {
         return (
@@ -93,38 +93,11 @@ const Timetable = () => {
                                 : index === daysDate.length - 1
                                 ? 'rounded-[1rem] rounded-bl-none'
                                 : 'rounded-[1rem]'
-                        } `}
-                    >
-                        <h3
-                            className={`font-bold capitalize ${
-                                selectedDay.date.getDay() === date.getDay()
-                                    ? 'text-white'
-                                    : 'text-black'
-                            }
-                ${
-                    index === 0
-                        ? 'rounded-[1rem] rounded-br-none'
-                        : index === daysDate.length - 1
-                        ? 'rounded-[1rem] rounded-bl-none'
-                        : 'rounded-[1rem]'
-                } `}
-                        >
+                        } `}>
+                        <h3 className={`font-bold capitalize ${selectedDay.date.getDay() === date.getDay() ? 'text-white' : 'text-black'}`}>
                             {day}
                         </h3>
-                        <h3
-                            className={`font-bold ${
-                                selectedDay.date.getDay() === date.getDay()
-                                    ? 'text-black'
-                                    : 'text-white'
-                            }
-                ${
-                    index === 0
-                        ? 'rounded-[1rem] rounded-br-none'
-                        : index === daysDate.length - 1
-                        ? 'rounded-[1rem] rounded-bl-none'
-                        : 'rounded-[1rem]'
-                } `}
-                        >
+                        <h3 className={`font-bold ${selectedDay.date.getDay() === date.getDay() ? 'text-black' : 'text-white'}`}>
                             {date.getDate()}
                         </h3>
                     </button>
@@ -134,7 +107,7 @@ const Timetable = () => {
     }
 
     return (
-        <div className="bg-primary flex flex-col h-full p-[1rem] relative rounded-lg">
+        <div className="bg-primary flex flex-col h-full p-[1rem] relative rounded-[1rem]">
             <div className="mb-[1rem]">
                 <DaySelector daysDate={daysDate} />
             </div>
@@ -143,13 +116,7 @@ const Timetable = () => {
                     <LecturesSkeleton />
                 </div>
             ) : (
-                <div
-                    className={`p-[1rem] flex-1 overflow-auto flex ${
-                        lecture.length > 0
-                            ? 'flex-col'
-                            : 'items-center justify-center'
-                    }`}
-                >
+                <div className={`p-[1rem] flex-1 overflow-auto flex ${lecture.length > 0 ? 'flex-col' : 'items-center justify-center'}`}>
                     <div className="flex flex-col gap-[2rem] h-auto">
                         {lecture.length > 0 ? (
                             lecture.map((lec, index) => (
@@ -157,42 +124,50 @@ const Timetable = () => {
                                     key={index}
                                     lecture={lec}
                                     setLecture={setLecture}
-                                    date={selectedDay.date
-                                        .toLocaleDateString('en-GB')
-                                        .split('/')
-                                        .join('_')}
+                                    date={selectedDay.date.toLocaleDateString('en-GB').split('/').join('_')}
                                 />
                             ))
                         ) : (
-                            <div className="p-[2rem] h-full rounded-xl border-gray-100 flex justify-center items-center flex-col gap-[1rem]">
-                                <div className="text-gray-400 mb-2">
-                                    <svg
-                                        className="w-[4rem] h-[4rem] mx-auto"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                                        />
+                            <div className="p-[2rem] h-full rounded-[1rem] border-gray-100 flex justify-center items-center flex-col gap-[1rem]">
+                                <div className="text-gray-400 mb-[0.5rem]">
+                                    <svg className="w-[4rem] h-[4rem] mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
                                 </div>
-                                <h3 className="text-gray-500 font-medium  mb-1">
-                                    No lectures scheduled
-                                </h3>
+                                <h3 className="text-gray-500 font-medium mb-[0.5rem]">No lectures scheduled</h3>
                             </div>
                         )}
                     </div>
                 </div>
             )}
-            <button className="absolute bottom-[1rem] right-[1rem] cursor-pointer bg-[#A0B8D9] rounded-full border-[0.1rem]">
-                <IoAdd size={35} />
+
+            <button className="absolute bottom-[1rem] right-[1rem] cursor-pointer bg-[#A0B8D9] rounded-full border-[0.1rem] p-[1rem] shadow-lg hover:bg-[#6F8DBD]"
+                onClick={() => setIsModalOpen(true)}>
+                <IoAdd size={3.5 + 'rem'} />
             </button>
+
+            {isModalOpen && (
+                <div className="fixed inset-0 flex items-center justify-center  bg-opacity-50 backdrop-blur-md z-100 uppercase">
+                    <div className="bg-white p-[1.5rem] rounded-[1rem] shadow-2xl w-[25rem] ">
+                        
+                        <h2 className="text-[1.5rem] font-bold text-[#6F8DBD] mb-[1rem] text-center">Add New Lecture</h2>
+
+                        <input type="text" placeholder="COURSE CODE" className="w-full p-[1rem] mb-[1rem] border rounded-[0.5rem]" 
+                            value={newLecture.courseCode} onChange={(e) => setNewLecture({ ...newLecture, courseCode: e.target.value })} />
+                        <input type="time" className="w-full p-[1rem] mb-[1rem] border rounded-[0.5rem]" 
+                            value={newLecture.from} onChange={(e) => setNewLecture({ ...newLecture, from: e.target.value })} />
+                        <input type="time" className="w-full p-[1rem] mb-[1.5rem] border rounded-[0.5rem]" 
+                            value={newLecture.to} onChange={(e) => setNewLecture({ ...newLecture, to: e.target.value })} />
+
+                        <div className="flex justify-center gap-[2rem]">
+                            <button className="bg-[#FF6384] px-[1rem] py-[0.8rem] rounded-[0.5rem] hover:bg-gray-400 hover:text-white" onClick={() => setIsModalOpen(false)}>CANCEL</button>
+                            <button className="bg-[#4BC0C0] text-white px-[1rem] py-[0.8rem] rounded-[0.5rem] hover:bg-blue-600 hover:text-black" onClick={() => setIsModalOpen(false)}>ADD</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
 
-export default Timetable
+export default Timetable  
