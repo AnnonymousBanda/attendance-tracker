@@ -78,14 +78,10 @@ const CancelDialog = ({ lecture, date, setLecture, setDialog }) => {
                         Are you sure you want to cancel this class?
                     </h2>
                 </div>
-                <div
-                    className={`flex w-full justify-center gap-[3rem] ${
-                        loading ? 'opacity-50' : ''
-                    }`}
-                >
+                <div className="flex w-full justify-center gap-[3rem]">
                     <button
                         onClick={handleClose}
-                        className="bg-red p-[1rem] rounded-lg"
+                        className="bg-red p-[1rem] rounded-lg cursor-pointer"
                     >
                         <p className="text-gray-800 uppercase font-bold">
                             Cancel
@@ -93,9 +89,13 @@ const CancelDialog = ({ lecture, date, setLecture, setDialog }) => {
                     </button>
                     <button
                         onClick={handleSubmit}
-                        className="bg-green p-[1rem] rounded-lg"
+                        className="bg-green p-[1rem] rounded-lg cursor-pointer"
                     >
-                        <p className="text-gray-800 uppercase font-bold">
+                        <p
+                            className={`text-gray-800 uppercase font-bold ${
+                                loading ? 'opacity-50' : ''
+                            }`}
+                        >
                             Confirm
                         </p>
                     </button>
