@@ -1,4 +1,5 @@
 'use client'
+import { useUser } from '@/context'
 import { getLectures, modifyAttendance } from '@/firebase/api'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
@@ -36,13 +37,14 @@ const CancelDialog = ({ lecture, date, setLecture, setDialog }) => {
     const handleClose = () => {
         setDialog(false)
     }
+    const { user } = useUser()
 
     const handleSubmit = async () => {
         setLoading(true)
         try {
             const res = await modifyAttendance(
-                '1',
-                '4',
+                user.userID,
+                user.semester,
                 lecture.to,
                 lecture.from,
                 date,

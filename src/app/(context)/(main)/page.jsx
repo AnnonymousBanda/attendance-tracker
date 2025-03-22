@@ -71,7 +71,6 @@ const Home = () => {
                 setLoading(false)
             } catch (error) {
                 toast.error(error.message, { className: 'toast-error' })
-                setLoading(false)
             }
         }
         fetch()

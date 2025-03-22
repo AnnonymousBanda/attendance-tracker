@@ -62,7 +62,10 @@ const addExtraLecture = catchAsync(async (userID, lecture, semester, date) => {
     )
         throw new AppError('Please, provide all the required fields', 400)
 
-    if (to <= from) throw new AppError('Invalid time', 400)
+    const [fromH, fromM] = from.split(':').map(Number)
+    const [toH, toM] = to.split(':').map(Number)
+    if (toH < fromH || (toH === fromH && toM <= fromM))
+        throw new AppError('Invalid time', 400)
 
     const userRef = doc(USER, userID)
     const user = await getDoc(userRef)
@@ -100,8 +103,6 @@ const modifyAttendance = catchAsync(
         const user = await getDoc(userRef)
 
         if (!user.exists()) throw new AppError('User not found', 404)
-
-        console.log(user.data())
 
         // Get lectures for the specified date
         let lectures = user.data().lectures?.[semester]?.[date] || []

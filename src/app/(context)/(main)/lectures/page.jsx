@@ -162,13 +162,15 @@ const Timetable = () => {
                     .join('_')
             )
 
-            if (res.status === 200) {
-                setLectures(res.data)
-                setIsModalOpen(false)
-                reset()
-            }
+            if (res.status !== 200) throw new Error(res.message)
+
+            setLectures(res.data)
+            setIsModalOpen(false)
+            reset()
         } catch (error) {
-            console.error('Add lecture error:', error)
+            toast.error(error.message, {
+                className: 'toast-error',
+            })
         }
     }
 

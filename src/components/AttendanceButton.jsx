@@ -5,6 +5,7 @@ import { MdOutlineSick, MdSick } from 'react-icons/md'
 import { PiHandPalmDuotone } from 'react-icons/pi'
 import { RxCrossCircled } from 'react-icons/rx'
 import { toast } from 'react-hot-toast'
+import { useUser } from '@/context'
 
 function AttendanceButton({ lecture, date, setLectures }) {
     const [status, setStatus] = useState(lecture.status)
@@ -12,12 +13,13 @@ function AttendanceButton({ lecture, date, setLectures }) {
     useEffect(() => {
         setStatus(lecture.status)
     }, [lecture])
+    const { user } = useUser()
 
     const handleClick = async (status) => {
         try {
             const res = await modifyAttendance(
-                '1',
-                '4',
+                user.userID,
+                user.semester,
                 lecture.to,
                 lecture.from,
                 date,
