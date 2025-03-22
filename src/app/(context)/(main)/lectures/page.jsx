@@ -10,6 +10,7 @@ import {
 } from '@/firebase/api'
 import { useUser } from '@/context'
 import { useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
 
 const Timetable = () => {
     const [selectedDay, setSelectedtDay] = useState(() => {
@@ -80,7 +81,9 @@ const Timetable = () => {
                 }
                 setLoading(false)
             } catch (error) {
-                console.error(error)
+                toast.error('Something went wrong! Please try again later', {
+                    className: 'toast-error',
+                })
                 setLoading(false)
             }
         }

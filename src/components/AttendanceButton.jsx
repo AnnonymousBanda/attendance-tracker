@@ -47,7 +47,7 @@ function AttendanceButton({ lecture, date, setLecture }) {
                 className: toastStatusMap[status],
             })
         } catch (error) {
-            toast.error('Something went wrong!', { className: 'toast-error' })
+            toast.error(error.message, { className: 'toast-error' })
         }
     }
 

@@ -16,6 +16,7 @@ import {
     getLectures,
 } from '@/firebase/api'
 import { FaRegClock } from 'react-icons/fa6'
+import toast from 'react-hot-toast'
 
 const Home = () => {
     const {
@@ -74,7 +75,8 @@ const Home = () => {
 
                 setLoading(false)
             } catch (error) {
-                console.log(error)
+                toast.error(error.message, { className: 'toast-error' })
+                setLoading(false)
             }
         }
         fetch()
@@ -127,8 +129,11 @@ const Home = () => {
             console.log(res.data)
             reset()
             setShowForm(false)
+            toast.success('Class added successfully', {
+                className: 'toast-success',
+            })
         } catch (error) {
-            console.log(error.message)
+            toast.error(error.message, { className: 'toast-error' })
         }
     }
 

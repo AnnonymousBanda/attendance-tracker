@@ -19,6 +19,7 @@ import annotationPlugin from 'chartjs-plugin-annotation'
 import { Loader, PieChart, PredictionsBar, StatsSkeleton } from '@/components'
 import { getAttendanceReport } from '@/firebase/api'
 import { MdOutlineQueryStats } from 'react-icons/md'
+import toast from 'react-hot-toast'
 
 ChartJS.register(
     CategoryScale,
@@ -51,7 +52,9 @@ const Stats = () => {
                 setCourseData(res.data)
                 setLoading(false)
             } catch (error) {
-                console.error(error)
+                toast.error(error.message, {
+                    className: 'toast-error',
+                })
             }
         }
 
