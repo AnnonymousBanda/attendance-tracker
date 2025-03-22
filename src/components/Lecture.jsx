@@ -1,7 +1,7 @@
 import React from 'react'
 import { AttendanceButton, CancelClassButton } from '.'
 
-const Lecture = ({ lecture, date, setLecture }) => {
+const Lecture = ({ lecture, date, setLectures }) => {
     return (
         <div className="flex flex-row gap-[1rem]">
             <div className="flex flex-col justify-center items-center gap-[0.5rem]">
@@ -16,7 +16,7 @@ const Lecture = ({ lecture, date, setLecture }) => {
                 <CancelClassButton
                     lecture={lecture}
                     date={date}
-                    setLecture={setLecture}
+                    setLectures={setLectures}
                 />
                 <h2>
                     {lecture.courseCode}: {lecture.courseName}
@@ -24,7 +24,7 @@ const Lecture = ({ lecture, date, setLecture }) => {
                 <AttendanceButton
                     lecture={lecture}
                     date={date}
-                    setLecture={setLecture}
+                    setLectures={setLectures}
                 />
             </div>
         </div>

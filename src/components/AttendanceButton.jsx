@@ -6,7 +6,7 @@ import { PiHandPalmDuotone } from 'react-icons/pi'
 import { RxCrossCircled } from 'react-icons/rx'
 import { toast } from 'react-hot-toast'
 
-function AttendanceButton({ lecture, date, setLecture }) {
+function AttendanceButton({ lecture, date, setLectures }) {
     const [status, setStatus] = useState(lecture.status)
 
     useEffect(() => {
@@ -30,7 +30,7 @@ function AttendanceButton({ lecture, date, setLecture }) {
             if (res.status !== 200) throw new Error(res.message)
 
             setStatus(status)
-            setLecture(res.data)
+            setLectures(res.data)
             const messageMap = {
                 present: 'Class marked present',
                 absent: 'Class marked absent',
