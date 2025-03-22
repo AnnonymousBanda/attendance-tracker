@@ -41,7 +41,7 @@ function AttendanceButton({ lecture, date, setLecture }) {
         <div className="flex gap-[1.5rem]">
             <button
                 onClick={() => handleClick('present')}
-                className={`bg-green text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${
+                className={`bg-green hover:bg-green-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${
                     status === 'present'
                         ? 'hover:cursor-default opacity-40'
                         : ''
@@ -58,7 +58,7 @@ function AttendanceButton({ lecture, date, setLecture }) {
             </button>
             <button
                 onClick={() => handleClick('absent')}
-                className={`bg-red text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${
+                className={`bg-red hover:bg-red-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${
                     status === 'absent' ? 'hover:cursor-default opacity-40' : ''
                 }`}
             >
@@ -74,7 +74,7 @@ function AttendanceButton({ lecture, date, setLecture }) {
             </button>
             <button
                 onClick={() => handleClick('medical')}
-                className={`bg-yellow text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${
+                className={`bg-yellow hover:bg-yellow-400 text-black font-medium p-[0.5rem] rounded-lg transition-colors duration-400 cursor-pointer ${
                     status === 'medical'
                         ? 'hover:cursor-default opacity-40'
                         : ''
