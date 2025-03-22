@@ -76,7 +76,7 @@ const CancelDialog = ({ lecture, date, setLecture, setDialog }) => {
         >
             <div
                 onClick={(e) => e.stopPropagation()}
-                className="flex flex-col items-center justify-center rounded-lg p-[2rem] gap-[2rem] bg-primary shadow-lg max-w-[35rem]"
+                className="flex flex-col items-center justify-center rounded-lg p-[2rem] gap-[2rem] bg-primary shadow-lg w-[85%] lg:max-w-[35rem]"
             >
                 <div className="flex flex-col items-center gap-[1rem]">
                     <h2 className="text-center text-gray-800 font-semibold">
