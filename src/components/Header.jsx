@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { usePathname } from 'next/navigation'
-import { user } from '../assets/index'
+import { profilePic } from '../assets/index'
 import { ProfileDialog } from './index'
 import Image from 'next/image'
 
@@ -24,7 +24,7 @@ const Header = () => {
 
                         <Image
                             onClick={() => setisDialogOpen(true)}
-                            src={user}
+                            src={profilePic}
                             alt="User Avatar"
                             className="w-[3rem] h-[3rem] rounded-full cursor-pointer"
                         />

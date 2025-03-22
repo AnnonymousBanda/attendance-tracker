@@ -14,6 +14,7 @@ const UserProvider = ({ children }) => {
                 userID: '1',
                 email: 'ankit_2301ce03@iitp.ac.in',
                 roll: '2301CE03',
+                batch: '2023',
                 semester: '4',
                 branch: 'Computer Science',
             }

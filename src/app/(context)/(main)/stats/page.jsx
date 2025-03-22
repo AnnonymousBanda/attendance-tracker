@@ -20,6 +20,7 @@ import { Loader, PieChart, PredictionsBar, StatsSkeleton } from '@/components'
 import { getAttendanceReport } from '@/firebase/api'
 import { MdOutlineQueryStats } from 'react-icons/md'
 import toast from 'react-hot-toast'
+import { useUser } from '@/context'
 
 ChartJS.register(
     CategoryScale,
@@ -44,11 +45,18 @@ const NoPie = () => {
 const Stats = () => {
     const [courseData, setCourseData] = useState([])
     const [loading, setLoading] = useState(true)
+    const { user } = useUser()
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await getAttendanceReport('1', '4')
+                const res = await getAttendanceReport(
+                    user.userID,
+                    user.semester
+                )
+
+                if (res.status !== 200) throw new Error(res.message)
+
                 setCourseData(res.data)
                 setLoading(false)
             } catch (error) {
@@ -211,9 +219,9 @@ const Stats = () => {
                                                                 90
                                                                     ? 'bg-[#4BC0C0]'
                                                                     : data.presentPercentage >=
-                                                                      75
-                                                                    ? 'bg-yellow-300'
-                                                                    : 'bg-[#FF6384]'
+                                                                        75
+                                                                      ? 'bg-yellow-300'
+                                                                      : 'bg-[#FF6384]'
                                                             }`}
                                                         >
                                                             {Math.floor(

@@ -17,6 +17,7 @@ import {
 } from '@/firebase/api'
 import { FaRegClock } from 'react-icons/fa6'
 import toast from 'react-hot-toast'
+import { useUser } from '@/context'
 
 const Home = () => {
     const {
@@ -35,17 +36,11 @@ const Home = () => {
     const [loading, setLoading] = useState(true)
     const [courses, setCourses] = useState([])
 
+    const { user } = useUser()
+
     useEffect(() => {
         const fetch = async () => {
             try {
-                const user = {
-                    name: 'Ankit Bhagat',
-                    userID: '1',
-                    email: 'ankit_2301ce03@iitp.ac.in',
-                    roll: '2301CE03',
-                    semester: '4',
-                    branch: 'Computer Science',
-                }
                 let res = await getLectures(
                     user.userID,
                     user.semester,
@@ -338,98 +333,95 @@ const Home = () => {
                     {showForm && (
                         <form
                             onSubmit={handleSubmit(onSubmit)}
-                            className="bg-white p-[1.25rem] rounded-xl shadow-md mt-[1rem] space-y-3"
+                            className={`bg-white p-[1.25rem] rounded-lg flex flex-col gap-[2rem] items-center`}
                         >
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
+                            <div>
+                                <label htmlFor="course" className="block mb-1">
+                                    <h3>Select Course:</h3>
+                                </label>
+                                <select
+                                    id="course"
+                                    className="border rounded-lg p-2 w-full text-[1.4rem] text-[#8c8c8c]"
+                                    {...register('course', {
+                                        required:
+                                            'Course selection is required',
+                                    })}
+                                >
+                                    <option
+                                        value=""
+                                        className="text-[1.4rem] cursor-pointer"
+                                    >
+                                        Select a course
+                                    </option>
+                                    {courses.map((course) => (
+                                        <option
+                                            key={course.courseCode}
+                                            value={`${course.courseCode} - ${course.courseName}`}
+                                            className="text-[1.4rem] cursor-pointer"
+                                        >
+                                            {course.courseCode} -{' '}
+                                            {course.courseName}
+                                        </option>
+                                    ))}
+                                </select>
+                                {errors.course && (
+                                    <p className="text-red-500">
+                                        {errors.course.message}
+                                    </p>
+                                )}
+                            </div>
+
+                            <div className="flex gap-[2rem]">
+                                <div className="flex gap-[0.5rem] items-center">
                                     <label
-                                        htmlFor="course"
+                                        htmlFor="from"
                                         className="block mb-1"
                                     >
-                                        <p>Select Course:</p>
+                                        <h3>From:</h3>
                                     </label>
-                                    <select
-                                        id="course"
-                                        className="border rounded-lg p-2 w-full text-[1rem] text-[#8c8c8c]"
-                                        {...register('course', {
-                                            required:
-                                                'Course selection is required',
+                                    <input
+                                        id="from"
+                                        type="time"
+                                        {...register('from', {
+                                            required: 'Start time is required',
                                         })}
-                                    >
-                                        <option value="">
-                                            Select a course
-                                        </option>
-                                        {courses.map((course) => (
-                                            <option
-                                                key={course.courseCode}
-                                                value={`${course.courseCode} - ${course.courseName}`}
-                                            >
-                                                {course.courseCode} -{' '}
-                                                {course.courseName}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    {errors.course && (
+                                        className="shadow-blue-100 p-[0.5rem] rounded-lg w-full text-[#8c8c8c] text-[1.4rem] border"
+                                    />
+                                    {errors.from && (
                                         <p className="text-red-500">
-                                            {errors.course.message}
+                                            {errors.from.message}
                                         </p>
                                     )}
                                 </div>
 
-                                <div>
-                                    <div className="flex gap-[0.5rem] items-center">
-                                        <label
-                                            htmlFor="from"
-                                            className="block mb-1"
-                                        >
-                                            <p className="w-[4rem]">From:</p>
-                                        </label>
-                                        <input
-                                            id="from"
-                                            type="time"
-                                            {...register('from', {
-                                                required:
-                                                    'Start time is required',
-                                            })}
-                                            className="shadow-blue-100 p-2 rounded-lg w-full text-[#8c8c8c] text-[1rem]"
-                                        />
-                                        {errors.from && (
-                                            <p className="text-red-500">
-                                                {errors.from.message}
-                                            </p>
-                                        )}
-                                    </div>
-
-                                    <div className="flex gap-[0.5rem] items-center">
-                                        <label
-                                            htmlFor="to"
-                                            className="block mb-1 mt-2"
-                                        >
-                                            <p className="w-[4rem]">To:</p>
-                                        </label>
-                                        <input
-                                            id="to"
-                                            type="time"
-                                            {...register('to', {
-                                                required:
-                                                    'End time is required',
-                                            })}
-                                            className="shadow-blue-100 p-2 rounded-lg w-full text-[#8c8c8c] text-[1rem]"
-                                        />
-                                        {errors.to && (
-                                            <p className="text-red-500">
-                                                {errors.to.message}
-                                            </p>
-                                        )}
-                                    </div>
+                                <div className="flex gap-[0.5rem] items-center">
+                                    <label
+                                        htmlFor="to"
+                                        className="block mb-1 mt-2"
+                                    >
+                                        <h3>To:</h3>
+                                    </label>
+                                    <input
+                                        id="to"
+                                        type="time"
+                                        {...register('to', {
+                                            required: 'End time is required',
+                                        })}
+                                        className="shadow-blue-100 p-[0.5rem] rounded-lg w-full text-[#8c8c8c] text-[1.4rem] border"
+                                    />
+                                    {errors.to && (
+                                        <p className="text-red-500">
+                                            {errors.to.message}
+                                        </p>
+                                    )}
                                 </div>
                             </div>
 
                             <button
                                 type="submit"
-                                className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 hover:cursor-pointer transition-colors"
+                                className="w-fit bg-green px-[1rem] py-[0.5rem] rounded-lg hover:bg-green-600 hover:cursor-pointer transition-colors duration-150"
                             >
-                                <p>Add Class</p>
+                                <h3>Add Class</h3>
                             </button>
                         </form>
                     )}
