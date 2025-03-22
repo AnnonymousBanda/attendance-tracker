@@ -58,6 +58,7 @@ const Home = () => {
                     throw new Error(res.error || 'Something went wrong!')
 
                 setSummaryData(res.data)
+                console.log(res.data)
 
                 setLoading(false)
             } catch (error) {
