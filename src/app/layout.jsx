@@ -144,6 +144,16 @@ export default function RootLayout({ children }) {
                     position="top-center"
                     reverseOrder={false}
                     toastOptions={{
+                        success: {
+                            iconTheme: {
+                                secondary: '#fff',
+                            },
+                        },
+                        error: {
+                            iconTheme: {
+                                secondary: '#fff',
+                            },
+                        },
                         style: {
                             padding: '1rem',
                             borderRadius: '0.8rem',

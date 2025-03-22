@@ -131,3 +131,64 @@
     background: linear-gradient(to right, transparent, #d1d5db, transparent);
     animation: skeleton-loading 1s infinite;
 }
+
+.toast-present {
+    background: rgba(92, 218, 217, 0.5) !important;
+    color: var(--color-secondary) !important;
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 14px 20px;
+    font-weight: 500;
+}
+
+.toast-absent {
+    background: rgba(239, 68, 68, 0.6) !important; 
+    color: var(--color-secondary) !important;
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 14px 20px;
+    font-weight: 500;
+}
+
+.toast-medical {
+    background: rgba(234, 179, 8, 0.6) !important; 
+    color: var(--color-secondary) !important;
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 14px 20px;
+    font-weight: 500;
+}
+
+.toast-cancelled {
+    background: rgba(var(--color-tertiary-rgb), 0.5) !important;
+    color: var(--color-secondary) !important;
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 14px 20px;
+    font-weight: 500;
+}
+
+.toast-error {
+    background: rgba(239, 68, 68, 0.5) !important;
+    color: var(--color-secondary) !important;
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 14px 20px;
+    font-weight: 500;
+}
+
