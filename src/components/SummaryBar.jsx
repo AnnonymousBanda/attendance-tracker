@@ -15,7 +15,7 @@ export default function SummaryBar({ summaryData }) {
                                     : 'bg-red-400'
                             } p-[0.3rem] w-[5rem] font-charts text-center text-black rounded-lg flex-none`}
                         >
-                            {data.presentPercentage}%
+                            {data.presentPercentage || 0}%
                         </h3>
                         <div className="flex-grow w-full h-[2.5rem] bg-gray-100 rounded-lg relative overflow-hidden">
                             <div
