@@ -124,6 +124,7 @@ const Home = () => {
             if (res.status !== 200) throw new Error('kuch toh gadbad hai')
 
             setClasses(res.data)
+            console.log(res.data)
             reset()
             setShowForm(false)
         } catch (error) {
@@ -132,7 +133,7 @@ const Home = () => {
     }
 
     const OngoingClasses = () => {
-        const ongoingClasses = classes.filter((cls) => {
+        const ongoingClasses = classes?.filter((cls) => {
             const [from_hours, from_minutes] = cls.from.split(':').map(Number)
             const from = new Date()
             from.setHours(from_hours, from_minutes, 0, 0)
@@ -149,9 +150,9 @@ const Home = () => {
             <div className="space-y-3">
                 <h2 className="text-gray-700">Ongoing Class</h2>
                 {ongoingClasses.length > 0 ? (
-                    ongoingClasses.map((cls) => (
+                    ongoingClasses.map((cls, i) => (
                         <div
-                            key={cls.courseCode}
+                            key={cls.courseCode + cls.from + i}
                             className="bg-white px-[1rem] pt-[3.5rem] pb-[3rem] rounded-xl shadow-sm flex justify-between items-center border border-gray-100 relative"
                         >
                             <div className="space-y-1">
@@ -174,7 +175,14 @@ const Home = () => {
                                     .join('_')}
                                 setLecture={setClasses}
                             />
-                            <CancelClassButton lecture={cls} />
+                            <CancelClassButton
+                                lecture={cls}
+                                date={new Date()
+                                    .toLocaleDateString('en-GB')
+                                    .split('/')
+                                    .join('_')}
+                                setLecture={setClasses}
+                            />
                         </div>
                     ))
                 ) : (
@@ -185,7 +193,7 @@ const Home = () => {
     }
 
     const PastClasses = () => {
-        const pastClasses = classes.filter((cls) => {
+        const pastClasses = classes?.filter((cls) => {
             const [to_hours, to_minutes] = cls.to.split(':').map(Number)
             const to = new Date()
             to.setHours(to_hours, to_minutes, 0, 0)
@@ -199,9 +207,9 @@ const Home = () => {
                     <NoClasses message="No past classes to display" />
                 ) : (
                     <>
-                        {pastClasses.map((cls) => (
+                        {pastClasses.map((cls, i) => (
                             <div
-                                key={cls.courseCode + cls.from}
+                                key={cls.courseCode + cls.from + i}
                                 className="bg-white px-[1rem] pt-[3.5rem] pb-[3rem] rounded-xl shadow-sm flex justify-between items-center border border-gray-100 relative"
                             >
                                 <div>
@@ -221,7 +229,14 @@ const Home = () => {
                                         .join('_')}
                                     setLecture={setClasses}
                                 />
-                                <CancelClassButton lecture={cls} />
+                                <CancelClassButton
+                                    lecture={cls}
+                                    date={new Date()
+                                        .toLocaleDateString('en-GB')
+                                        .split('/')
+                                        .join('_')}
+                                    setLecture={setClasses}
+                                />
                             </div>
                         ))}
                     </>
@@ -245,9 +260,9 @@ const Home = () => {
                     <NoClasses message="No upcoming classes" />
                 ) : (
                     <>
-                        {upcomingClasses.map((cls) => (
+                        {upcomingClasses.map((cls, i) => (
                             <div
-                                key={cls.courseCode + cls.from}
+                                key={cls.courseCode + cls.from + i}
                                 className="bg-white px-[1rem] py-[3rem] rounded-xl shadow-sm flex justify-between items-center border border-gray-100 relative"
                             >
                                 <div className="space-y-1">
@@ -261,7 +276,14 @@ const Home = () => {
                                 <p className="text-gray-700 font-medium bg-gray-200 px-[1rem] py-[0.5rem] w-fit text-center rounded-lg">
                                     {cls.from} - {cls.to}
                                 </p>
-                                <CancelClassButton lecture={cls} />
+                                <CancelClassButton
+                                    lecture={cls}
+                                    date={new Date()
+                                        .toLocaleDateString('en-GB')
+                                        .split('/')
+                                        .join('_')}
+                                    setLecture={setClasses}
+                                />
                             </div>
                         ))}
                     </>
