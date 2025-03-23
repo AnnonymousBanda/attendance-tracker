@@ -29,6 +29,29 @@ const updateUser = catchAsync(async (userID, user) => {
     return { status: 200, message: 'User updated successfully' }
 })
 
+const getUser = catchAsync(async (userID) => {
+    if (!userID)
+        throw new AppError('Please, provide all the required fields', 400)
+
+    const userRef = doc(USER, userID)
+    const user = await getDoc(userRef)
+
+    if (!user.exists()) throw new AppError('User not found', 404)
+
+    return {
+        status: 200,
+        message: 'User fetched successfully',
+        data: {
+            name: user.data().name,
+            email: user.data().email,
+            roll: user.data().roll,
+            batch: user.data().batch,
+            semester: user.data().semester,
+            branch: user.data().branch,
+        },
+    }
+})
+
 const getLectures = catchAsync(async (userID, semester, date) => {
     const userRef = doc(USER, userID)
     const user = await getDoc(userRef)
@@ -203,4 +226,5 @@ export {
     addExtraLecture,
     modifyAttendance,
     getAttendanceReport,
+    getUser,
 }

@@ -4,9 +4,8 @@ import { getLectures, modifyAttendance } from '@/firebase/api'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { MdClose } from 'react-icons/md'
-import { TiCancel } from 'react-icons/ti'
 
-const CancelButton = ({ lecture, date, setLecture }) => {
+const CancelButton = ({ lecture, date, setLectures }) => {
     const [isDialog, setDialog] = useState(false)
     const handleClick = () => {
         setDialog(!isDialog)
@@ -24,7 +23,7 @@ const CancelButton = ({ lecture, date, setLecture }) => {
                 <CancelDialog
                     lecture={lecture}
                     date={date}
-                    setLecture={setLecture}
+                    setLectures={setLectures}
                     setDialog={setDialog}
                 />
             )}
@@ -32,7 +31,7 @@ const CancelButton = ({ lecture, date, setLecture }) => {
     )
 }
 
-const CancelDialog = ({ lecture, date, setLecture, setDialog }) => {
+const CancelDialog = ({ lecture, date, setLectures, setDialog }) => {
     const [loading, setLoading] = useState(false)
     const handleClose = () => {
         setDialog(false)
@@ -57,7 +56,7 @@ const CancelDialog = ({ lecture, date, setLecture, setDialog }) => {
             if (res.status !== 200) throw new Error(res.message)
 
             console.log(res)
-            setLecture([...res.data])
+            setLectures([...res.data])
             setDialog(false)
             setLoading(false)
             toast.success('Class cancelled successfully', {

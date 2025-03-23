@@ -296,7 +296,7 @@ const Home = () => {
                                         .toLocaleDateString('en-GB')
                                         .split('/')
                                         .join('_')}
-                                    setLecture={setClasses}
+                                    setLectures={setClasses}
                                 />
                             </div>
                         ))}

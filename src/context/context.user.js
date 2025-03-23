@@ -1,4 +1,5 @@
 import { Loader } from '@/components'
+import { getUser } from '@/firebase/api/firebase.firestore'
 import { createContext, useContext, useState, useEffect } from 'react'
 
 const UserContext = createContext()
@@ -9,17 +10,16 @@ const UserProvider = ({ children }) => {
 
     useEffect(() => {
         const fetchUser = async () => {
-            const userData = {
-                name: 'Ankit Bhagat',
-                userID: '1',
-                email: 'ankit_2301ce03@iitp.ac.in',
-                roll: '2301CE03',
-                batch: '2023',
-                semester: '4',
-                branch: 'Computer Science',
+            try {
+                const res = await getUser('1')
+
+                if (res.status !== 200) throw new Error(res.message)
+
+                setUser({ ...res.data, userID: '1' })
+                setLoading(false)
+            } catch (error) {
+                toast.error(error.message, { className: 'toast-error' })
             }
-            setUser(userData)
-            setLoading(false)
         }
 
         fetchUser()
