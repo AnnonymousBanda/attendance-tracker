@@ -75,12 +75,6 @@ export default function ProfileDialog({ setisDialogOpen }) {
                             </div>
                         </div>
                         <div className="flex flex-col w-full bg-[#d7e4ee] justify-center items-center mt-[4rem] p-[1rem] gap-[1rem] rounded-lg">
-                            <div className="w-full flex justify-center items-center bg-primary p-[1rem] gap-[1rem] rounded-lg">
-                                <MdOutlineDeveloperMode className="w-[3rem] h-[4rem]" />
-                                <div className="flex flex-col w-full justify-center">
-                                    <p className="font-bold">Developers</p>
-                                </div>
-                            </div>
                             <Link
                                 href="https://forms.gle/DjoRKfTt6NNjepzU9"
                                 target="#"
