@@ -82,13 +82,13 @@ export default function ProfileDialog({ setisDialogOpen }) {
                             >
                                 <MdBugReport className="w-[3rem] h-[4rem]" />
                                 <div className="flex flex-col w-full justify-center">
-                                    <p className="font-bold">Report a Bug</p>
+                                    <h3 className="font-bold">Report a Bug</h3>
                                 </div>
                             </Link>
-                            <div className=" w-full flex justify-center items-center bg-[#fca5a5] p-[1rem] gap-[1rem] rounded-lg">
+                            <div className=" w-full flex justify-center items-center bg-red-300 p-[1rem] gap-[1rem] rounded-lg">
                                 <MdLogout className="w-[3rem] h-[4rem]" />
                                 <div className="flex flex-col w-full justify-center">
-                                    <p className="font-bold">Logout</p>
+                                    <h3 className="font-bold uppercase">Logout</h3>
                                 </div>
                             </div>
                         </div>
