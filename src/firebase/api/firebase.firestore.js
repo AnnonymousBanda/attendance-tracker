@@ -52,6 +52,24 @@ const getUser = catchAsync(async (userID) => {
     }
 })
 
+const modifySemester = catchAsync(async (userID, semester) => {
+    if (!userID || !semester)
+        throw new AppError('Please, provide all the required fields', 400)
+
+    semester = Number(semester)
+    if (semester < 1 || semester > 10)
+        throw new AppError('Invalid semester', 400)
+
+    const userRef = doc(USER, userID)
+    const user = await getDoc(userRef)
+
+    if (!user.exists()) throw new AppError('User not found', 404)
+
+    await updateDoc(userRef, { semester })
+
+    return { status: 200, message: 'Semester updated successfully' }
+})
+
 const getLectures = catchAsync(async (userID, semester, date) => {
     const userRef = doc(USER, userID)
     const user = await getDoc(userRef)
@@ -222,6 +240,7 @@ const getAttendanceReport = catchAsync(async (userID, semester) => {
 export {
     addNewUser,
     updateUser,
+    modifySemester,
     getLectures,
     addExtraLecture,
     modifyAttendance,
