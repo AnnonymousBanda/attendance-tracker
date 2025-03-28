@@ -1,4 +1,3 @@
-import Head from 'next/head'
 import './globals.css'
 
 export const metadata = {
@@ -6,6 +5,7 @@ export const metadata = {
         default: 'AttTrack',
         template: '%s - AttTrack',
     },
+    charset: 'utf-8',
     description:
         'Attendance Tracker is a PWA that helps users monitor their attendance overall and course-wise, ensuring they never fall short of 75%.',
     applicationName: 'AttTrack',
@@ -134,9 +134,6 @@ export const themeColor = '#f3f8fa'
 export default function RootLayout({ children }) {
     return (
         <html lang="en">
-            <Head>
-                <meta charSet="UTF-8" />
-            </Head>
             <body>{children}</body>
         </html>
     )
