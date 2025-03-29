@@ -77,11 +77,13 @@ const getLectures = catchAsync(async (userID, semester, date) => {
     if (!user.exists()) throw new AppError('User not found', 404)
 
     let lectures = user.data().lectures || {} // get all lectures of the day
-    lectures = lectures[semester][date].filter(
-        (lecture) => lecture.status !== 'cancelled'
-    )
+    lectures = lectures[semester]
+        ? lectures[semester][date]?.filter(
+              (lecture) => lecture.status !== 'cancelled'
+          )
+        : []
 
-    lectures.sort((a, b) => a.from.localeCompare(b.from))
+    lectures?.sort((a, b) => a.from.localeCompare(b.from))
 
     return {
         status: 200,
@@ -170,7 +172,7 @@ const modifyAttendance = catchAsync(
 
         let courses = user.data().courses?.[semester] || []
 
-        courses = courses.map((course) => {
+        courses = courses?.map((course) => {
             if (course.courseCode === courseCode) {
                 if (preStatus && course[preStatus] !== undefined)
                     course[preStatus]--
@@ -185,14 +187,14 @@ const modifyAttendance = catchAsync(
             [`courses.${semester}`]: courses,
         })
 
-        lectures = lectures.filter((lecture) => lecture.status !== 'cancelled')
+        lectures = lectures?.filter((lecture) => lecture.status !== 'cancelled')
 
-        lectures.sort((a, b) => a.from.localeCompare(b.from))
+        lectures?.sort((a, b) => a.from.localeCompare(b.from))
 
         return {
             status: 200,
             message: 'Attendance marked successfully',
-            data: lectures,
+            data: lectures || [],
         }
     }
 )
@@ -208,7 +210,7 @@ const getAttendanceReport = catchAsync(async (userID, semester) => {
 
     const report = user
         .data()
-        .courses[semester].map((course) => ({
+        .courses[semester]?.map((course) => ({
             ...course,
             presentPercentage:
                 Number(
@@ -232,9 +234,9 @@ const getAttendanceReport = catchAsync(async (userID, semester) => {
                 course.total * 0.75 - (course.present + course.medical)
             ),
         }))
-        .sort((a, b) => a.courseCode.localeCompare(b.courseCode))
+        ?.sort((a, b) => a.courseCode.localeCompare(b.courseCode))
 
-    return { status: 200, message: 'Attendance report', data: report }
+    return { status: 200, message: 'Attendance report', data: report || [] }
 })
 
 export {
