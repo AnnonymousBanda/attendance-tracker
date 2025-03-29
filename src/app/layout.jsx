@@ -72,10 +72,6 @@ export const metadata = {
                 url: '/images/splash-1179x2556.png',
                 media: '(device-width: 393px) and (device-height: 852px)',
             }, // iPhone 15, 15 Pro
-            {
-                url: '/images/splash-1290x2796.png',
-                media: '(device-width: 430px) and (device-height: 932px)',
-            }, // iPhone 15 Pro Max, 14 Pro Max
         ],
     },
     formatDetection: {
