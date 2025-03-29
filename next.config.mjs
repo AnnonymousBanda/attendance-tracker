@@ -11,6 +11,23 @@ const withPWA = nextPWA({
     workboxOptions: {
         disableDevLogs: true,
     },
+    runtimeCaching: [
+        {
+            urlPattern: ({ request, url }) =>
+                request.destination === '' && url.pathname.endsWith('.json'), // Match JSON requests
+            handler: 'NetworkFirst', // Try network first, fallback to cache
+            options: {
+                cacheName: 'json-cache',
+                expiration: {
+                    maxEntries: 50,
+                    maxAgeSeconds: 60 * 60 * 24, // 1 day
+                },
+                cacheableResponse: {
+                    statuses: [200],
+                },
+            },
+        },
+    ],
 })
 
 const nextConfig = withPWA({
