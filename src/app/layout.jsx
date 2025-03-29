@@ -1,3 +1,4 @@
+import { Toaster } from 'react-hot-toast'
 import './globals.css'
 
 export const metadata = {
@@ -130,7 +131,20 @@ export const themeColor = '#f3f8fa'
 export default function RootLayout({ children }) {
     return (
         <html lang="en">
-            <body>{children}</body>
+            <body>
+                <Toaster
+                    position="top-center"
+                    reverseOrder={false}
+                    toastOptions={{
+                        style: {
+                            padding: '1rem',
+                            borderRadius: '0.8rem',
+                            fontSize: '1.4rem',
+                        },
+                    }}
+                />
+                {children}
+            </body>
         </html>
     )
 }
