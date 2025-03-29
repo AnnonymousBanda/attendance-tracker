@@ -1,7 +1,12 @@
+'use client'
+
 import Image from 'next/image'
-import { logo, ms_logo } from '../../../assets'
+import { logo, ms_logo } from '@/assets'
+import { useUser } from '@/context'
+
 
 const Login = () => {
+    const { signInWithMicrosoft } = useUser()
     return (
         <div className="h-screen w-full bg-primary flex justify-center items-center">
             <div className="w-fit h-fit p-[5rem] rounded-xl shadow-lg flex flex-col gap-[3rem] max-container justify-center items-center">
@@ -9,7 +14,10 @@ const Login = () => {
                     <Image src={logo} alt="Logo" className="w-[8rem]" />
                     <h1>Attendance&nbsp;Tracker</h1>
                 </div>
-                <button className="flex gap-[0.5rem] cursor-pointer items-center justify-center bg-[#2f2f2f] text-white h-[4.5rem] px-[1.5rem] rounded-sm hover:bg-[#0e0202]">
+                <button
+                    className="flex gap-[0.5rem] cursor-pointer items-center justify-center bg-[#2f2f2f] text-white h-[4.5rem] px-[1.5rem] rounded-sm hover:bg-[#0e0202]"
+                    onClick={signInWithMicrosoft}
+                >
                     <Image
                         src={ms_logo}
                         alt="Microsoft logo"

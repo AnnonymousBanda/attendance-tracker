@@ -1,41 +1,130 @@
 import { Loader } from '@/components'
-import { getUser } from '@/firebase/api/firebase.firestore'
+import { getUser, addUser } from '@/firebase/api/firebase.firestore'
 import { createContext, useContext, useState, useEffect } from 'react'
 import { toast } from 'react-toastify'
+import {
+    getAuth,
+    signInWithPopup,
+    signOut,
+    OAuthProvider,
+    onAuthStateChanged,
+} from 'firebase/auth'
+import axios from 'axios'
+import { useRouter } from 'next/navigation'
+
+const auth = getAuth()
+const provider = new OAuthProvider('microsoft.com')
+provider.addScope('user.read')
+provider.addScope('email')
 
 const UserContext = createContext()
 
 const UserProvider = ({ children }) => {
     const [loading, setLoading] = useState(true)
     const [user, setUser] = useState(null)
+    const router = useRouter()
 
     useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                if (!navigator.onLine) {
-                    toast.error('No internet connection', { className: 'toast-error' })
-                    return
+        const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+            if (firebaseUser) {
+                const userData = await getUser(firebaseUser.uid)
+
+                if (userData.status === 200) {
+                    setUser(userData.data)
+
+                    router.push('/')
+                    setLoading(false)
+                } else {
+                    router.push('/login')
+                    setLoading(false)
                 }
-
-                const res = await getUser('1')
-
-                if (res.status !== 200) throw new Error(res.message)
-
-                setUser({ ...res.data, userID: '1' })
-            } catch (error) {
-                toast.error(error.message, { className: 'toast-error' })
-            } finally {
-                setLoading(false)
             }
-        }
+        })
 
-        fetchUser()
+        return () => unsubscribe()
     }, [])
 
-    const logout = () => setUser(null)
+    const isAuthenticated = () => !!user
+
+    const signInWithMicrosoft = async () => {
+        try {
+            const result = await signInWithPopup(auth, provider)
+            const { displayName, email, uid } = result.user
+
+            let userData = await getUser(uid)
+            if (userData.status === 200) {
+                setUser(userData.data)
+
+                router.push('/')
+                setLoading(false)
+
+                return
+            }
+
+            const credential = OAuthProvider.credentialFromResult(result)
+            const accessToken = credential?.accessToken
+
+            let photoURL = ''
+            if (accessToken) {
+                try {
+                    const res = await axios.get(
+                        'https://graph.microsoft.com/v1.0/me/photo/$value',
+                        {
+                            headers: { Authorization: `Bearer ${accessToken}` },
+                            responseType: 'arraybuffer',
+                        }
+                    )
+                    const imageBase64 = Buffer.from(
+                        res.data,
+                        'binary'
+                    ).toString('base64')
+                    photoURL = `data:image/png;base64,${imageBase64}`
+                } catch (err) {
+                    console.error('Failed to fetch profile picture', err)
+                }
+            }
+
+            const userInfo = {
+                displayName,
+                email,
+                uid,
+                photoURL,
+            }
+
+            setUser(userInfo)
+
+            router.push('/register')
+            setLoading(false)
+        } catch (error) {
+            console.error('Sign-in error:', error)
+            toast.error('Sign-in failed. Please try again.')
+        }
+    }
+
+    const logout = async () => {
+        try {
+            await signOut(auth)
+
+            setUser(null)
+
+            router.push('/login')
+            setLoading(false)
+        } catch (error) {
+            console.error('Logout error:', error)
+            toast.error('Logout failed. Please try again.')
+        }
+    }
 
     return (
-        <UserContext.Provider value={{ user, setUser, logout }}>
+        <UserContext.Provider
+            value={{
+                user,
+                setUser,
+                isAuthenticated,
+                logout,
+                signInWithMicrosoft,
+            }}
+        >
             {loading ? <Loader /> : children}
         </UserContext.Provider>
     )
