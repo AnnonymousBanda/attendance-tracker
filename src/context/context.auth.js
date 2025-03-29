@@ -17,9 +17,9 @@ const provider = new OAuthProvider('microsoft.com')
 provider.addScope('user.read')
 provider.addScope('email')
 
-const UserContext = createContext()
+const AuthContext = createContext()
 
-const UserProvider = ({ children }) => {
+const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true)
     const [user, setUser] = useState(null)
     const router = useRouter()
@@ -96,7 +96,6 @@ const UserProvider = ({ children }) => {
             router.push('/register')
             setLoading(false)
         } catch (error) {
-            console.error('Sign-in error:', error)
             toast.error('Sign-in failed. Please try again.')
         }
     }
@@ -110,13 +109,12 @@ const UserProvider = ({ children }) => {
             router.push('/login')
             setLoading(false)
         } catch (error) {
-            console.error('Logout error:', error)
             toast.error('Logout failed. Please try again.')
         }
     }
 
     return (
-        <UserContext.Provider
+        <AuthContext.Provider
             value={{
                 user,
                 setUser,
@@ -126,14 +124,14 @@ const UserProvider = ({ children }) => {
             }}
         >
             {loading ? <Loader /> : children}
-        </UserContext.Provider>
+        </AuthContext.Provider>
     )
 }
 
-const useUser = () => {
-    const context = useContext(UserContext)
-    if (!context) throw new Error('useUser must be used within a UserProvider')
+const useAuth = () => {
+    const context = useContext(AuthContext)
+    if (!context) throw new Error('useAuth must be used within a AuthProvider')
     return context
 }
 
-export { UserProvider, useUser }
+export { AuthProvider, useAuth }

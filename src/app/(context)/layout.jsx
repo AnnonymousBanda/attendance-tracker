@@ -1,9 +1,9 @@
 'use client'
 
-import { UserProvider } from '@/context'
+import { AuthProvider } from '@/context'
 
 const layout = ({ children }) => {
-    return <UserProvider>{children}</UserProvider>
+    return <AuthProvider>{children}</AuthProvider>
 }
 
 export default layout

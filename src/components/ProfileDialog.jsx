@@ -14,7 +14,7 @@ import {
 import { BiSolidBookBookmark } from 'react-icons/bi'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useUser } from '@/context'
+import { useAuth } from '@/context'
 import { useState } from 'react'
 import { modifySemester } from '@/firebase/api/firebase.firestore'
 import toast from 'react-hot-toast'
@@ -23,7 +23,7 @@ export default function ProfileDialog({ setisDialogOpen }) {
     const handleClose = () => {
         setisDialogOpen(false)
     }
-    const { user } = useUser()
+    const { user } = useAuth()
     const [edit, setEdit] = useState(false)
     const [semester, setSemester] = useState(user?.semester)
     const [loading, setLoading] = useState(false)

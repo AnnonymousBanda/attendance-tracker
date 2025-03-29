@@ -8,7 +8,7 @@ import {
     addExtraLecture,
     getAttendanceReport,
 } from '@/firebase/api'
-import { useUser } from '@/context'
+import { useAuth } from '@/context'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 
@@ -55,7 +55,7 @@ const Timetable = () => {
     const [lectures, setLectures] = useState([])
     const [courses, setCourses] = useState([])
     const [isModalOpen, setIsModalOpen] = useState(false)
-    const { user } = useUser()
+    const { user } = useAuth()
 
     useEffect(() => {
         const fetchData = async () => {
@@ -114,8 +114,8 @@ const Timetable = () => {
                             index === 0
                                 ? 'rounded-[1rem] rounded-br-none'
                                 : index === daysDate.length - 1
-                                ? 'rounded-[1rem] rounded-bl-none'
-                                : 'rounded-[1rem]'
+                                  ? 'rounded-[1rem] rounded-bl-none'
+                                  : 'rounded-[1rem]'
                         } `}
                     >
                         <h3
@@ -181,7 +181,7 @@ const Timetable = () => {
             </div>
 
             {loading ? (
-                <div className='flex-1 overflow-hidden'>
+                <div className="flex-1 overflow-hidden">
                     <LecturesSkeleton />
                 </div>
             ) : (

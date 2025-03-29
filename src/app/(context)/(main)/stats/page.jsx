@@ -20,7 +20,7 @@ import { Loader, PieChart, PredictionsBar, StatsSkeleton } from '@/components'
 import { getAttendanceReport } from '@/firebase/api'
 import { MdOutlineQueryStats } from 'react-icons/md'
 import toast from 'react-hot-toast'
-import { useUser } from '@/context'
+import { useAuth } from '@/context'
 
 ChartJS.register(
     CategoryScale,
@@ -45,7 +45,7 @@ const NoPie = () => {
 const Stats = () => {
     const [courseData, setCourseData] = useState([])
     const [loading, setLoading] = useState(true)
-    const { user } = useUser()
+    const { user } = useAuth()
 
     useEffect(() => {
         const fetchData = async () => {

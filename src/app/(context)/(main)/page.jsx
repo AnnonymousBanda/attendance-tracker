@@ -17,7 +17,7 @@ import {
 } from '@/firebase/api'
 import { FaRegClock } from 'react-icons/fa6'
 import toast from 'react-hot-toast'
-import { useUser } from '@/context'
+import { useAuth } from '@/context'
 
 const Home = () => {
     const {
@@ -36,7 +36,7 @@ const Home = () => {
     const [loading, setLoading] = useState(true)
     const [courses, setCourses] = useState([])
 
-    const { user } = useUser()
+    const { user } = useAuth()
 
     useEffect(() => {
         const fetch = async () => {

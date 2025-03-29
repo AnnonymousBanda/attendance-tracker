@@ -2,11 +2,10 @@
 
 import Image from 'next/image'
 import { logo, ms_logo } from '@/assets'
-import { useUser } from '@/context'
-
+import { useAuth } from '@/context'
 
 const Login = () => {
-    const { signInWithMicrosoft } = useUser()
+    const { signInWithMicrosoft } = useAuth()
     return (
         <div className="h-screen w-full bg-primary flex justify-center items-center">
             <div className="w-fit h-fit p-[5rem] rounded-xl shadow-lg flex flex-col gap-[3rem] max-container justify-center items-center">

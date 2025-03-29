@@ -1,3 +1,3 @@
-import { UserProvider, useUser } from './context.user'
+import { AuthProvider, useAuth } from './context.auth'
 
-export { UserProvider, useUser }
+export { AuthProvider, useAuth }
