@@ -114,8 +114,8 @@ const Timetable = () => {
                             index === 0
                                 ? 'rounded-[1rem] rounded-br-none'
                                 : index === daysDate.length - 1
-                                  ? 'rounded-[1rem] rounded-bl-none'
-                                  : 'rounded-[1rem]'
+                                ? 'rounded-[1rem] rounded-bl-none'
+                                : 'rounded-[1rem]'
                         } `}
                     >
                         <h3
@@ -181,7 +181,9 @@ const Timetable = () => {
             </div>
 
             {loading ? (
-                <LecturesSkeleton />
+                <div className='flex-1 overflow-hidden'>
+                    <LecturesSkeleton />
+                </div>
             ) : (
                 <div
                     className={`p-[1rem] flex-1 overflow-auto flex ${
