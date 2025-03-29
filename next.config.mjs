@@ -14,17 +14,18 @@ const withPWA = nextPWA({
     runtimeCaching: [
         {
             urlPattern: ({ request, url }) =>
-                request.destination === '' && url.pathname.endsWith('.json'), // Match JSON requests
-            handler: 'NetworkFirst', // Try network first, fallback to cache
+                request.destination === '' && url.pathname.endsWith('.json'),
+            handler: 'NetworkFirst', // Try fetching from network, fallback to cache
             options: {
                 cacheName: 'json-cache',
                 expiration: {
-                    maxEntries: 50,
-                    maxAgeSeconds: 60 * 60 * 24, // 1 day
+                    maxEntries: 100, // Store up to 100 JSON responses
+                    maxAgeSeconds: 60 * 60 * 24 * 7, // Cache JSON for 7 days
                 },
                 cacheableResponse: {
-                    statuses: [200],
+                    statuses: [200], // Only cache successful responses
                 },
+                networkTimeoutSeconds: 5, // Wait max 5 sec before using cache
             },
         },
     ],
