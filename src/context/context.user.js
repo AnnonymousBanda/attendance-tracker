@@ -1,6 +1,7 @@
 import { Loader } from '@/components'
 import { getUser } from '@/firebase/api/firebase.firestore'
 import { createContext, useContext, useState, useEffect } from 'react'
+import { toast } from 'react-toastify'
 
 const UserContext = createContext()
 
@@ -11,14 +12,20 @@ const UserProvider = ({ children }) => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
+                if (!navigator.onLine) {
+                    toast.error('No internet connection', { className: 'toast-error' })
+                    return
+                }
+
                 const res = await getUser('1')
 
                 if (res.status !== 200) throw new Error(res.message)
 
                 setUser({ ...res.data, userID: '1' })
-                setLoading(false)
             } catch (error) {
                 toast.error(error.message, { className: 'toast-error' })
+            } finally {
+                setLoading(false)
             }
         }
 
