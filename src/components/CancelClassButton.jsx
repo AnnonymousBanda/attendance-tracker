@@ -55,8 +55,7 @@ const CancelDialog = ({ lecture, date, setLectures, setDialog }) => {
 
             if (res.status !== 200) throw new Error(res.message)
 
-            console.log(res)
-            setLectures([...res.data])
+            setLectures(res.data)
             setDialog(false)
             setLoading(false)
             toast.success('Class cancelled successfully', {
