@@ -22,6 +22,7 @@ export default function ProfileDialog({ setisDialogOpen }) {
     const [edit, setEdit] = useState(false)
     const [semester, setSemester] = useState(user?.semester)
     const [loading, setLoading] = useState(false)
+    const [buttonClicked, setButtonClicked] = useState(false)
 
     const handleEdit = () => {
         setEdit(!edit)
@@ -108,7 +109,7 @@ export default function ProfileDialog({ setisDialogOpen }) {
                                         type="number"
                                         defaultValue={semester}
                                         disabled={!edit}
-                                        className={`w-[5rem] text-[1rem] md:text-[1.3rem] p-[0.3rem] ${
+                                        className={`w-[4rem] text-[1.2rem] md:text-[1.6rem] text-right ${
                                             edit
                                                 ? 'bg-white rounded-lg'
                                                 : 'border-none'
@@ -130,7 +131,7 @@ export default function ProfileDialog({ setisDialogOpen }) {
                                     <div className="flex gap-[0.5rem] justify-center items-center absolute bottom-[-4rem] right-0">
                                         <button
                                             onClick={handleCancel}
-                                            className="bg-red p-[0.5rem] rounded-lg cursor-pointer hover:bg-red-600 transition-colors duration-100"
+                                            className="bg-red py-[0.75rem] px-[1rem] rounded-lg cursor-pointer hover:bg-red-600 transition-colors duration-100"
                                         >
                                             <h3 className="uppercase">
                                                 cancel
@@ -138,7 +139,7 @@ export default function ProfileDialog({ setisDialogOpen }) {
                                         </button>
                                         <button
                                             onClick={handleChangeSem}
-                                            className={`bg-green p-[0.5rem] rounded-lg cursor-pointer hover:bg-green-600 transition-colors duration-100 ${
+                                            className={`bg-green py-[0.75rem] px-[1rem] rounded-lg cursor-pointer hover:bg-green-600 transition-colors duration-100 ${
                                                 loading
                                                     ? 'opacity-50 cursor-not-allowed'
                                                     : ''
@@ -162,8 +163,12 @@ export default function ProfileDialog({ setisDialogOpen }) {
                                 </div>
                             </Link>
                             <button
-                                className="w-full flex justify-center items-center bg-red-300 p-[1rem] gap-[1rem] rounded-lg cursor-pointer"
-                                onClick={logout}
+                                className={`w-full flex justify-center items-center bg-red-300 p-[1rem] gap-[1rem] rounded-lg cursor-pointer ${buttonClicked ? 'opacity-50 ' : 'hover:bg-red '}`}
+                                onClick={async () => {
+                                    setButtonClicked(true)
+                                    await logout()
+                                    setButtonClicked(false)
+                                }}
                             >
                                 <MdLogout className="w-[3rem] h-[4rem]" />
                                 <div className="flex flex-col w-full justify-center">
