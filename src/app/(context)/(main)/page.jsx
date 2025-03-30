@@ -1,7 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { MdAdd } from 'react-icons/md'
 import {
@@ -26,7 +25,6 @@ const Home = () => {
         formState: { errors },
         reset,
     } = useForm()
-    const { push } = useRouter()
 
     const [greeting, setGreeting] = useState('')
     const [showForm, setShowForm] = useState(false)
@@ -35,6 +33,8 @@ const Home = () => {
     const [summaryData, setSummaryData] = useState([])
     const [loading, setLoading] = useState(true)
     const [courses, setCourses] = useState([])
+
+    const initialRender = useRef(true)
 
     const { user } = useAuth()
 
@@ -75,6 +75,11 @@ const Home = () => {
     }, [])
 
     useEffect(() => {
+        if (initialRender.current) {
+            initialRender.current = false
+            return
+        }
+
         const fetchSummary = async () => {
             try {
                 const res = await getAttendanceReport(

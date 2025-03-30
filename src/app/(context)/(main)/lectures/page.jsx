@@ -60,8 +60,6 @@ const Timetable = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                console.log(user)
-
                 const res = await getLectures(
                     user.userID,
                     user.semester,
