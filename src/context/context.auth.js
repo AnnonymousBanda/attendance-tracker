@@ -2,7 +2,7 @@
 
 import { Loader } from '@/components'
 import { getUser } from '@/firebase/api/firebase.firestore'
-import { createContext, useContext, useState, useEffect, useRef } from 'react'
+import { createContext, useContext, useState, useEffect } from 'react'
 import { toast } from 'react-toastify'
 import {
     getAuth,
@@ -38,11 +38,17 @@ const AuthProvider = ({ children }) => {
                         router.push('/')
                     setShowLoader(false)
                 } else {
-                    router.push('/login')
+                    if (pathname === '/register') router.push('/register')
+                    else if (['/', '/lectures', '/stats'].includes(pathname))
+                        router.push('/login')
+
                     setShowLoader(false)
                 }
             } else {
-                router.push('/login')
+                if (pathname === '/register') router.push('/register')
+                else if (['/', '/lectures', '/stats'].includes(pathname))
+                    router.push('/login')
+
                 setShowLoader(false)
             }
         })
@@ -93,7 +99,9 @@ const AuthProvider = ({ children }) => {
 
             router.push('/register')
         } catch (error) {
-            toast.error('Sign-in failed. Please try again.')
+            toast.error('Sign-in failed. Please try again.', {
+                className: 'toast-error',
+            })
         }
     }
 
@@ -103,7 +111,9 @@ const AuthProvider = ({ children }) => {
             setUser(null)
             router.push('/login')
         } catch (error) {
-            toast.error('Logout failed. Please try again.')
+            toast.error('Logout failed. Please try again.', {
+                className: 'toast-error',
+            })
         }
     }
 
