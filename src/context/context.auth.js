@@ -22,41 +22,29 @@ provider.addScope('email')
 const AuthContext = createContext()
 
 const AuthProvider = ({ children }) => {
-    const [loading, setLoading] = useState(true)
+    const [showLoader, setShowLoader] = useState(true)
     const [user, setUser] = useState(null)
     const router = useRouter()
     const pathname = usePathname()
-    const initialRender = useRef(true)
-
-    // Track Navigation (Avoid Initial Render)
-    useEffect(() => {
-        if (initialRender.current) {
-            initialRender.current = false
-            return
-        }
-
-        console.log('Navigated to:', pathname)
-        setLoading(false) // Stop loading after navigation
-    }, [pathname])
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-            setLoading(true)
-
             if (firebaseUser) {
                 const userData = await getUser(firebaseUser.uid)
                 if (userData.status === 200) {
                     setUser(userData.data)
-                    await router.push('/')
+
+                    if (pathname === '/login' || pathname === '/register')
+                        router.push('/')
+                    setShowLoader(false)
                 } else {
-                    await router.push('/login')
+                    router.push('/login')
+                    setShowLoader(false)
                 }
             } else {
-                setUser(null)
-                await router.push('/login')
+                router.push('/login')
+                setShowLoader(false)
             }
-
-            setLoading(false)
         })
 
         return () => unsubscribe()
@@ -66,14 +54,14 @@ const AuthProvider = ({ children }) => {
 
     const signInWithMicrosoft = async () => {
         try {
-            setLoading(true)
             const result = await signInWithPopup(auth, provider)
             const { displayName, email, uid } = result.user
 
             let userData = await getUser(uid)
             if (userData.status === 200) {
                 setUser(userData.data)
-                await router.push('/')
+                router.push('/')
+                setShowLoader(false)
                 return
             }
 
@@ -103,24 +91,19 @@ const AuthProvider = ({ children }) => {
             const userInfo = { displayName, email, uid, photoURL }
             setUser(userInfo)
 
-            await router.push('/register')
+            router.push('/register')
         } catch (error) {
             toast.error('Sign-in failed. Please try again.')
-        } finally {
-            setLoading(false)
         }
     }
 
     const logout = async () => {
         try {
-            setLoading(true)
             await signOut(auth)
             setUser(null)
-            await router.push('/login')
+            router.push('/login')
         } catch (error) {
             toast.error('Logout failed. Please try again.')
-        } finally {
-            setLoading(false)
         }
     }
 
@@ -129,12 +112,12 @@ const AuthProvider = ({ children }) => {
             value={{
                 user,
                 setUser,
-                isAuthenticated,
                 logout,
                 signInWithMicrosoft,
+                isAuthenticated,
             }}
         >
-            {loading ? <Loader /> : children}
+            {showLoader ? <Loader /> : children}
         </AuthContext.Provider>
     )
 }
