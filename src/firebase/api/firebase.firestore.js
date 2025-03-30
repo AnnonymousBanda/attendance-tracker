@@ -42,6 +42,7 @@ const getUser = catchAsync(async (userID) => {
         status: 200,
         message: 'User fetched successfully',
         data: {
+            userID: userID,
             name: user.data().name,
             email: user.data().email,
             roll: user.data().roll,

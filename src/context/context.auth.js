@@ -1,6 +1,8 @@
+'use client'
+
 import { Loader } from '@/components'
-import { getUser, addUser } from '@/firebase/api/firebase.firestore'
-import { createContext, useContext, useState, useEffect } from 'react'
+import { getUser } from '@/firebase/api/firebase.firestore'
+import { createContext, useContext, useState, useEffect, useRef } from 'react'
 import { toast } from 'react-toastify'
 import {
     getAuth,
@@ -10,7 +12,7 @@ import {
     onAuthStateChanged,
 } from 'firebase/auth'
 import axios from 'axios'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 
 const auth = getAuth()
 const provider = new OAuthProvider('microsoft.com')
@@ -23,22 +25,38 @@ const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true)
     const [user, setUser] = useState(null)
     const router = useRouter()
+    const pathname = usePathname()
+    const initialRender = useRef(true)
+
+    // Track Navigation (Avoid Initial Render)
+    useEffect(() => {
+        if (initialRender.current) {
+            initialRender.current = false
+            return
+        }
+
+        console.log('Navigated to:', pathname)
+        setLoading(false) // Stop loading after navigation
+    }, [pathname])
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+            setLoading(true)
+
             if (firebaseUser) {
                 const userData = await getUser(firebaseUser.uid)
-
                 if (userData.status === 200) {
                     setUser(userData.data)
-
-                    router.push('/')
-                    setLoading(false)
+                    await router.push('/')
                 } else {
-                    router.push('/login')
-                    setLoading(false)
+                    await router.push('/login')
                 }
+            } else {
+                setUser(null)
+                await router.push('/login')
             }
+
+            setLoading(false)
         })
 
         return () => unsubscribe()
@@ -48,16 +66,14 @@ const AuthProvider = ({ children }) => {
 
     const signInWithMicrosoft = async () => {
         try {
+            setLoading(true)
             const result = await signInWithPopup(auth, provider)
             const { displayName, email, uid } = result.user
 
             let userData = await getUser(uid)
             if (userData.status === 200) {
                 setUser(userData.data)
-
-                router.push('/')
-                setLoading(false)
-
+                await router.push('/')
                 return
             }
 
@@ -84,32 +100,27 @@ const AuthProvider = ({ children }) => {
                 }
             }
 
-            const userInfo = {
-                displayName,
-                email,
-                uid,
-                photoURL,
-            }
-
+            const userInfo = { displayName, email, uid, photoURL }
             setUser(userInfo)
 
-            router.push('/register')
-            setLoading(false)
+            await router.push('/register')
         } catch (error) {
             toast.error('Sign-in failed. Please try again.')
+        } finally {
+            setLoading(false)
         }
     }
 
     const logout = async () => {
         try {
+            setLoading(true)
             await signOut(auth)
-
             setUser(null)
-
-            router.push('/login')
-            setLoading(false)
+            await router.push('/login')
         } catch (error) {
             toast.error('Logout failed. Please try again.')
+        } finally {
+            setLoading(false)
         }
     }
 

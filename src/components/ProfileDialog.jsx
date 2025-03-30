@@ -5,12 +5,7 @@ import { UserCircleIcon } from '@heroicons/react/24/outline'
 import { profilePic } from '@/assets'
 import { HiAcademicCap } from 'react-icons/hi2'
 import { IoCalendar } from 'react-icons/io5'
-import {
-    MdBugReport,
-    MdLogout,
-    MdModeEdit,
-    MdOutlineDeveloperMode,
-} from 'react-icons/md'
+import { MdBugReport, MdLogout, MdModeEdit } from 'react-icons/md'
 import { BiSolidBookBookmark } from 'react-icons/bi'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -23,7 +18,7 @@ export default function ProfileDialog({ setisDialogOpen }) {
     const handleClose = () => {
         setisDialogOpen(false)
     }
-    const { user } = useAuth()
+    const { user, logout } = useAuth()
     const [edit, setEdit] = useState(false)
     const [semester, setSemester] = useState(user?.semester)
     const [loading, setLoading] = useState(false)
@@ -166,14 +161,17 @@ export default function ProfileDialog({ setisDialogOpen }) {
                                     <h3 className="font-bold">Report a Bug</h3>
                                 </div>
                             </Link>
-                            <div className=" w-full flex justify-center items-center bg-red-300 p-[1rem] gap-[1rem] rounded-lg">
+                            <button
+                                className="w-full flex justify-center items-center bg-red-300 p-[1rem] gap-[1rem] rounded-lg cursor-pointer"
+                                onClick={logout}
+                            >
                                 <MdLogout className="w-[3rem] h-[4rem]" />
                                 <div className="flex flex-col w-full justify-center">
                                     <h3 className="font-bold uppercase">
                                         Logout
                                     </h3>
                                 </div>
-                            </div>
+                            </button>
                         </div>
                     </div>
                 </div>
