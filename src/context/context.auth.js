@@ -3,7 +3,7 @@
 import { Loader } from '@/components'
 import { getUser } from '@/firebase/api/firebase.firestore'
 import { createContext, useContext, useState, useEffect } from 'react'
-import { toast } from 'react-toastify'
+import { toast } from 'react-hot-toast'
 import {
     getAuth,
     signInWithPopup,
@@ -13,7 +13,6 @@ import {
     signInWithRedirect,
     getRedirectResult,
 } from 'firebase/auth'
-import axios from 'axios'
 import { usePathname, useRouter } from 'next/navigation'
 
 const auth = getAuth()
@@ -75,31 +74,9 @@ const AuthProvider = ({ children }) => {
                 const credential = OAuthProvider.credentialFromResult(result)
                 const accessToken = credential?.accessToken
 
-                let photoURL = ''
-                if (accessToken) {
-                    try {
-                        const res = await axios.get(
-                            'https://graph.microsoft.com/v1.0/me/photo/$value',
-                            {
-                                headers: {
-                                    Authorization: `Bearer ${accessToken}`,
-                                },
-                                responseType: 'arraybuffer',
-                            }
-                        )
-                        const imageBase64 = Buffer.from(
-                            res.data,
-                            'binary'
-                        ).toString('base64')
-                        photoURL = `data:image/png;base64,${imageBase64}`
-                    } catch (err) {
-                        console.error('Failed to fetch profile picture', err)
-                    }
-                }
-
-                const userInfo = { displayName, email, uid, photoURL }
-                setUser(userInfo)
-                router.replace('/register')
+                router.replace(
+                    `/register?displayName=${displayName}&email=${email}&uid=${uid}&accessToken=${accessToken}`
+                )
             } catch (error) {
                 console.error('Redirect login failed:', error)
                 toast.error('Sign-in failed. Please try again.', {
@@ -117,10 +94,6 @@ const AuthProvider = ({ children }) => {
         /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
 
     const isAuthenticated = () => !!user
-
-    // const signInWithMicrosoft = async () => {
-    // signInWithRedirect(auth, provider)
-    // }
 
     const signInWithMicrosoft = async () => {
         if (isMobile()) {
@@ -143,32 +116,11 @@ const AuthProvider = ({ children }) => {
             const credential = OAuthProvider.credentialFromResult(result)
             const accessToken = credential?.accessToken
 
-            let photoURL = ''
-            if (accessToken) {
-                try {
-                    const res = await axios.get(
-                        'https://graph.microsoft.com/v1.0/me/photo/$value',
-                        {
-                            headers: { Authorization: `Bearer ${accessToken}` },
-                            responseType: 'arraybuffer',
-                        }
-                    )
-                    const imageBase64 = Buffer.from(
-                        res.data,
-                        'binary'
-                    ).toString('base64')
-                    photoURL = `data:image/png;base64,${imageBase64}`
-                } catch (err) {
-                    console.error('Failed to fetch profile picture', err)
-                }
-            }
-
-            const userInfo = { displayName, email, uid, photoURL }
-            setUser(userInfo)
-            console.log('User info:', userInfo)
-
-            router.replace('/register')
+            router.replace(
+                `/register?displayName=${displayName}&email=${email}&uid=${uid}&accessToken=${accessToken}`
+            )
         } catch (error) {
+            console.log('Sign-in error:', error.message)
             toast.error('Sign-in failed. Please try again.', {
                 className: 'toast-error',
             })

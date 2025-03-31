@@ -17,7 +17,9 @@ const Login = () => {
                     <h1>Attendance&nbsp;Tracker</h1>
                 </div>
                 <button
-                    className={`flex gap-[0.5rem] cursor-pointer items-center justify-center text-white h-[4.5rem] px-[1.5rem] rounded-lg bg-[#2f2f2f]  ${buttonClicked ? 'opacity-50 ' : 'hover:bg-[#0e0202]'}`}
+                    className={`flex gap-[0.5rem] cursor-pointer items-center justify-center text-white h-[4.5rem] px-[1.5rem] rounded-lg bg-[#2f2f2f]  ${
+                        buttonClicked ? 'opacity-50 ' : 'hover:bg-[#0e0202]'
+                    }`}
                     onClick={async () => {
                         setButtonClicked(true)
                         await signInWithMicrosoft()
@@ -29,7 +31,7 @@ const Login = () => {
                         alt="Microsoft logo"
                         className="w-[1.8rem]"
                     />
-                    <p>Login&nbsp;with&nbsp;Microsoft</p>
+                    <h3>Sign&nbsp;in&nbsp;with&nbsp;Microsoft</h3>
                 </button>
             </div>
         </div>
