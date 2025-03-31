@@ -55,68 +55,76 @@ const AuthProvider = ({ children }) => {
             }
         })
 
-        // const handleRedirectResult = async () => {
-        //     try {
-        //         const result = await getRedirectResult(auth)
-        //         if (!result) return
+        const handleRedirectResult = async () => {
+            try {
+                const result = await getRedirectResult(auth)
+                if (!result) return
 
-        //         const { displayName, email, uid } = result.user
-        //         let userData = await getUser(uid)
+                const { displayName, email, uid } = result.user
+                let userData = await getUser(uid)
 
-        //         if (userData.status === 200) {
-        //             setUser(userData.data)
-        //             router.replace('/')
-        //             return
-        //         }
+                if (userData.status === 200) {
+                    setUser(userData.data)
+                    router.replace('/')
+                    return
+                }
 
-        //         const credential = OAuthProvider.credentialFromResult(result)
-        //         const accessToken = credential?.accessToken
+                const credential = OAuthProvider.credentialFromResult(result)
+                const accessToken = credential?.accessToken
 
-        //         let photoURL = ''
-        //         if (accessToken) {
-        //             try {
-        //                 const res = await axios.get(
-        //                     'https://graph.microsoft.com/v1.0/me/photo/$value',
-        //                     {
-        //                         headers: {
-        //                             Authorization: `Bearer ${accessToken}`,
-        //                         },
-        //                         responseType: 'arraybuffer',
-        //                     }
-        //                 )
-        //                 const imageBase64 = Buffer.from(
-        //                     res.data,
-        //                     'binary'
-        //                 ).toString('base64')
-        //                 photoURL = `data:image/png;base64,${imageBase64}`
-        //             } catch (err) {
-        //                 console.error('Failed to fetch profile picture', err)
-        //             }
-        //         }
+                let photoURL = ''
+                if (accessToken) {
+                    try {
+                        const res = await axios.get(
+                            'https://graph.microsoft.com/v1.0/me/photo/$value',
+                            {
+                                headers: {
+                                    Authorization: `Bearer ${accessToken}`,
+                                },
+                                responseType: 'arraybuffer',
+                            }
+                        )
+                        const imageBase64 = Buffer.from(
+                            res.data,
+                            'binary'
+                        ).toString('base64')
+                        photoURL = `data:image/png;base64,${imageBase64}`
+                    } catch (err) {
+                        console.error('Failed to fetch profile picture', err)
+                    }
+                }
 
-        //         const userInfo = { displayName, email, uid, photoURL }
-        //         setUser(userInfo)
-        //         router.replace('/register')
-        //     } catch (error) {
-        //         console.error('Redirect login failed:', error)
-        //         toast.error('Sign-in failed. Please try again.', {
-        //             className: 'toast-error',
-        //         })
-        //     }
-        // }
+                const userInfo = { displayName, email, uid, photoURL }
+                setUser(userInfo)
+                router.replace('/register')
+            } catch (error) {
+                console.error('Redirect login failed:', error)
+                toast.error('Sign-in failed. Please try again.', {
+                    className: 'toast-error',
+                })
+            }
+        }
 
-        // handleRedirectResult()
+        if (isMobile()) handleRedirectResult()
 
         return () => unsubscribe()
     }, [])
 
+    const isMobile = () =>
+        /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+
     const isAuthenticated = () => !!user
 
     // const signInWithMicrosoft = async () => {
-    //     signInWithRedirect(auth, provider)
+    // signInWithRedirect(auth, provider)
     // }
 
     const signInWithMicrosoft = async () => {
+        if (isMobile()) {
+            signInWithRedirect(auth, provider)
+            return
+        }
+
         try {
             const result = await signInWithPopup(auth, provider)
             const { displayName, email, uid } = result.user
