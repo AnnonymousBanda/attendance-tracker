@@ -10,7 +10,7 @@ const Login = () => {
     const [buttonClicked, setButtonClicked] = useState(false)
 
     return (
-        <div className="h-screen w-full bg-primary flex justify-center items-center">
+        <div className="h-svh w-full bg-primary flex justify-center items-center">
             <div className="w-fit h-fit p-[5rem] rounded-xl shadow-lg flex flex-col gap-[3rem] max-container justify-center items-center">
                 <div className="flex flex-col items-center gap-[1rem]">
                     <Image src={logo} alt="Logo" className="w-[8rem]" />

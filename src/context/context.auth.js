@@ -10,6 +10,8 @@ import {
     signOut,
     OAuthProvider,
     onAuthStateChanged,
+    signInWithRedirect,
+    getRedirectResult,
 } from 'firebase/auth'
 import axios from 'axios'
 import { usePathname, useRouter } from 'next/navigation'
@@ -35,28 +37,84 @@ const AuthProvider = ({ children }) => {
                     setUser(userData.data)
 
                     if (pathname === '/login' || pathname === '/register')
-                        router.push('/')
+                        router.replace('/')
                     setShowLoader(false)
                 } else {
-                    if (pathname === '/register') router.push('/register')
+                    if (pathname === '/register') router.replace('/register')
                     else if (['/', '/lectures', '/stats'].includes(pathname))
-                        router.push('/login')
+                        router.replace('/login')
 
                     setShowLoader(false)
                 }
             } else {
-                if (pathname === '/register') router.push('/register')
+                if (pathname === '/register') router.replace('/register')
                 else if (['/', '/lectures', '/stats'].includes(pathname))
-                    router.push('/login')
+                    router.replace('/login')
 
                 setShowLoader(false)
             }
         })
 
+        // const handleRedirectResult = async () => {
+        //     try {
+        //         const result = await getRedirectResult(auth)
+        //         if (!result) return
+
+        //         const { displayName, email, uid } = result.user
+        //         let userData = await getUser(uid)
+
+        //         if (userData.status === 200) {
+        //             setUser(userData.data)
+        //             router.replace('/')
+        //             return
+        //         }
+
+        //         const credential = OAuthProvider.credentialFromResult(result)
+        //         const accessToken = credential?.accessToken
+
+        //         let photoURL = ''
+        //         if (accessToken) {
+        //             try {
+        //                 const res = await axios.get(
+        //                     'https://graph.microsoft.com/v1.0/me/photo/$value',
+        //                     {
+        //                         headers: {
+        //                             Authorization: `Bearer ${accessToken}`,
+        //                         },
+        //                         responseType: 'arraybuffer',
+        //                     }
+        //                 )
+        //                 const imageBase64 = Buffer.from(
+        //                     res.data,
+        //                     'binary'
+        //                 ).toString('base64')
+        //                 photoURL = `data:image/png;base64,${imageBase64}`
+        //             } catch (err) {
+        //                 console.error('Failed to fetch profile picture', err)
+        //             }
+        //         }
+
+        //         const userInfo = { displayName, email, uid, photoURL }
+        //         setUser(userInfo)
+        //         router.replace('/register')
+        //     } catch (error) {
+        //         console.error('Redirect login failed:', error)
+        //         toast.error('Sign-in failed. Please try again.', {
+        //             className: 'toast-error',
+        //         })
+        //     }
+        // }
+
+        // handleRedirectResult()
+
         return () => unsubscribe()
     }, [])
 
     const isAuthenticated = () => !!user
+
+    // const signInWithMicrosoft = async () => {
+    //     signInWithRedirect(auth, provider)
+    // }
 
     const signInWithMicrosoft = async () => {
         try {
@@ -66,7 +124,7 @@ const AuthProvider = ({ children }) => {
             let userData = await getUser(uid)
             if (userData.status === 200) {
                 setUser(userData.data)
-                router.push('/')
+                router.replace('/')
                 setShowLoader(false)
                 return
             }
@@ -97,7 +155,7 @@ const AuthProvider = ({ children }) => {
             const userInfo = { displayName, email, uid, photoURL }
             setUser(userInfo)
 
-            router.push('/register')
+            router.replace('/register')
         } catch (error) {
             toast.error('Sign-in failed. Please try again.', {
                 className: 'toast-error',
@@ -109,7 +167,7 @@ const AuthProvider = ({ children }) => {
         try {
             await signOut(auth)
             setUser(null)
-            router.push('/login')
+            router.replace('/login')
         } catch (error) {
             toast.error('Logout failed. Please try again.', {
                 className: 'toast-error',

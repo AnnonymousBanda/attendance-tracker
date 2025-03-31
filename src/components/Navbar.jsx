@@ -15,6 +15,7 @@ const Navbar = () => {
                     <Link
                         href="/"
                         className="flex flex-col justify-center items-center gap-[0.1rem]"
+                        replace
                     >
                         <Image
                             src={Home}
@@ -30,6 +31,7 @@ const Navbar = () => {
                     <Link
                         href="/lectures"
                         className="flex flex-col justify-center items-center gap-[0.1rem]"
+                        replace
                     >
                         <Image
                             src={Lectures}
@@ -49,6 +51,7 @@ const Navbar = () => {
                     <Link
                         href="/stats"
                         className="flex flex-col justify-center items-center gap-[0.1rem]"
+                        replace
                     >
                         <Image
                             src={Stats}
