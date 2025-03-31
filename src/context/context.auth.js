@@ -20,6 +20,9 @@ const auth = getAuth()
 const provider = new OAuthProvider('microsoft.com')
 provider.addScope('user.read')
 provider.addScope('email')
+provider.setCustomParameters({
+    prompt: 'select_account',
+})
 
 const AuthContext = createContext()
 
@@ -162,6 +165,7 @@ const AuthProvider = ({ children }) => {
 
             const userInfo = { displayName, email, uid, photoURL }
             setUser(userInfo)
+            console.log('User info:', userInfo)
 
             router.replace('/register')
         } catch (error) {
