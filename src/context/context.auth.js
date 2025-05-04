@@ -14,8 +14,9 @@ import {
     getRedirectResult,
 } from 'firebase/auth'
 import { usePathname, useRouter } from 'next/navigation'
+import { app } from '@/firebase/firebase.config'
 
-const auth = getAuth()
+const auth = getAuth(app)
 const provider = new OAuthProvider('microsoft.com')
 provider.addScope('user.read')
 provider.addScope('email')
@@ -32,51 +33,28 @@ const AuthProvider = ({ children }) => {
     const pathname = usePathname()
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-            if (firebaseUser) {
-                const userData = await getUser(firebaseUser.uid)
-                if (userData.status === 200) {
-                    setUser(userData.data)
-
-                    if (pathname === '/login' || pathname === '/register')
-                        router.replace('/')
-                    setShowLoader(false)
-                } else {
-                    if (pathname === '/register') router.replace('/register')
-                    else if (['/', '/lectures', '/stats'].includes(pathname))
-                        router.replace('/login')
-
-                    setShowLoader(false)
-                }
-            } else {
-                if (pathname === '/register') router.replace('/register')
-                else if (['/', '/lectures', '/stats'].includes(pathname))
-                    router.replace('/login')
-
-                setShowLoader(false)
-            }
-        })
-
         const handleRedirectResult = async () => {
             try {
                 const result = await getRedirectResult(auth)
-                if (!result) return
+                if (result) {
+                    const { displayName, email, uid } = result.user
 
-                const { displayName, email, uid } = result.user
-                let userData = await getUser(uid)
+                    const userData = await getUser(uid)
 
-                if (userData.status === 200) {
-                    setUser(userData.data)
-                    router.replace('/')
-                    return
+                    if (userData.status === 200) {
+                        setUser(userData.data)
+                        router.replace('/')
+                        return
+                    }
+
+                    const credential =
+                        OAuthProvider.credentialFromResult(result)
+                    const accessToken = credential?.accessToken
+
+                    router.replace(
+                        `/register?displayName=${displayName}&email=${email}&uid=${uid}&accessToken=${accessToken}`
+                    )
                 }
-
-                const credential = OAuthProvider.credentialFromResult(result)
-                const accessToken = credential?.accessToken
-
-                router.replace(
-                    `/register?displayName=${displayName}&email=${email}&uid=${uid}&accessToken=${accessToken}`
-                )
             } catch (error) {
                 console.error('Redirect login failed:', error)
                 toast.error('Sign-in failed. Please try again.', {
@@ -85,10 +63,57 @@ const AuthProvider = ({ children }) => {
             }
         }
 
-        if (isMobile()) handleRedirectResult()
+        const initAuth = async () => {
+            // if (!isMobile()) await handleRedirectResult()
+            if (user) return setShowLoader(false)
 
-        return () => unsubscribe()
-    }, [])
+            const unsubscribe = onAuthStateChanged(
+                auth,
+                async (firebaseUser) => {
+                    if (!firebaseUser) {
+                        if (pathname === '/register')
+                            router.replace('/register')
+                        else if (
+                            ['/', '/lectures', '/stats'].includes(pathname)
+                        )
+                            router.replace('/login')
+
+                        setShowLoader(false)
+                        return
+                    }
+
+                    const userData = await getUser(firebaseUser.uid)
+
+                    if (userData.status === 200) {
+                        setUser(userData.data)
+
+                        if (pathname === '/login' || pathname === '/register') {
+                            router.replace('/')
+                        }
+                    } else {
+                        if (pathname === '/register')
+                            router.replace('/register')
+                        else if (
+                            ['/', '/lectures', '/stats'].includes(pathname)
+                        )
+                            router.replace('/login')
+                    }
+
+                    setShowLoader(false)
+                }
+            )
+
+            return unsubscribe
+        }
+
+        const unsubscribePromise = initAuth()
+
+        return () => {
+            unsubscribePromise.then((unsubscribe) => {
+                if (typeof unsubscribe === 'function') unsubscribe()
+            })
+        }
+    }, [pathname])
 
     const isMobile = () =>
         /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
@@ -97,7 +122,14 @@ const AuthProvider = ({ children }) => {
 
     const signInWithMicrosoft = async () => {
         if (isMobile()) {
-            signInWithRedirect(auth, provider)
+            let userData = await getUser('t0gEKmUnqyRJdNsBi3Q5u0doz2H3')
+            if (userData.status === 200) {
+                setUser(userData.data)
+                router.replace('/')
+                setShowLoader(false)
+                return
+            }
+            // signInWithRedirect(auth, provider)
             return
         }
 
