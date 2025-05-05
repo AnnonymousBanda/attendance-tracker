@@ -31,6 +31,7 @@ const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
     const router = useRouter()
     const pathname = usePathname()
+    const { query } = useRouter()
 
     useEffect(() => {
         const handleRedirectResult = async () => {
@@ -71,11 +72,7 @@ const AuthProvider = ({ children }) => {
                 auth,
                 async (firebaseUser) => {
                     if (!firebaseUser) {
-                        if (pathname === '/register')
-                            router.replace('/register')
-                        else if (
-                            ['/', '/lectures', '/stats'].includes(pathname)
-                        )
+                        if (['/', '/lectures', '/stats'].includes(pathname))
                             router.replace('/login')
 
                         setShowLoader(false)
@@ -90,14 +87,8 @@ const AuthProvider = ({ children }) => {
                         if (pathname === '/login' || pathname === '/register') {
                             router.replace('/')
                         }
-                    } else {
-                        if (pathname === '/register')
-                            router.replace('/register')
-                        else if (
-                            ['/', '/lectures', '/stats'].includes(pathname)
-                        )
-                            router.replace('/login')
-                    }
+                    } else if (['/', '/lectures', '/stats'].includes(pathname))
+                        router.replace('/login')
 
                     setShowLoader(false)
                 }
