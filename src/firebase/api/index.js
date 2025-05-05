@@ -1,17 +1,21 @@
 import {
-    addNewUser,
-    updateUser,
+    register,
+    modifySemester,
     getLectures,
     addExtraLecture,
     modifyAttendance,
     getAttendanceReport,
+    getUser,
+    resetSemester,
 } from './firebase.firestore.js'
 
 export {
-    addNewUser,
-    updateUser,
+    register,
+    modifySemester,
     getLectures,
     addExtraLecture,
     modifyAttendance,
     getAttendanceReport,
+    getUser,
+    resetSemester,
 }

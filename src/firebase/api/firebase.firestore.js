@@ -10,24 +10,99 @@ import {
 
 import { app } from '../firebase.config.js'
 import { AppError, catchAsync } from '../firebase.error.js'
+import Notion from '@/notion'
 
 const db = getFirestore(app)
 
 const USER = collection(db, 'users')
 
-const addNewUser = catchAsync(async (userID, user) => {
-    const userRef = doc(USER, userID)
-    await setDoc(userRef, user)
+const register = catchAsync(
+    async (
+        userID,
+        name,
+        roll,
+        email,
+        batch,
+        year,
+        department,
+        branch,
+        semester,
+        degree
+    ) => {
+        if (
+            !userID ||
+            !name ||
+            !email ||
+            !roll ||
+            !batch ||
+            !year ||
+            !department ||
+            !branch ||
+            !semester ||
+            !degree
+        )
+            throw new AppError('Please, provide all the required fields', 400)
 
-    return { status: 200, message: 'User added successfully' }
-})
+        if (year < 1 || year > 5) throw new AppError('Invalid year', 400)
 
-const updateUser = catchAsync(async (userID, user) => {
-    const userRef = doc(USER, userID)
-    await updateDoc(userRef, user)
+        if (degree !== 'BTech' && degree !== 'Dual Degree')
+            throw new AppError(
+                'Please, select between BTech or Dual Degree',
+                400
+            )
 
-    return { status: 200, message: 'User updated successfully' }
-})
+        if (
+            (degree === 'Dual Degree' && (semester < 1 || semester > 10)) ||
+            (degree === 'BTech' && (semester < 1 || semester > 8))
+        )
+            throw new AppError('Invalid semester', 400)
+
+        const n = degree === 'Dual Degree' ? 10 : 8
+        const lectures = {}
+        for (let i = 1; i <= n; i++)
+            lectures[i] = {
+                mon: [],
+                tue: [],
+                wed: [],
+                thu: [],
+                fri: [],
+                sat: [],
+                sun: [],
+            }
+
+        const courses = {}
+        for (let i = 1; i <= n; i++) {
+            let temp = await Notion.getCourses(semester, branch)
+            courses[i] = []
+            temp = temp.sort((a, b) => a.courseCode.localeCompare(b.courseCode))
+            temp.forEach((course) => {
+                courses[i].push({
+                    courseCode: course.courseCode,
+                    courseName: course.courseName,
+                    present: 0,
+                    absent: 0,
+                    medical: 0,
+                })
+            })
+        }
+
+        const userRef = doc(USER, userID)
+        await setDoc(userRef, {
+            name,
+            email,
+            roll,
+            batch,
+            year,
+            department,
+            branch,
+            degree,
+            semester,
+            courses,
+        })
+
+        return { status: 200, message: 'User added successfully' }
+    }
+)
 
 const getUser = catchAsync(async (userID) => {
     if (!userID)
@@ -46,9 +121,12 @@ const getUser = catchAsync(async (userID) => {
             name: user.data().name,
             email: user.data().email,
             roll: user.data().roll,
-            batch: user.data().batch,
-            semester: user.data().semester,
+            department: user.data().department,
             branch: user.data().branch,
+            degree: user.data().degree,
+            semester: user.data().semester,
+            batch: user.data().batch,
+            year: user.data().year,
         },
     }
 })
@@ -57,33 +135,35 @@ const modifySemester = catchAsync(async (userID, semester) => {
     if (!userID || !semester)
         throw new AppError('Please, provide all the required fields', 400)
 
-    semester = Number(semester)
-    if (semester < 1 || semester > 10)
-        throw new AppError('Invalid semester', 400)
-
     const userRef = doc(USER, userID)
     const user = await getDoc(userRef)
 
     if (!user.exists()) throw new AppError('User not found', 404)
+
+    degree = user.data().degree
+    semester = Number(semester)
+    if (
+        (degree === 'Dual Degree' && (semester < 1 || semester > 10)) ||
+        (degree === 'BTech' && (semester < 1 || semester > 8))
+    )
+        throw new AppError('Invalid semester', 400)
 
     await updateDoc(userRef, { semester })
 
     return { status: 200, message: 'Semester updated successfully' }
 })
 
-const getLectures = catchAsync(async (userID, semester, date) => {
+const getLectures = catchAsync(async (userID, semester, day) => {
     const userRef = doc(USER, userID)
     const user = await getDoc(userRef)
 
     if (!user.exists()) throw new AppError('User not found', 404)
 
-    let lectures = user.data().lectures || {} // get all lectures of the day
-    lectures = lectures[semester]
-        ? lectures[semester][date]?.filter(
-              (lecture) => lecture.status !== 'cancelled'
-          )
-        : []
+    let lecturesFirebase = user.data().lectures?.[semester] || []
+    let lecturesNotion = (await Notion.getLectures(semester, day, branch)) || []
 
+    const lectures = []
+    lectures.concat(lecturesFirebase).concat(lecturesNotion)
     lectures?.sort((a, b) => a.from.localeCompare(b.from))
 
     return {
@@ -93,12 +173,12 @@ const getLectures = catchAsync(async (userID, semester, date) => {
     }
 })
 
-const addExtraLecture = catchAsync(async (userID, lecture, semester, date) => {
+const addExtraLecture = catchAsync(async (userID, lecture, semester, day) => {
     const { to, from, courseCode, courseName } = lecture
     if (
         !to ||
         !from ||
-        !date ||
+        !day ||
         !semester ||
         !userID ||
         !courseCode ||
@@ -116,16 +196,20 @@ const addExtraLecture = catchAsync(async (userID, lecture, semester, date) => {
 
     if (!user.exists()) throw new AppError('User not found', 404)
 
+    let lectures = await getLectures(userID, semester, day).data
+
+    if (
+        lectures.some((lecture) => {
+            return lecture.from === from && lecture.to === from
+        })
+    )
+        throw new AppError('Lecture time conflict', 400)
+
     await updateDoc(userRef, {
-        [`lectures.${semester}.${date}`]: arrayUnion(lecture),
+        [`lectures.${semester}.${day}`]: arrayUnion(lecture),
     })
 
-    let lectures = user.data().lectures || {}
-    lectures = lectures[semester]?.[date] || []
-    lectures = lectures
-        .filter((lec) => lec.status !== 'cancelled')
-        .concat(lecture)
-
+    lectures.concat(lecture)
     lectures.sort((a, b) => a.from.localeCompare(b.from))
 
     return {
@@ -136,11 +220,11 @@ const addExtraLecture = catchAsync(async (userID, lecture, semester, date) => {
 })
 
 const modifyAttendance = catchAsync(
-    async (userID, semester, to, from, date, courseCode, status) => {
+    async (userID, semester, to, from, day, courseCode, status) => {
         if (!['present', 'absent', 'medical', 'cancelled'].includes(status))
             throw new AppError('Invalid status', 400)
 
-        if (!to || !from || !date || !courseCode || !status || !userID)
+        if (!to || !from || !day || !courseCode || !status || !userID)
             throw new AppError('Please, provide all the required fields', 400)
 
         const userRef = doc(USER, userID)
@@ -148,27 +232,36 @@ const modifyAttendance = catchAsync(
 
         if (!user.exists()) throw new AppError('User not found', 404)
 
-        // Get lectures for the specified date
-        let lectures = user.data().lectures?.[semester]?.[date] || []
+        // Get lectures for the specified day
+        let lectures = user.data().lectures?.[semester]?.[day] || []
         let preStatus = null
 
-        lectures = lectures.map((lecture) => {
-            if (
-                lecture.to === to &&
-                lecture.from === from &&
-                lecture.courseCode === courseCode
-            ) {
-                preStatus = lecture.status
-                return {
-                    ...lecture,
-                    status,
+        if (status === 'cancelled') {
+            lectures = lectures.filter(
+                (lecture) =>
+                    lecture.to !== to ||
+                    lecture.from !== from ||
+                    lecture.courseCode !== courseCode
+            )
+        } else {
+            lectures = lectures.map((lecture) => {
+                if (
+                    lecture.to === to &&
+                    lecture.from === from &&
+                    lecture.courseCode === courseCode
+                ) {
+                    preStatus = lecture.status
+                    return {
+                        ...lecture,
+                        status,
+                    }
                 }
-            }
-            return lecture
-        })
+                return lecture
+            })
+        }
 
         await updateDoc(userRef, {
-            [`lectures.${semester}.${date}`]: lectures,
+            [`lectures.${semester}.${day}`]: lectures,
         })
 
         let courses = user.data().courses?.[semester] || []
@@ -188,7 +281,7 @@ const modifyAttendance = catchAsync(
             [`courses.${semester}`]: courses,
         })
 
-        lectures = lectures?.filter((lecture) => lecture.status !== 'cancelled')
+        // lectures = lectures?.filter((lecture) => lecture.status !== 'cancelled')
 
         lectures?.sort((a, b) => a.from.localeCompare(b.from))
 
@@ -200,14 +293,21 @@ const modifyAttendance = catchAsync(
     }
 )
 
-const getAttendanceReport = catchAsync(async (userID, semester) => {
-    if (!userID || !semester)
+const getAttendanceReport = catchAsync(async (userID, semester, branch) => {
+    if (!userID || !semester || !branch)
         throw new AppError('Please, provide all the required fields', 400)
 
     const userRef = doc(USER, userID)
     const user = await getDoc(userRef)
 
     if (!user.exists()) throw new AppError('User not found', 404)
+
+    const total = (await Notion.getCourses(semester, branch))
+        .sort((a, b) => a.courseCode.localeCompare(b.courseCode))
+        .reduce((acc, course) => {
+            acc[course.courseCode] = course.total
+            return acc
+        }, {})
 
     const report = user
         .data()
@@ -229,10 +329,14 @@ const getAttendanceReport = catchAsync(async (userID, semester) => {
                 ) * 100,
             maximumAchievableAttendance:
                 Number(
-                    ((course.total - course.absent) / course.total).toFixed(2)
+                    (
+                        (total[course.courseCode] - course.absent) /
+                        total[course.courseCode]
+                    ).toFixed(2)
                 ) * 100,
             minimumLecturesToAttend: Math.floor(
-                course.total * 0.75 - (course.present + course.medical)
+                total[course.courseCode] * 0.75 -
+                    (course.present + course.medical)
             ),
         }))
         ?.sort((a, b) => a.courseCode.localeCompare(b.courseCode))
@@ -240,13 +344,38 @@ const getAttendanceReport = catchAsync(async (userID, semester) => {
     return { status: 200, message: 'Attendance report', data: report || [] }
 })
 
+const resetSemester = catchAsync(async (userID, semester) => {
+    if (!userID || !semester)
+        throw new AppError('Please, provide all the required fields', 400)
+
+    const userRef = doc(USER, userID)
+    const user = await getDoc(userRef)
+
+    if (!user.exists()) throw new AppError('User not found', 404)
+
+    await updateDoc(userRef, {
+        [`lectures.${semester}`]: {
+            mon: [],
+            tue: [],
+            wed: [],
+            thu: [],
+            fri: [],
+            sat: [],
+            sun: [],
+        },
+        [`courses.${semester}`]: [],
+    })
+
+    return { status: 200, message: 'Semester reset successfully' }
+})
+
 export {
-    addNewUser,
-    updateUser,
+    register,
     modifySemester,
     getLectures,
     addExtraLecture,
     modifyAttendance,
     getAttendanceReport,
     getUser,
+    resetSemester,
 }
