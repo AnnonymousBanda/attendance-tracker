@@ -154,10 +154,15 @@ const modifySemester = catchAsync(async (userID, semester) => {
 })
 
 const getLectures = catchAsync(async (userID, semester, day) => {
+    if (!userID || !semester || !day)
+        throw new AppError('Please, provide all the required fields', 400)
+
     const userRef = doc(USER, userID)
     const user = await getDoc(userRef)
 
     if (!user.exists()) throw new AppError('User not found', 404)
+
+    let branch = user.data().branch
 
     let lecturesFirebase = user.data().lectures?.[semester] || []
     let lecturesNotion = (await Notion.getLectures(semester, day, branch)) || []
@@ -200,7 +205,7 @@ const addExtraLecture = catchAsync(async (userID, lecture, semester, day) => {
 
     if (
         lectures.some((lecture) => {
-            return lecture.from === from && lecture.to === from
+            return lecture.to > from && lecture.from < to
         })
     )
         throw new AppError('Lecture time conflict', 400)
@@ -232,33 +237,32 @@ const modifyAttendance = catchAsync(
 
         if (!user.exists()) throw new AppError('User not found', 404)
 
-        // Get lectures for the specified day
-        let lectures = user.data().lectures?.[semester]?.[day] || []
-        let preStatus = null
+        let branch = user.data().branch
 
-        if (status === 'cancelled') {
-            lectures = lectures.filter(
-                (lecture) =>
-                    lecture.to !== to ||
-                    lecture.from !== from ||
-                    lecture.courseCode !== courseCode
-            )
-        } else {
-            lectures = lectures.map((lecture) => {
-                if (
-                    lecture.to === to &&
-                    lecture.from === from &&
-                    lecture.courseCode === courseCode
-                ) {
-                    preStatus = lecture.status
-                    return {
-                        ...lecture,
-                        status,
-                    }
+        let lectures = await getLectures(userID, semester, branch, day)
+
+        let preStatus = null
+        lectures = lectures.map((lecture) => {
+            if (
+                lecture.to === to &&
+                lecture.from === from &&
+                lecture.courseCode === courseCode
+            ) {
+                preStatus = lecture.status
+                return {
+                    ...lecture,
+                    status,
                 }
-                return lecture
-            })
-        }
+            }
+            return lecture
+        })
+
+        // if (preStatus === status)
+        //     return {
+        //         status: 200,
+        //         message: 'Attendance marked successfully',
+        //         data: lectures || [],
+        //     }
 
         await updateDoc(userRef, {
             [`lectures.${semester}.${day}`]: lectures,
@@ -270,8 +274,8 @@ const modifyAttendance = catchAsync(
             if (course.courseCode === courseCode) {
                 if (preStatus && course[preStatus] !== undefined)
                     course[preStatus]--
-                if (status === 'cancelled') course['total']--
-                else if (course[status] !== undefined) course[status]++
+                // if (status === 'cancelled') course['total']--
+                if (course[status] !== undefined) course[status]++
                 return { ...course }
             }
             return course
@@ -281,7 +285,7 @@ const modifyAttendance = catchAsync(
             [`courses.${semester}`]: courses,
         })
 
-        // lectures = lectures?.filter((lecture) => lecture.status !== 'cancelled')
+        lectures = lectures?.filter((lecture) => lecture.status !== 'cancelled')
 
         lectures?.sort((a, b) => a.from.localeCompare(b.from))
 
@@ -293,14 +297,16 @@ const modifyAttendance = catchAsync(
     }
 )
 
-const getAttendanceReport = catchAsync(async (userID, semester, branch) => {
-    if (!userID || !semester || !branch)
+const getAttendanceReport = catchAsync(async (userID, semester) => {
+    if (!userID || !semester)
         throw new AppError('Please, provide all the required fields', 400)
 
     const userRef = doc(USER, userID)
     const user = await getDoc(userRef)
 
     if (!user.exists()) throw new AppError('User not found', 404)
+
+    let branch = user.data().branch
 
     const total = (await Notion.getCourses(semester, branch))
         .sort((a, b) => a.courseCode.localeCompare(b.courseCode))
