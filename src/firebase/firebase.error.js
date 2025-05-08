@@ -26,7 +26,7 @@ const globalErrorHandler = (error) => {
 }
 
 const handleDevelopmentError = (error) => {
-    console.error(error)
+    console.log(error)
     return {
         status: error.status || 500,
         message: error.message,
@@ -41,7 +41,7 @@ const handleProductionError = (error) => {
             message: error.message,
         }
     }
-    console.error('Unexpected error:', error)
+    console.log('Unexpected error:', error)
     return {
         status: 500,
         message: 'Something went wrong',

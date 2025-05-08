@@ -57,7 +57,7 @@ const AuthProvider = ({ children }) => {
                     )
                 }
             } catch (error) {
-                console.error('Redirect login failed:', error)
+                console.log('Redirect login failed:', error)
                 toast.error('Sign-in failed. Please try again.', {
                     className: 'toast-error',
                 })

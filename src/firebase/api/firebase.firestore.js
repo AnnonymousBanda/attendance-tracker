@@ -164,7 +164,12 @@ const getLectures = catchAsync(async (userID, semester, day) => {
 
     let branch = user.data().branch
 
-    let lecturesFirebase = user.data().lectures?.[semester] || []
+    let lecturesFirebase =
+        user
+            .data()
+            .lectures?.[
+                semester
+            ]?.filter((lecture) => lecture.status !== 'cancelled') || []
     let lecturesNotion = (await Notion.getLectures(semester, day, branch)) || []
 
     const lectures = []
@@ -334,12 +339,12 @@ const getAttendanceReport = catchAsync(async (userID, semester) => {
                     ).toFixed(2)
                 ) * 100,
             maximumAchievableAttendance: 100,
-                // Number(
-                //     (
-                //         (total[course.courseCode] - course.absent) /
-                //         total[course.courseCode]
-                //     ).toFixed(2)
-                // ) * 100,
+            // Number(
+            //     (
+            //         (total[course.courseCode] - course.absent) /
+            //         total[course.courseCode]
+            //     ).toFixed(2)
+            // ) * 100,
             minimumLecturesToAttend: 10,
             //     Math.floor(
             //     total[course.courseCode] * 0.75 -
