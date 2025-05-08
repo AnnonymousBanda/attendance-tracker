@@ -309,7 +309,7 @@ const getAttendanceReport = catchAsync(async (userID, semester) => {
     let branch = user.data().branch
 
     const total = (await Notion.getCourses(semester, branch))
-        .sort((a, b) => a.courseCode.localeCompare(b.courseCode))
+        ?.sort((a, b) => a.courseCode.localeCompare(b.courseCode))
         .reduce((acc, course) => {
             acc[course.courseCode] = course.total
             return acc
@@ -333,17 +333,18 @@ const getAttendanceReport = catchAsync(async (userID, semester) => {
                         (course.present + course.absent + course.medical)
                     ).toFixed(2)
                 ) * 100,
-            maximumAchievableAttendance:
-                Number(
-                    (
-                        (total[course.courseCode] - course.absent) /
-                        total[course.courseCode]
-                    ).toFixed(2)
-                ) * 100,
-            minimumLecturesToAttend: Math.floor(
-                total[course.courseCode] * 0.75 -
-                    (course.present + course.medical)
-            ),
+            maximumAchievableAttendance: 100,
+                // Number(
+                //     (
+                //         (total[course.courseCode] - course.absent) /
+                //         total[course.courseCode]
+                //     ).toFixed(2)
+                // ) * 100,
+            minimumLecturesToAttend: 10,
+            //     Math.floor(
+            //     total[course.courseCode] * 0.75 -
+            //         (course.present + course.medical)
+            // ),
         }))
         ?.sort((a, b) => a.courseCode.localeCompare(b.courseCode))
 
