@@ -16,7 +16,7 @@ const db = getFirestore(app)
 
 const USER = collection(db, 'users')
 
-const register = catchAsync(
+const registerUser = catchAsync(
     async (
         userID,
         name,
@@ -74,8 +74,10 @@ const register = catchAsync(
         for (let i = 1; i <= n; i++) {
             let temp = await Notion.getCourses(semester, branch)
             courses[i] = []
-            temp = temp.sort((a, b) => a.courseCode.localeCompare(b.courseCode))
-            temp.forEach((course) => {
+            temp = temp?.sort((a, b) =>
+                a.courseCode.localeCompare(b.courseCode)
+            )
+            temp?.forEach((course) => {
                 courses[i].push({
                     courseCode: course.courseCode,
                     courseName: course.courseName,
@@ -87,6 +89,9 @@ const register = catchAsync(
         }
 
         const userRef = doc(USER, userID)
+        const userSnap = await getDoc(userRef)
+        if (userSnap.exists()) throw new AppError('User already exists', 400)
+
         await setDoc(userRef, {
             name,
             email,
@@ -98,6 +103,7 @@ const register = catchAsync(
             degree,
             semester,
             courses,
+            lectures,
         })
 
         return { status: 200, message: 'User added successfully' }
@@ -382,7 +388,7 @@ const resetSemester = catchAsync(async (userID, semester) => {
 })
 
 export {
-    register,
+    registerUser,
     modifySemester,
     getLectures,
     addExtraLecture,

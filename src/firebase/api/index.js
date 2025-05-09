@@ -1,5 +1,5 @@
 import {
-    register,
+    registerUser,
     modifySemester,
     getLectures,
     addExtraLecture,
@@ -10,7 +10,7 @@ import {
 } from './firebase.firestore.js'
 
 export {
-    register,
+    registerUser,
     modifySemester,
     getLectures,
     addExtraLecture,
