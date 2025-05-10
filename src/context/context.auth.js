@@ -53,7 +53,7 @@ const AuthProvider = ({ children }) => {
                     const accessToken = credential?.accessToken
 
                     router.replace(
-                        `/register?displayName=${displayName}&email=${email}&uid=${uid}&accessToken=${accessToken}`
+                        `/register?displayName=${displayName}&email=${email}&uuid=${uid}&accessToken=${accessToken}`
                     )
                 }
             } catch (error) {
@@ -140,7 +140,7 @@ const AuthProvider = ({ children }) => {
             const accessToken = credential?.accessToken
 
             router.replace(
-                `/register?displayName=${displayName}&email=${email}&uid=${uid}&accessToken=${accessToken}`
+                `/register?displayName=${displayName}&email=${email}&uuid=${uid}&accessToken=${accessToken}`
             )
         } catch (error) {
             console.log('Sign-in error:', error.message)
