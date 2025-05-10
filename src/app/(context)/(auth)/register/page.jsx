@@ -1,27 +1,27 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { useSearchParams } from 'next/navigation'
-import { register } from '@/firebase/api'
-import { toast } from 'react-hot-toast';
+import { useRouter, useSearchParams } from 'next/navigation'
+import { registerUser } from '@/firebase/api'
+import { toast } from 'react-hot-toast'
 
 export default function RegisterForm() {
     const searchParams = useSearchParams()
+    const router = useRouter()
 
     const name = searchParams.get('displayName') || ''
     const email = searchParams.get('email') || ''
 
-    const rollNumber = email.split('_')[1]?.split('@')[0] || ''
-    const batch = '20' + (rollNumber.substring(0, 2) || '')
-    const degreeCode = rollNumber.substring(2, 4)
-    const degree = degreeCode === '01' ? 'Btech' : 'Dual Degree'
+    const roll = email.split('_')[1]?.split('@')[0] || ''
+    const batch = '20' + (roll.substring(0, 2) || '')
+    const degreeCode = roll.substring(2, 4)
+    const degree = degreeCode === '01' ? 'BTech' : 'Dual Degree'
 
     const BRANCHESFromEnv = process.env.NEXT_PUBLIC_BRANCHES?.split('_') || []
 
-    const branchCode = rollNumber.substring(4, 6)
-    const department = branchCode
-    const UUID = searchParams.get('UUID') || ''
+    const branchCode = roll.substring(4, 6)
+    const UUID = searchParams.get('uuid') || ''
 
     const {
         register,
@@ -33,9 +33,8 @@ export default function RegisterForm() {
         defaultValues: {
             name,
             email,
-            rollNumber,
+            roll,
             degree,
-            department,
             branch: '',
             batch,
             semester: 1,
@@ -56,29 +55,70 @@ export default function RegisterForm() {
         setValue('year', `${newYear}${suffix}`)
     }, [semester, setValue])
 
+    useEffect(() => {
+        if (errors.branch) {
+            toast.error(errors.branch.message, {
+                className: 'toast-error',
+            })
+        } else if (errors.name) {
+            toast.error(errors.name.message, {
+                className: 'toast-error',
+            })
+        } else if (errors.email) {
+            toast.error(errors.email.message, {
+                className: 'toast-error',
+            })
+        } else if (errors.roll) {
+            toast.error(errors.roll.message, {
+                className: 'toast-error',
+            })
+        } else if (errors.degree) {
+            toast.error(errors.degree.message, {
+                className: 'toast-error',
+            })
+        } else if (errors.batch) {
+            toast.error(errors.batch.message, {
+                className: 'toast-error',
+            })
+        } else if (errors.semester) {
+            toast.error(errors.semester.message, {
+                className: 'toast-error',
+            })
+        } else if (errors.year) {
+            toast.error(errors.year.message, {
+                className: 'toast-error',
+            })
+        } else {
+            toast.dismiss()
+        }
+    }, [
+        errors.branch,
+        errors.name,
+        errors.email,
+        errors.roll,
+        errors.degree,
+        errors.batch,
+        errors.semester,
+        errors.year,
+    ])
+
     const onSubmit = async (data) => {
         data = {
             userID: UUID,
-            name: data.name,
-            email: data.email,
-            batch: data.batch,
-            roll: data.roll,
-            year: data.year,
-            department: data.department,
-            branch: data.branch,
-            semester: data.semester,
-            degree: data.degree,
+            ...data,
         }
+        console.log(
+            `UUID: ${data.userID} name: ${data.name} email: ${data.email} batch: ${data.batch} roll: ${data.roll} degree: ${data.degree} branch: ${data.branch} semester: ${data.semester} year: ${data.year}`
+        )
 
         try {
-            const res = await register(
+            const res = await registerUser(
                 data.userID,
                 data.name,
                 data.roll,
                 data.email,
                 data.batch,
                 data.year,
-                data.department,
                 data.branch,
                 data.semester,
                 data.degree
@@ -86,12 +126,13 @@ export default function RegisterForm() {
 
             if (res.status !== 200) throw new Error(res.message)
             setValue('UUID', res.data.UUID)
-            console.log(res.data)
-            reset()
-            
-            toast.success(' regidter successfully', {
+            // reset()
+
+            toast.success('Registration successful', {
                 className: 'toast-success',
             })
+
+            router.replace('/')
         } catch (error) {
             toast.error(error.message, { className: 'toast-error' })
         }
@@ -103,56 +144,69 @@ export default function RegisterForm() {
             : [1, 2, 3, 4, 5, 6, 7, 8]
 
     return (
-        <div className="min-h-screen px-20 flex items-center justify-center">
-            <div className="h-full  p-[1rem] max-container bg-primary rounded-lg">
-                <h1 className=" text-center text-gray-800 p-[2rem]">
+        <div className="min-h-screen flex items-center justify-center">
+            <div className="h-fit  p-[1rem] max-container bg-primary rounded-2xl my-[2rem] border-[0.5px] border-gray-200">
+                <h1 className=" text-center text-gray-800 my-[2rem]">
                     Register
                 </h1>
 
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                <form
+                    onSubmit={handleSubmit(onSubmit)}
+                    className="space-y-4 px-[2rem]"
+                >
                     <div>
-                        <h2 className="block   text-gray-700">Name</h2>
+                        <h2 className="block text-gray-700">Name</h2>
                         <input
-                            {...register('name')}
+                            {...register('name', {
+                                required: 'Name is required',
+                            })}
                             readOnly
                             className="mt-1 block w-full px-[1.5rem] py-[1rem] border border-gray-300 text-2xl rounded-md shadow-sm"
                         />
                     </div>
 
+                    <div className="flex flex-row gap-[2.5rem]">
+                        <div className="flex-1">
+                            <h2 className="block text-gray-700">Email</h2>
+                            <input
+                                {...register('email', {
+                                    required: 'Email is required',
+                                })}
+                                readOnly
+                                className="mt-1 block w-full px-[1.5rem] py-[1rem] border border-gray-300 text-2xl rounded-md shadow-sm"
+                            />
+                        </div>
+
+                        <div className="flex-1">
+                            <h2 className="block text-gray-700">Roll Number</h2>
+                            <input
+                                {...register('roll', {
+                                    required: 'Roll number is required',
+                                })}
+                                readOnly
+                                className="mt-1 block w-full px-[1.5rem] py-[1rem] text-2xl border border-gray-300 rounded-md shadow-sm"
+                            />
+                        </div>
+                    </div>
+
                     <div>
-                        <h2 className="block  text-gray-700">Email</h2>
+                        <h2 className="block text-gray-700">Degree</h2>
                         <input
-                            {...register('email')}
+                            {...register('degree', {
+                                required: 'Degree is required',
+                            })}
                             readOnly
-                            className="mt-1 block w-full px-[1.5rem] py-[1rem] border border-gray-300 text-2xl rounded-md shadow-sm"
+                            className="mt-1 block w-full border border-gray-300 px-[1.5rem] py-[1rem] text-2xl rounded-md shadow-sm"
                         />
                     </div>
 
                     <div>
-                        <h2 className="block text-gray-700">Roll Number</h2>
-                        <input
-                            {...register('rollNumber')}
-                            readOnly
-                            className="mt-1 block w-full px-[1.5rem] py-[1rem] text-2xl border border-gray-300 rounded-md shadow-sm"
-                        />
-                    </div>
-
-                    <div>
-                        <h2 className="block  text-gray-700">Degree</h2>
-                        <input
-                            {...register('degree')}
-                            readOnly
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 px-[1.5rem] py-[1rem] text-2xl rounded-md shadow-sm"
-                        />
-                    </div>
-
-                    <div>
-                        <h2 className="block  text-gray-700">Branch</h2>
+                        <h2 className="block text-gray-700">Branch</h2>
                         <select
                             {...register('branch', {
-                                required: 'REQUIRED FIELD',
+                                required: 'Please select a branch',
                             })}
-                            className="w-full p-2 border border-gray-300 shadow-sm rounded px-[1.5rem] py-[1rem] text-2xl  max-h-48 overflow-y-auto text-gray-700"
+                            className="w-full p-2 border border-gray-300 shadow-sm rounded px-[1.5rem] py-[1rem] text-2xl max-h-48 overflow-y-auto text-gray-700"
                         >
                             <option value="">SELECT BRANCH</option>
                             {BRANCHESFromEnv.map((branch) => (
@@ -161,61 +215,52 @@ export default function RegisterForm() {
                                 </option>
                             ))}
                         </select>
-                        {errors.branch && (
-                            <p className="text-red-500  text-sm ">
-                                {errors.branch.message}
-                            </p>
-                        )}
                     </div>
 
                     <div>
-                        <h2 className="block  text-gray-700">Department</h2>
+                        <h2 className="block text-gray-700">Batch</h2>
                         <input
-                            {...register('department', {
-                                required: 'REQUIRED FIELD',
+                            {...register('batch', {
+                                required: 'Batch is required',
                             })}
-                            className="mt-1 block w-full  border border-gray-300 rounded-md px-[1.5rem] py-[1rem] text-2xl shadow-sm"
-                            placeholder="Enter your department"
-                        />
-                        {errors.department && (
-                            <p className="text-red-500 text-sm mt-1">
-                                {errors.department.message}
-                            </p>
-                        )}
-                    </div>
-
-                    <div>
-                        <h2 className="block  text-gray-700">Batch</h2>
-                        <input
-                            {...register('batch')}
-                            readOnly
-                            className="mt-1 block w-full  px-[1.5rem] py-[1rem] text-2xl border border-gray-300 rounded-md shadow-sm"
-                        />
-                    </div>
-
-                    <div>
-                        <h2 className="block text-gray-700">Semester</h2>
-                        <select
-                            {...register('semester')}
-                            className="mt-1 block w-full px-[1.5rem] py-[1rem] text-2xl border border-gray-300 rounded-md shadow-sm"
-                        >
-                            {semesterOptions.map((sem) => (
-                                <option key={sem} value={sem}>
-                                    {sem}
-                                </option>
-                            ))}
-                        </select>
-                        <h2 className="block  text-gray-700 mt-2">Year</h2>
-                        <input
-                            {...register('year')}
                             readOnly
                             className="mt-1 block w-full px-[1.5rem] py-[1rem] text-2xl border border-gray-300 rounded-md shadow-sm"
                         />
                     </div>
-                    <div className="flex justify-center items-center w-full">
+
+                    <div className="flex flex-row gap-[2.5rem] w-full">
+                        <div className="flex-1">
+                            <h2 className="block text-gray-700">Semester</h2>
+                            <select
+                                {...register('semester', {
+                                    required: 'Please select a semester',
+                                })}
+                                className="mt-1 block w-full px-[1.5rem] py-[1rem] text-2xl border border-gray-300 rounded-md shadow-sm"
+                            >
+                                {semesterOptions.map((sem) => (
+                                    <option key={sem} value={sem}>
+                                        {sem}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="flex-1">
+                            <h2 className="block text-gray-700 mt-2">Year</h2>
+                            <input
+                                {...register('year', {
+                                    required: 'Year is required',
+                                })}
+                                readOnly
+                                className="mt-1 block w-full px-[1.5rem] py-[1rem] text-2xl border border-gray-300 rounded-md shadow-sm"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="flex justify-center items-center w-full mt-[2.5rem]">
                         <button
                             type="submit"
-                            className="w-50  px-4 py-2 bg-green-600 text-white font-medium rounded-md hover:bg-green-700"
+                            className="px-[2.5rem] py-[0.5rem] bg-green-600 text-white rounded-md cursor-pointer hover:bg-green-700"
                         >
                             <h2>Submit</h2>
                         </button>
