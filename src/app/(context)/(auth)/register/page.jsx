@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { registerUser } from '@/firebase/api'
 import { toast } from 'react-hot-toast'
+import Notion from '@/notion'
 
 export default function RegisterForm() {
     const searchParams = useSearchParams()
@@ -20,7 +21,6 @@ export default function RegisterForm() {
 
     const BRANCHESFromEnv = process.env.NEXT_PUBLIC_BRANCHES?.split('_') || []
 
-    const branchCode = roll.substring(4, 6)
     const UUID = searchParams.get('uuid') || ''
 
     const {

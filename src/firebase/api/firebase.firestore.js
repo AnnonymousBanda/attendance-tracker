@@ -24,7 +24,6 @@ const registerUser = catchAsync(
         email,
         batch,
         year,
-        department,
         branch,
         semester,
         degree
@@ -36,7 +35,6 @@ const registerUser = catchAsync(
             !roll ||
             !batch ||
             !year ||
-            !department ||
             !branch ||
             !semester ||
             !degree
@@ -72,7 +70,7 @@ const registerUser = catchAsync(
 
         const courses = {}
         for (let i = 1; i <= n; i++) {
-            let temp = await Notion.getCourses(semester, branch)
+            let temp = (await Notion.getCourses(semester, branch)) || []
             courses[i] = []
             temp = temp?.sort((a, b) =>
                 a.courseCode.localeCompare(b.courseCode)
@@ -98,7 +96,6 @@ const registerUser = catchAsync(
             roll,
             batch,
             year,
-            department,
             branch,
             degree,
             semester,
@@ -127,7 +124,7 @@ const getUser = catchAsync(async (userID) => {
             name: user.data().name,
             email: user.data().email,
             roll: user.data().roll,
-            department: user.data().department,
+            // department: user.data().department,
             branch: user.data().branch,
             degree: user.data().degree,
             semester: user.data().semester,
