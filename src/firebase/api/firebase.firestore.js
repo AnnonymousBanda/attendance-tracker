@@ -163,7 +163,7 @@ const modifySemester = catchAsync(async (userID, semester) => {
 
     if (!user.exists()) throw new AppError('User not found', 404)
 
-    degree = user.data().degree
+    const degree = user.data().degree
     semester = Number(semester)
     if (
         (degree === 'Dual Degree' && (semester < 1 || semester > 10)) ||
@@ -192,11 +192,10 @@ const getLectures = catchAsync(async (userID, semester, day) => {
             .data()
             .lectures?.[
                 semester
-            ]?.filter((lecture) => lecture.status !== 'cancelled') || []
+            ]?.[day]?.filter((lecture) => lecture.status !== 'cancelled') || []
     let lecturesNotion = (await Notion.getLectures(semester, day, branch)) || []
 
-    const lectures = []
-    lectures.concat(lecturesFirebase).concat(lecturesNotion)
+    const lectures = [].concat(lecturesFirebase).concat(lecturesNotion)
     lectures?.sort((a, b) => a.from.localeCompare(b.from))
 
     return {

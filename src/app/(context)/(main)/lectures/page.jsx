@@ -63,10 +63,7 @@ const Timetable = () => {
                 const res = await getLectures(
                     user.userID,
                     user.semester,
-                    selectedDay.date
-                        .toLocaleDateString('en-GB')
-                        .split('/')
-                        .join('_')
+                    selectedDay.day
                 )
                 if (res.status !== 200) throw new Error(res.message)
 
@@ -197,10 +194,7 @@ const Timetable = () => {
                                     key={index}
                                     lecture={lec}
                                     setLectures={setLectures}
-                                    date={selectedDay.date
-                                        .toLocaleDateString('en-GB')
-                                        .split('/')
-                                        .join('_')}
+                                    day={selectedDay.day}
                                 />
                             ))}
                         </div>

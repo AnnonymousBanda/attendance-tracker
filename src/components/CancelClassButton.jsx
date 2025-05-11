@@ -5,7 +5,7 @@ import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { MdClose } from 'react-icons/md'
 
-const CancelButton = ({ lecture, date, setLectures }) => {
+const CancelButton = ({ lecture, day, setLectures }) => {
     const [isDialog, setDialog] = useState(false)
     const handleClick = () => {
         setDialog(!isDialog)
@@ -22,7 +22,7 @@ const CancelButton = ({ lecture, date, setLectures }) => {
             {isDialog && (
                 <CancelDialog
                     lecture={lecture}
-                    date={date}
+                    day={day}
                     setLectures={setLectures}
                     setDialog={setDialog}
                 />
@@ -31,7 +31,7 @@ const CancelButton = ({ lecture, date, setLectures }) => {
     )
 }
 
-const CancelDialog = ({ lecture, date, setLectures, setDialog }) => {
+const CancelDialog = ({ lecture, day, setLectures, setDialog }) => {
     const [loading, setLoading] = useState(false)
     const handleClose = () => {
         setDialog(false)
@@ -46,7 +46,7 @@ const CancelDialog = ({ lecture, date, setLectures, setDialog }) => {
                 user.semester,
                 lecture.to,
                 lecture.from,
-                date,
+                day,
                 lecture.courseCode,
                 'cancelled'
             )

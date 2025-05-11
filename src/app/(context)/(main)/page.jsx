@@ -44,7 +44,9 @@ const Home = () => {
                 let res = await getLectures(
                     user.userID,
                     user.semester,
-                    new Date().toLocaleDateString('en-GB').split('/').join('_')
+                    new Date()
+                        .toLocaleDateString('en-US', { weekday: 'short' })
+                        .toLowerCase()
                 )
 
                 if (res.status !== 200) throw new Error(res.message)
@@ -132,10 +134,12 @@ const Home = () => {
 
         try {
             const res = await addExtraLecture(
-                '1',
+                user.userID,
                 data,
-                '4',
-                new Date().toLocaleDateString('en-GB').split('/').join('_')
+                user.semester,
+                new Date()
+                    .toLocaleDateString('en-US', { weekday: 'short' })
+                    .toLowerCase()
             )
             if (res.status !== 200) throw new Error(res.message)
 
@@ -188,18 +192,20 @@ const Home = () => {
 
                             <AttendanceButton
                                 lecture={cls}
-                                date={new Date()
-                                    .toLocaleDateString('en-GB')
-                                    .split('/')
-                                    .join('_')}
+                                day={new Date()
+                                    .toLocaleDateString('en-US', {
+                                        weekday: 'short',
+                                    })
+                                    .toLowerCase()}
                                 setLectures={setClasses}
                             />
                             <CancelClassButton
                                 lecture={cls}
-                                date={new Date()
-                                    .toLocaleDateString('en-GB')
-                                    .split('/')
-                                    .join('_')}
+                                day={new Date()
+                                    .toLocaleDateString('en-US', {
+                                        weekday: 'short',
+                                    })
+                                    .toLowerCase()}
                                 setLectures={setClasses}
                             />
                         </div>
@@ -242,18 +248,20 @@ const Home = () => {
 
                                 <AttendanceButton
                                     lecture={cls}
-                                    date={new Date()
-                                        .toLocaleDateString('en-GB')
-                                        .split('/')
-                                        .join('_')}
+                                    day={new Date()
+                                        .toLocaleDateString('en-US', {
+                                            weekday: 'short',
+                                        })
+                                        .toLowerCase()}
                                     setLectures={setClasses}
                                 />
                                 <CancelClassButton
                                     lecture={cls}
-                                    date={new Date()
-                                        .toLocaleDateString('en-GB')
-                                        .split('/')
-                                        .join('_')}
+                                    day={new Date()
+                                        .toLocaleDateString('en-US', {
+                                            weekday: 'short',
+                                        })
+                                        .toLowerCase()}
                                     setLectures={setClasses}
                                 />
                             </div>
@@ -297,10 +305,11 @@ const Home = () => {
                                 </p>
                                 <CancelClassButton
                                     lecture={cls}
-                                    date={new Date()
-                                        .toLocaleDateString('en-GB')
-                                        .split('/')
-                                        .join('_')}
+                                    day={new Date()
+                                        .toLocaleDateString('en-US', {
+                                            weekday: 'short',
+                                        })
+                                        .toLowerCase()}
                                     setLectures={setClasses}
                                 />
                             </div>

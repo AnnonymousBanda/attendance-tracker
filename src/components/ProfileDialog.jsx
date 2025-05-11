@@ -13,6 +13,7 @@ import { useAuth } from '@/context'
 import { useState } from 'react'
 import { modifySemester } from '@/firebase/api/firebase.firestore'
 import toast from 'react-hot-toast'
+import { useRouter } from 'next/navigation'
 
 export default function ProfileDialog({ setisDialogOpen }) {
     const handleClose = () => {
@@ -23,6 +24,7 @@ export default function ProfileDialog({ setisDialogOpen }) {
     const [semester, setSemester] = useState(user?.semester)
     const [loading, setLoading] = useState(false)
     const [buttonClicked, setButtonClicked] = useState(false)
+    const router = useRouter()
 
     const handleEdit = () => {
         setEdit(!edit)
@@ -38,11 +40,15 @@ export default function ProfileDialog({ setisDialogOpen }) {
             const res = await modifySemester(user?.userID, semester)
             if (res.status !== 200) throw new Error(res.message)
 
-            console.log(semester)
             setEdit(false)
             setSemester(semester)
+
             toast.success('Semester updated', { className: 'toast-success' })
+
             setLoading(false)
+            setisDialogOpen(false)
+
+            router.replace('/')
         } catch (error) {
             toast.error(error.message, { className: 'toast-error' })
             setLoading(false)

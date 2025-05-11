@@ -7,7 +7,7 @@ import { RxCrossCircled } from 'react-icons/rx'
 import { toast } from 'react-hot-toast'
 import { useAuth } from '@/context'
 
-function AttendanceButton({ lecture, date, setLectures }) {
+function AttendanceButton({ lecture, day, setLectures }) {
     const [status, setStatus] = useState(lecture.status)
 
     useEffect(() => {
@@ -22,7 +22,7 @@ function AttendanceButton({ lecture, date, setLectures }) {
                 user.semester,
                 lecture.to,
                 lecture.from,
-                date,
+                day,
                 lecture.courseCode,
                 status
             )
