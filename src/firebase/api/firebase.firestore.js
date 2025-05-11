@@ -41,13 +41,17 @@ const registerUser = catchAsync(
         )
             throw new AppError('Please, provide all the required fields', 400)
 
-        if (year < 1 || year > 5) throw new AppError('Invalid year', 400)
-
         if (degree !== 'BTech' && degree !== 'Dual Degree')
             throw new AppError(
                 'Please, select between BTech or Dual Degree',
                 400
             )
+
+        if (year < 1) throw new AppError('Invalid year', 400)
+        if (degree === 'Dual Degree' && year > 5)
+            throw new AppError('Invalid year', 400)
+        if (degree === 'BTech' && year > 4)
+            if (year < 1 || year > 5) throw new AppError('Invalid year', 400)
 
         if (
             (degree === 'Dual Degree' && (semester < 1 || semester > 10)) ||
@@ -68,13 +72,14 @@ const registerUser = catchAsync(
                 sun: [],
             }
 
+        //fetch all semester courses from notion
+        let temp = (await Notion.getCourses(semester, branch)) || []
+        console.log('Courses fetched')
+        temp = temp?.sort((a, b) => a.courseCode.localeCompare(b.courseCode))
+
         const courses = {}
         for (let i = 1; i <= n; i++) {
-            let temp = (await Notion.getCourses(semester, branch)) || []
             courses[i] = []
-            temp = temp?.sort((a, b) =>
-                a.courseCode.localeCompare(b.courseCode)
-            )
             temp?.forEach((course) => {
                 courses[i].push({
                     courseCode: course.courseCode,
@@ -103,7 +108,23 @@ const registerUser = catchAsync(
             lectures,
         })
 
-        return { status: 200, message: 'User added successfully' }
+        return {
+            status: 200,
+            message: 'User added successfully',
+            data: {
+                userID,
+                name,
+                email,
+                roll,
+                batch,
+                year,
+                branch,
+                degree,
+                semester,
+                courses,
+                lectures,
+            },
+        }
     }
 )
 
@@ -124,7 +145,6 @@ const getUser = catchAsync(async (userID) => {
             name: user.data().name,
             email: user.data().email,
             roll: user.data().roll,
-            // department: user.data().department,
             branch: user.data().branch,
             degree: user.data().degree,
             semester: user.data().semester,

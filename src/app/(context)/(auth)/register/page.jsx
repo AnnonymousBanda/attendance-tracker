@@ -5,11 +5,12 @@ import { useForm } from 'react-hook-form'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { registerUser } from '@/firebase/api'
 import { toast } from 'react-hot-toast'
-import Notion from '@/notion'
+import { useAuth } from '@/context'
 
 export default function RegisterForm() {
     const searchParams = useSearchParams()
     const router = useRouter()
+    const { setUser } = useAuth()
 
     const name = searchParams.get('displayName') || ''
     const email = searchParams.get('email') || ''
@@ -107,9 +108,6 @@ export default function RegisterForm() {
             userID: UUID,
             ...data,
         }
-        console.log(
-            `UUID: ${data.userID} name: ${data.name} email: ${data.email} batch: ${data.batch} roll: ${data.roll} degree: ${data.degree} branch: ${data.branch} semester: ${data.semester} year: ${data.year}`
-        )
 
         try {
             const res = await registerUser(
@@ -125,13 +123,12 @@ export default function RegisterForm() {
             )
 
             if (res.status !== 200) throw new Error(res.message)
-            setValue('UUID', res.data.UUID)
-            // reset()
 
             toast.success('Registration successful', {
                 className: 'toast-success',
             })
 
+            setUser(res.data)
             router.replace('/')
         } catch (error) {
             toast.error(error.message, { className: 'toast-error' })
