@@ -2,23 +2,22 @@ import { AppError, catchAsync } from '@/firebase/firebase.error'
 
 const getCourses = catchAsync(async (semester, branch) => {
     try {
-        const res = await fetch(process.env.NEXT_PUBLIC_GSHEET_URL)
-        const link = await res.json()
+        const id = process.env.NEXT_PUBLIC_GSHEET_ID
+        const url = `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:json&sheet=${branch}`
 
-        if (!res.ok) {
+        const response = await fetch(url)
+
+        if (response.status !== 200) {
             throw new AppError('Failed to fetch courses', 404)
         }
 
-        const courses = await fetch(
-            `${link[branch]}?action=getcourses&semester=${semester}`
-        )
-        const data = await courses.json()
+        const raw = await response.text()
+        const json = JSON.parse(raw.substr(47).slice(0, -2))
 
-        if (!courses.ok) {
-            throw new AppError('Failed to fetch courses', 404)
-        }
+        const allcourses = parseCourses(json)
+        const semcourses = allcourses[semester]
 
-        return data
+        return semcourses
     } catch (error) {
         console.log('Error fetching courses:', error)
         throw new AppError(error.message, 500)
@@ -27,46 +26,129 @@ const getCourses = catchAsync(async (semester, branch) => {
 
 const getLectures = catchAsync(async (semester, day, branch) => {
     try {
-        const res = await fetch(process.env.NEXT_PUBLIC_GSHEET_URL)
-        const link = await res.json()
+        const id = process.env.NEXT_PUBLIC_GSHEET_ID
 
-        if (!res.ok) {
-            throw new AppError('Failed to fetch courses', 404)
-        }
+        const cellrange = JSON.parse(process.env.NEXT_PUBLIC_CELL_RANGE)
+        const semCellRange = cellrange[`${semester}`]
 
-        const lectures = await fetch(
-            `${link[branch]}?action=getlectures&semester=${semester}&day=${day}`
-        )
-        const data = await lectures.json()
+        const url = `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:json&tq=SELECT ${semCellRange}&sheet=${branch}`
+        const response = await fetch(url)
 
-        if (!lectures.ok) {
+        if (response.status !== 200) {
             throw new AppError('Failed to fetch lectures', 404)
         }
 
-        return data
+        const raw = await response.text()
+        const json = JSON.parse(raw.substr(47).slice(0, -2))
+
+        const timetable = extractTimetable(json)
+        const lectures = timetable[day]
+
+        return lectures
     } catch (error) {
         console.log('Error fetching lectures:', error)
         throw new AppError(error.message, 500)
     }
 })
 
-const getDatabaseLinks = catchAsync(async () => {
-    const url = process.env.NEXT_PUBLIC_GSHEET_URL
+const parseCourses = (json) => {
+    const totalSemesters = 4
+    const columnsPerSemester = 14
+    const semesterData = {}
 
-    const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    })
+    const rows = json.table.rows
 
-    if (!response.ok) {
-        throw new AppError('Failed to fetch database links', 404)
+    for (let sem = 0; sem < totalSemesters; sem++) {
+        const semName = `${sem + 1}`
+        semesterData[semName] = []
+
+        const baseIndex = sem * columnsPerSemester
+
+        rows.forEach((row, rowIndex) => {
+            const cells = row?.c || []
+
+            const nameCell = cells[baseIndex]
+            const codeCell = cells[baseIndex + 1]
+            const totalClassesCell = cells[baseIndex + 2]
+
+            const courseName = nameCell?.v || null
+            const courseCode = codeCell?.v || null
+            const total = totalClassesCell?.v || null
+
+            if (courseName && courseCode) {
+                semesterData[semName].push({
+                    courseName,
+                    courseCode,
+                    total,
+                })
+            }
+        })
     }
 
-    const data = await response.json()
-    console.log(data)
-    return data
-})
+    return semesterData
+}
+
+function extractTimetable(json) {
+    const weekdays = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
+
+    const cols = json.table.cols.slice(3, 13)
+    const rows = json.table.rows
+
+    const lectures = {
+        mon: [],
+        tue: [],
+        wed: [],
+        thu: [],
+        fri: [],
+        sat: [],
+        sun: [],
+    }
+
+    cols.forEach((col, colIndex) => {
+        const label = col.label
+        const [from, to] = label.split(' ')[0].split('-')
+
+        const slotCourseCodes = label.split(' ').slice(1, 8)
+
+        weekdays.forEach((day, dayIndex) => {
+            const code = slotCourseCodes[dayIndex]
+            if (!code) return
+
+            const row = rows.find((r) => r.c[1] && r.c[1].v === code)
+            if (!row) return
+
+            const courseName = row.c[0]?.v
+
+            lectures[day].push({
+                courseCode: code,
+                courseName: courseName,
+                from,
+                to,
+                status: null,
+            })
+        })
+    })
+
+    return lectures
+}
+
+// const getDatabaseLinks = catchAsync(async () => {
+//     const url = process.env.NEXT_PUBLIC_GSHEET_URL
+
+//     const response = await fetch(url, {
+//         method: 'GET',
+//         headers: {
+//             'Content-Type': 'application/json',
+//         },
+//     })
+
+//     if (!response.ok) {
+//         throw new AppError('Failed to fetch database links', 404)
+//     }
+
+//     const data = await response.json()
+//     console.log(data)
+//     return data
+// })
 
 export { getCourses, getLectures }
