@@ -1,5 +1,16 @@
 import { AppError, catchAsync } from '@/firebase/firebase.error'
 
+const cellrange = {
+    1: 'A, B, C, D, E, F, G, H, I, J, K, L, M',
+    2: 'O, P, Q, R, S, T, U, V, W, X, Y, Z, AA',
+    3: 'AC, AD, AE, AF, AG, AH, AI, AJ, AK, AL, AM, AN, AO',
+    4: 'AP, AQ, AR, AS, AT, AU, AV, AW, AX, AY, AZ, BA, BB',
+    5: 'BC, BD, BE, BF, BG, BH, BI, BJ, BK, BL, BM, BN, BO',
+    6: 'BP, BQ, BR, BS, BT, BU, BV, BW, BX, BY, BZ, CA, CB',
+    7: 'CC, CD, CE, CF, CG, CH, CI, CJ, CK, CL, CM, CN, CO',
+    8: 'CP, CQ, CR, CS, CT, CU, CV, CW, CX, CY, CZ, DA, DB',
+}
+
 const getCourses = catchAsync(async (semester, branch) => {
     try {
         const id = process.env.NEXT_PUBLIC_GSHEET_ID
@@ -27,9 +38,7 @@ const getCourses = catchAsync(async (semester, branch) => {
 const getLectures = catchAsync(async (semester, day, branch) => {
     try {
         const id = process.env.NEXT_PUBLIC_GSHEET_ID
-
-        const cellrange = JSON.parse(process.env.NEXT_PUBLIC_CELL_RANGE)
-        const semCellRange = cellrange[`${semester}`]
+        const semCellRange = cellrange[semester]
 
         const url = `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:json&tq=SELECT ${semCellRange}&sheet=${branch}`
         const response = await fetch(url)
