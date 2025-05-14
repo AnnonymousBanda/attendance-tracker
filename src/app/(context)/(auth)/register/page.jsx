@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { registerUser } from '@/firebase/api'
@@ -11,6 +11,7 @@ export default function RegisterForm() {
     const searchParams = useSearchParams()
     const router = useRouter()
     const { setUser } = useAuth()
+    const [loading, setLoading] = useState(false)
 
     const name = searchParams.get('displayName') || ''
     const email = searchParams.get('email') || ''
@@ -104,6 +105,9 @@ export default function RegisterForm() {
     ])
 
     const onSubmit = async (data) => {
+        setLoading(true)
+
+        const toastID = toast.loading('Registering...')
         data = {
             userID: UUID,
             ...data,
@@ -124,6 +128,7 @@ export default function RegisterForm() {
 
             if (res.status !== 200) throw new Error(res.message)
 
+            toast.dismiss(toastID)
             toast.success('Registration successful', {
                 className: 'toast-success',
             })
@@ -131,7 +136,10 @@ export default function RegisterForm() {
             setUser(res.data)
             router.replace('/')
         } catch (error) {
+            toast.dismiss(toastID)
             toast.error(error.message, { className: 'toast-error' })
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -152,58 +160,58 @@ export default function RegisterForm() {
                     className="space-y-4 px-[2rem]"
                 >
                     <div>
-                        <h2 className="block text-gray-700">Name</h2>
+                        <h2 className="block text-gray-800">Name</h2>
                         <input
                             {...register('name', {
                                 required: 'Name is required',
                             })}
                             readOnly
-                            className="mt-1 block w-full px-[1.5rem] py-[1rem] border border-gray-300 text-2xl rounded-md shadow-sm"
+                            className="bg-[#fcfcfc] mt-1 block w-full px-[1.5rem] py-[1rem] border border-gray-300 text-2xl rounded-md shadow-sm opacity-50 cursor-not-allowed"
                         />
                     </div>
 
                     <div className="flex flex-row gap-[2.5rem]">
                         <div className="flex-1">
-                            <h2 className="block text-gray-700">Email</h2>
+                            <h2 className="block text-gray-800">Email</h2>
                             <input
                                 {...register('email', {
                                     required: 'Email is required',
                                 })}
                                 readOnly
-                                className="mt-1 block w-full px-[1.5rem] py-[1rem] border border-gray-300 text-2xl rounded-md shadow-sm"
+                                className="bg-[#fcfcfc] mt-1 block w-full px-[1.5rem] py-[1rem] border border-gray-300 text-2xl rounded-md shadow-sm opacity-50 cursor-not-allowed"
                             />
                         </div>
 
                         <div className="flex-1">
-                            <h2 className="block text-gray-700">Roll Number</h2>
+                            <h2 className="block text-gray-800">Roll Number</h2>
                             <input
                                 {...register('roll', {
                                     required: 'Roll number is required',
                                 })}
                                 readOnly
-                                className="mt-1 block w-full px-[1.5rem] py-[1rem] text-2xl border border-gray-300 rounded-md shadow-sm"
+                                className="bg-[#fcfcfc] mt-1 block w-full px-[1.5rem] py-[1rem] text-2xl border border-gray-300 rounded-md shadow-sm opacity-50 cursor-not-allowed"
                             />
                         </div>
                     </div>
 
                     <div>
-                        <h2 className="block text-gray-700">Degree</h2>
+                        <h2 className="block text-gray-800">Degree</h2>
                         <input
                             {...register('degree', {
                                 required: 'Degree is required',
                             })}
                             readOnly
-                            className="mt-1 block w-full border border-gray-300 px-[1.5rem] py-[1rem] text-2xl rounded-md shadow-sm"
+                            className="bg-[#fcfcfc] mt-1 block w-full border border-gray-300 px-[1.5rem] py-[1rem] text-2xl rounded-md shadow-sm opacity-50 cursor-not-allowed"
                         />
                     </div>
 
                     <div>
-                        <h2 className="block text-gray-700">Branch</h2>
+                        <h2 className="block text-gray-800">Branch</h2>
                         <select
                             {...register('branch', {
                                 required: 'Please select a branch',
                             })}
-                            className="w-full p-2 border border-gray-300 shadow-sm rounded px-[1.5rem] py-[1rem] text-2xl max-h-48 overflow-y-auto text-gray-700"
+                            className="bg-[#fcfcfc] w-full p-2 border border-gray-300 shadow-sm rounded px-[1.5rem] py-[1rem] text-2xl max-h-48 overflow-y-auto"
                         >
                             <option value="">SELECT BRANCH</option>
                             {BRANCHESFromEnv.map((branch) => (
@@ -215,24 +223,24 @@ export default function RegisterForm() {
                     </div>
 
                     <div>
-                        <h2 className="block text-gray-700">Batch</h2>
+                        <h2 className="block text-gray-800">Batch</h2>
                         <input
                             {...register('batch', {
                                 required: 'Batch is required',
                             })}
                             readOnly
-                            className="mt-1 block w-full px-[1.5rem] py-[1rem] text-2xl border border-gray-300 rounded-md shadow-sm"
+                            className="bg-[#fcfcfc] mt-1 block w-full px-[1.5rem] py-[1rem] text-2xl border border-gray-300 rounded-md shadow-sm opacity-50 cursor-not-allowed"
                         />
                     </div>
 
                     <div className="flex flex-row gap-[2.5rem] w-full">
                         <div className="flex-1">
-                            <h2 className="block text-gray-700">Semester</h2>
+                            <h2 className="block text-gray-800">Semester</h2>
                             <select
                                 {...register('semester', {
                                     required: 'Please select a semester',
                                 })}
-                                className="mt-1 block w-full px-[1.5rem] py-[1rem] text-2xl border border-gray-300 rounded-md shadow-sm"
+                                className="bg-[#fcfcfc] mt-1 block w-full px-[1.5rem] py-[1rem] text-2xl border border-gray-300 rounded-md shadow-sm"
                             >
                                 {semesterOptions.map((sem) => (
                                     <option key={sem} value={sem}>
@@ -243,13 +251,13 @@ export default function RegisterForm() {
                         </div>
 
                         <div className="flex-1">
-                            <h2 className="block text-gray-700 mt-2">Year</h2>
+                            <h2 className="block text-gray-800 mt-2">Year</h2>
                             <input
                                 {...register('year', {
                                     required: 'Year is required',
                                 })}
                                 readOnly
-                                className="mt-1 block w-full px-[1.5rem] py-[1rem] text-2xl border border-gray-300 rounded-md shadow-sm"
+                                className="bg-[#fcfcfc] mt-1 block w-full px-[1.5rem] py-[1rem] text-2xl border border-gray-300 rounded-md shadow-sm opacity-50 cursor-not-allowed"
                             />
                         </div>
                     </div>
@@ -257,7 +265,11 @@ export default function RegisterForm() {
                     <div className="flex justify-center items-center w-full mt-[2.5rem]">
                         <button
                             type="submit"
-                            className="px-[2.5rem] py-[0.5rem] bg-green-600 text-white rounded-md cursor-pointer hover:bg-green-700"
+                            className={`px-[2.5rem] py-[0.5rem] bg-green-600 text-white rounded-md cursor-pointer ${
+                                loading
+                                    ? 'opacity-50 cursor-not-allowed'
+                                    : 'hover:bg-green-700'
+                            }`}
                         >
                             <h2>Submit</h2>
                         </button>
