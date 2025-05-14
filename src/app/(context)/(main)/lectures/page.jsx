@@ -60,6 +60,7 @@ const Timetable = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                setLoading(true);
                 const res = await getLectures(
                     user.userID,
                     user.semester,
