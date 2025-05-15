@@ -172,7 +172,7 @@ const Home = () => {
         return (
             <div className="space-y-3">
                 <h2 className="text-gray-700">Ongoing Class</h2>
-                {ongoingClasses.length > 0 ? (
+                {ongoingClasses?.length > 0 ? (
                     ongoingClasses.map((cls, i) => (
                         <div
                             key={cls.courseCode + cls.from + i}

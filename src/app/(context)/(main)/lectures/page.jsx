@@ -14,7 +14,7 @@ import toast from 'react-hot-toast'
 
 const Timetable = () => {
     const [selectedDay, setSelectedtDay] = useState(() => {
-        const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
+        const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
         const today = new Date()
         const todayIndex = today.getDay() // === 0 ? 0 : today.getDay() - 1
         const todayDate = new Date(today)
@@ -60,7 +60,7 @@ const Timetable = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                setLoading(true);
+                setLoading(true)
                 const res = await getLectures(
                     user.userID,
                     user.semester,
@@ -152,10 +152,7 @@ const Timetable = () => {
                 user.userID,
                 lectureData,
                 user.semester,
-                selectedDay.date
-                    .toLocaleDateString('en-GB')
-                    .split('/')
-                    .join('_')
+                selectedDay.day
             )
 
             if (res.status !== 200) throw new Error(res.message)
@@ -171,7 +168,7 @@ const Timetable = () => {
     }
 
     return (
-        <div className="bg-primary flex flex-col h-full p-[1rem] relative rounded-lg">
+        <div className="bg-primary flex flex-col h-full w-full p-[1rem] relative rounded-lg">
             <div className="mb-[1rem]">
                 <DaySelector daysDate={daysDate} />
             </div>
@@ -183,14 +180,14 @@ const Timetable = () => {
             ) : (
                 <div
                     className={`p-[1rem] flex-1 overflow-auto flex ${
-                        lectures.length > 0
+                        lectures?.length > 0
                             ? 'flex-col'
                             : 'items-center justify-center'
                     }`}
                 >
-                    {lectures.length > 0 ? (
+                    {lectures?.length > 0 ? (
                         <div className="flex flex-col gap-[2rem] h-auto">
-                            {lectures.map((lec, index) => (
+                            {lectures?.map((lec, index) => (
                                 <Lecture
                                     key={index}
                                     lecture={lec}
@@ -239,7 +236,7 @@ const Timetable = () => {
                     }}
                 >
                     <div
-                        className="bg-white p-[2rem] rounded-lg max-w-[50rem] w-auto flex gap-[1rem] flex-col"
+                        className="bg-white p-[4rem] rounded-lg max-w-[50rem] w-full flex gap-[1rem] flex-col"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <h2 className="text-center text-gray-800 font-semibold">
