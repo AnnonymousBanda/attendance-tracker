@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { registerUser } from '@/firebase/api'
 import { toast } from 'react-hot-toast'
 import { useAuth } from '@/context'
+import { BRANCHES } from '@/utils/branches'
 
 export default function RegisterForm() {
     const searchParams = useSearchParams()
@@ -21,7 +22,7 @@ export default function RegisterForm() {
     const degreeCode = roll.substring(2, 4)
     const degree = degreeCode === '01' ? 'BTech' : 'Dual Degree'
 
-    const BRANCHESFromEnv = process.env.NEXT_PUBLIC_BRANCHES?.split('_') || []
+    const BRANCHESFromEnv = BRANCHES.split('_') || [] //process.env.NEXT_PUBLIC_BRANCHES?.split('_') || []
 
     const UUID = searchParams.get('uuid') || ''
 
