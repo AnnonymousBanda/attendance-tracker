@@ -4,25 +4,9 @@ import { Loader } from '@/components'
 import { getUser } from '@/firebase/api/firebase.firestore'
 import { createContext, useContext, useState, useEffect } from 'react'
 import { toast } from 'react-hot-toast'
-import {
-    getAuth,
-    signInWithPopup,
-    signOut,
-    OAuthProvider,
-    onAuthStateChanged,
-    signInWithRedirect,
-    getRedirectResult,
-} from 'firebase/auth'
 import { usePathname, useRouter } from 'next/navigation'
-import { app } from '@/firebase/firebase.config'
-
-const auth = getAuth(app)
-const provider = new OAuthProvider('microsoft.com')
-provider.addScope('user.read')
-provider.addScope('email')
-provider.setCustomParameters({
-    prompt: 'select_account',
-})
+import axios from 'axios'
+import { generatePKCE } from '@/utils/pkce'
 
 const AuthContext = createContext()
 
@@ -31,128 +15,88 @@ const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
     const router = useRouter()
     const pathname = usePathname()
-    const { query } = useRouter()
 
     useEffect(() => {
-        const handleRedirectResult = async () => {
-            try {
-                const result = await getRedirectResult(auth)
-                if (result) {
-                    const { displayName, email, uid } = result.user
-
-                    const userData = await getUser(uid)
-
-                    if (userData.status === 200) {
-                        setUser(userData.data)
-                        router.replace('/')
-                        return
-                    }
-
-                    const credential =
-                        OAuthProvider.credentialFromResult(result)
-                    const accessToken = credential?.accessToken
-
-                    router.replace(
-                        `/register?displayName=${displayName}&email=${email}&uuid=${uid}&accessToken=${accessToken}`
-                    )
-                }
-            } catch (error) {
-                console.log('Redirect login failed:', error)
-                toast.error('Sign-in failed. Please try again.', {
-                    className: 'toast-error',
-                })
-            }
-        }
-
         const initAuth = async () => {
-            // if (!isMobile()) await handleRedirectResult()
-            if (user) return setShowLoader(false)
+            try {
+                const accessToken = localStorage.getItem('accessToken')
 
-            const unsubscribe = onAuthStateChanged(
-                auth,
-                async (firebaseUser) => {
-                    if (!firebaseUser) {
-                        if (['/', '/lectures', '/stats'].includes(pathname))
-                            router.replace('/login')
-
-                        setShowLoader(false)
-                        return
-                    }
-
-                    const userData = await getUser(firebaseUser.uid)
-
-                    if (userData.status === 200) {
-                        setUser(userData.data)
-
-                        if (pathname === '/login' || pathname === '/register') {
-                            router.replace('/')
-                        }
-                    } else if (['/', '/lectures', '/stats'].includes(pathname))
+                if (!accessToken) {
+                    if (['/', '/lectures', '/stats'].includes(pathname))
                         router.replace('/login')
 
                     setShowLoader(false)
+                    return
                 }
-            )
 
-            return unsubscribe
+                const user = await axios.get(
+                    'https://graph.microsoft.com/v1.0/me',
+                    {
+                        headers: {
+                            Authorization: `Bearer ${accessToken}`,
+                        },
+                    }
+                )
+
+                if (user.status !== 200) {
+                    if (['/', '/lectures', '/stats'].includes(pathname))
+                        router.replace('/login')
+
+                    setShowLoader(false)
+                    return
+                }
+
+                const userData = await getUser(user.data.id)
+
+                if (userData.status !== 200) {
+                    const { displayName, mail, id, jobTitle } = user.data
+
+                    if (['/', '/lectures', '/stats'].includes(pathname))
+                        router.replace(
+                            `/register?displayName=${displayName}&email=${mail}&uuid=${id}&accessToken=${accessToken}&degree=${jobTitle}`
+                        )
+                    setShowLoader(false)
+                    return
+                }
+
+                setUser(userData.data)
+
+                if (pathname === '/login' || pathname === '/register')
+                    router.replace('/')
+
+                setShowLoader(false)
+            } catch (error) {
+                toast.error('Login failed. Please try again.')
+                router.replace('/login')
+            }
         }
 
-        const unsubscribePromise = initAuth()
-
-        return () => {
-            unsubscribePromise.then((unsubscribe) => {
-                if (typeof unsubscribe === 'function') unsubscribe()
-            })
-        }
+        initAuth()
     }, [pathname])
-
-    const isMobile = () =>
-        /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
 
     const isAuthenticated = () => !!user
 
     const signInWithMicrosoft = async () => {
-        if (isMobile()) {
-            let userData = await getUser('t0gEKmUnqyRJdNsBi3Q5u0doz2H3')
-            if (userData.status === 200) {
-                setUser(userData.data)
-                router.replace('/')
-                setShowLoader(false)
-                return
-            }
-            // signInWithRedirect(auth, provider)
-            return
-        }
+        const { verifier, challenge } = await generatePKCE()
+        localStorage.setItem('pkce_verifier', verifier)
 
-        try {
-            const result = await signInWithPopup(auth, provider)
-            const { displayName, email, uid } = result.user
+        const params = new URLSearchParams({
+            client_id: process.env.NEXT_PUBLIC_OUTLOOK_CLIENT_ID,
+            response_type: 'code',
+            redirect_uri: process.env.NEXT_PUBLIC_OUTLOOK_REDIRECT_URI,
+            response_mode: 'query',
+            scope: 'openid profile email offline_access https://graph.microsoft.com/User.Read',
+            code_challenge: challenge,
+            code_challenge_method: 'S256',
+            prompt: 'select_account',
+        })
 
-            let userData = await getUser(uid)
-            if (userData.status === 200) {
-                setUser(userData.data)
-                router.replace('/')
-                setShowLoader(false)
-                return
-            }
-
-            const credential = OAuthProvider.credentialFromResult(result)
-            const accessToken = credential?.accessToken
-
-            router.replace(
-                `/register?displayName=${displayName}&email=${email}&uuid=${uid}&accessToken=${accessToken}`
-            )
-        } catch (error) {
-            console.log('Sign-in error:', error.message)
-            toast.error('Sign-in failed. Please try again.', {
-                className: 'toast-error',
-            })
-        }
+        window.location.href = `https://login.microsoftonline.com/${process.env.NEXT_PUBLIC_OUTLOOK_TENANT_ID}/oauth2/v2.0/authorize?${params.toString()}`
     }
 
     const logout = async () => {
         try {
-            await signOut(auth)
+            localStorage.removeItem('accessToken')
             setUser(null)
             router.replace('/login')
         } catch (error) {
