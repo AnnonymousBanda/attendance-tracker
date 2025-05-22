@@ -27,6 +27,14 @@ const globalErrorHandler = (error) => {
 
 const handleDevelopmentError = (error) => {
     console.log(error)
+
+    if (error.code && error.name === 'FirebaseError') {
+        return {
+            status: 503,
+            message: error.message,
+        }
+    }
+
     return {
         status: error.status || 500,
         message: error.message,
@@ -35,16 +43,25 @@ const handleDevelopmentError = (error) => {
 }
 
 const handleProductionError = (error) => {
+    console.log(error)
+
     if (error.isOperational) {
         return {
             status: error.status,
             message: error.message,
         }
     }
-    console.log('Unexpected error:', error)
+
+    if (error.code && error.name === 'FirebaseError') {
+        return {
+            status: 503,
+            message: 'Internal server error! Please hang on for a while.',
+        }
+    }
+
     return {
         status: 500,
-        message: 'Something went wrong',
+        message: 'Something went wrong! Please try again.',
     }
 }
 
