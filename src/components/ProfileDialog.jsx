@@ -169,16 +169,16 @@ export default function ProfileDialog({ setisDialogOpen }) {
                                 </div>
                             </Link>
                             <button
-                                className={`w-full flex justify-center items-center bg-red-300 p-[1rem] gap-[1rem] rounded-lg cursor-pointer ${buttonClicked ? 'opacity-50 ' : 'hover:bg-red '}`}
+                                className={`w-full flex justify-center gap-[1rem] items-center bg-red-300 p-[1rem] rounded-lg cursor-pointer ${buttonClicked ? 'opacity-50 ' : 'hover:bg-red '}`}
                                 onClick={async () => {
                                     setButtonClicked(true)
                                     await logout()
                                     setButtonClicked(false)
                                 }}
                             >
-                                <MdLogout className="w-[3rem] h-[4rem]" />
-                                <div className="flex flex-col w-full justify-center">
-                                    <h3 className="font-bold uppercase">
+                                <MdLogout className="w-[3rem] h-[4rem] gap-[1rem]" />
+                                <div className="flex flex-col w-full">
+                                    <h3 className="font-bold uppercase w-fit">
                                         Logout
                                     </h3>
                                 </div>
