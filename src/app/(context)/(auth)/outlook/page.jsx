@@ -82,12 +82,13 @@ export default function OutlookCallback() {
     return (
         <div className="flex-col gap-4 w-full h-full absolute top-0 left-0 flex items-center justify-center bg-primary">
             <div className="max-container h-svh flex flex-col justify-center items-center gap-[2.5rem]">
-                <h1 className="font-bold text-[2.5rem] flex w-fit items-center justify-center text-gray-600">
-                    Authenticating with Outlook
-                    <span className="inline-block w-[2rem] text-left">
+                <div className="text-center text-[2.5rem] text-gray-600 font-bold">
+                    <span className="text-[5rem] text-left">
                         {'.'.repeat(dotCount)}
+                        {' '}
                     </span>
-                </h1>
+                    <div>Authenticating with Outlook</div>
+                </div>
             </div>
         </div>
     )
