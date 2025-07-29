@@ -4,10 +4,19 @@ import { useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 export default function OutlookCallback() {
     const router = useRouter()
     const searchParams = useSearchParams()
+    const [dotCount, setDotCount] = useState(1)
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setDotCount((prev) => (prev % 3) + 1)
+        }, 600)
+        return () => clearInterval(interval)
+    }, [])
 
     useEffect(() => {
         const getToken = async () => {
@@ -70,5 +79,16 @@ export default function OutlookCallback() {
         getToken()
     }, [searchParams])
 
-    return <h1>Authenticating with Outlook...</h1>
+    return (
+        <div className="flex-col gap-4 w-full h-full absolute top-0 left-0 flex items-center justify-center bg-primary">
+            <div className="max-container h-svh flex flex-col justify-center items-center gap-[2.5rem]">
+                <h1 className="font-bold text-[2.5rem] flex w-fit items-center justify-center text-gray-600">
+                    Authenticating with Outlook
+                    <span className="inline-block w-[2rem] text-left">
+                        {'.'.repeat(dotCount)}
+                    </span>
+                </h1>
+            </div>
+        </div>
+    )
 }
