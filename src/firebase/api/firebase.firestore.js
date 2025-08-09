@@ -188,6 +188,7 @@ const getLectures = catchAsync(async (userID, semester, day) => {
 
     let branch = user.data().branch
 
+    // firebase lectures get fetched and then gsheet data is fetched which includes the cancelled lectures with status null.
     let lecturesFirebase =
         user
             .data()
@@ -303,14 +304,27 @@ const modifyAttendance = catchAsync(
         let lectures = (await getLectures(userID, semester, day)).data
 
         let preStatus = null
+        // lectures = lectures?.map((lecture) => {
+        //     if (
+        //         lecture.to === to &&
+        //         lecture.from === from &&
+        //         lecture.courseCode === courseCode
+        //     ) {
+        //         preStatus = lecture.status
+        //         return { ...lecture, status }
+        //     }
+        //     return lecture
+        // })
+
         lectures = lectures?.map((lecture) => {
-            if (
+            const match = (
                 lecture.to === to &&
                 lecture.from === from &&
                 lecture.courseCode === courseCode
-            ) {
+            )
+            if (match) {
                 preStatus = lecture.status
-                return { ...lecture, status }
+                return { ...lecture, status: 'cancelled' } // explicit
             }
             return lecture
         })
