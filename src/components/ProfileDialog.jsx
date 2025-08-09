@@ -19,7 +19,7 @@ export default function ProfileDialog({ setisDialogOpen }) {
     const handleClose = () => {
         setisDialogOpen(false)
     }
-    const { user, logout } = useAuth()
+    const { user, setUser, logout } = useAuth()
     const [edit, setEdit] = useState(false)
     const [semester, setSemester] = useState(user?.semester)
     const [loading, setLoading] = useState(false)
@@ -42,6 +42,10 @@ export default function ProfileDialog({ setisDialogOpen }) {
 
             setEdit(false)
             setSemester(semester)
+            setUser({
+                ...user,
+                semester: semester,
+            })
 
             toast.success('Semester updated', { className: 'toast-success' })
 
