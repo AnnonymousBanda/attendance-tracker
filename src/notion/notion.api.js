@@ -100,7 +100,7 @@ const parseCourses = (json) => {
 function extractTimetable(json) {
     const weekdays = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
 
-    const cols = json.table.cols.slice(3, 13)
+    const cols = json.table.cols.slice(1, 13)
     const rows = json.table.rows
 
     const lectures = {
