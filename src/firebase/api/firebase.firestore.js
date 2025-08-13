@@ -192,7 +192,9 @@ const getLectures = catchAsync(async (userID, semester, day) => {
     let lecturesFirebase =
         user
             .data()
-            .lectures?.[semester]?.[day]?.sort((a, b) => a.from.localeCompare(b.from)) || []
+            .lectures?.[semester]?.[day]?.sort((a, b) =>
+                a.from.localeCompare(b.from)
+            ) || []
     let lecturesNotion =
         (await Notion.getLectures(semester, day, branch))?.sort((a, b) =>
             a.from.localeCompare(b.from)
@@ -223,9 +225,14 @@ const getLectures = catchAsync(async (userID, semester, day) => {
         }
     }
 
-    lectures=lectures?.filter(
-                (lecture) => lecture.status !== 'cancelled'
-            )?.sort((a, b) => a.from.localeCompare(b.from))
+    const parseTime = (t) => {
+        const [h, m] = t.split(':').map(Number)
+        return h * 60 + m
+    }
+
+    lectures = lectures
+        .filter((lecture) => lecture.status !== 'cancelled')
+        .sort((a, b) => parseTime(a.from) - parseTime(b.from))
 
     return {
         status: 200,
@@ -316,11 +323,10 @@ const modifyAttendance = catchAsync(
         // })
 
         lectures = lectures?.map((lecture) => {
-            const match = (
+            const match =
                 lecture.to === to &&
                 lecture.from === from &&
                 lecture.courseCode === courseCode
-            )
             if (match) {
                 preStatus = lecture.status
                 return { ...lecture, status: status } // explicit
@@ -453,31 +459,35 @@ const resetSemester = catchAsync(async (userID, semester) => {
     return { status: 200, message: 'Semester reset successfully' }
 })
 
-const updateAttendance = catchAsync(async (userID, semester, courseCode, attendanceData) => {
-    if (!userID || !semester || !courseCode || !attendanceData)
-        throw new AppError('Please, provide all the required fields', 400)
+const updateAttendance = catchAsync(
+    async (userID, semester, courseCode, attendanceData) => {
+        if (!userID || !semester || !courseCode || !attendanceData)
+            throw new AppError('Please, provide all the required fields', 400)
 
-    const userRef = doc(USER, userID)
-    const userSnap = await getDoc(userRef)
+        const userRef = doc(USER, userID)
+        const userSnap = await getDoc(userRef)
 
-    if (!userSnap.exists()) throw new AppError('User not found', 404)
+        if (!userSnap.exists()) throw new AppError('User not found', 404)
 
-    const courses = userSnap.data().courses?.[semester] || []
-    const courseIndex = courses.findIndex((course) => course.courseCode === courseCode)
+        const courses = userSnap.data().courses?.[semester] || []
+        const courseIndex = courses.findIndex(
+            (course) => course.courseCode === courseCode
+        )
 
-    if (courseIndex === -1) throw new AppError('Course not found', 404)
+        if (courseIndex === -1) throw new AppError('Course not found', 404)
 
-    const updatedCourse = {
-        ...courses[courseIndex],
-        ...attendanceData,
+        const updatedCourse = {
+            ...courses[courseIndex],
+            ...attendanceData,
+        }
+
+        await updateDoc(userRef, {
+            [`courses.${semester}.${courseIndex}`]: updatedCourse,
+        })
+
+        return { status: 200, message: 'Attendance updated successfully' }
     }
-
-    await updateDoc(userRef, {
-        [`courses.${semester}.${courseIndex}`]: updatedCourse,
-    })
-
-    return { status: 200, message: 'Attendance updated successfully' }
-})
+)
 
 export {
     registerUser,
