@@ -360,7 +360,7 @@ const modifyAttendance = catchAsync(
 
         lectures = lectures
             .filter((lecture) => lecture.status !== 'cancelled')
-            .sort((a, b) => a.from.localeCompare(b.from))
+            .sort((a, b) => parseTime(a.from) - parseTime(b.from))
 
         return {
             status: 200,
