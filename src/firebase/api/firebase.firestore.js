@@ -225,11 +225,6 @@ const getLectures = catchAsync(async (userID, semester, day) => {
         }
     }
 
-    const parseTime = (t) => {
-        const [h, m] = t.split(':').map(Number)
-        return h * 60 + m
-    }
-
     lectures = lectures
         .filter((lecture) => lecture.status !== 'cancelled')
         .sort((a, b) => parseTime(a.from) - parseTime(b.from))
@@ -240,6 +235,11 @@ const getLectures = catchAsync(async (userID, semester, day) => {
         data: lectures || [],
     }
 })
+
+const parseTime = (t) => {
+    const [h, m] = t.split(':').map(Number)
+    return h * 60 + m
+}
 
 const addExtraLecture = catchAsync(async (userID, lecture, semester, day) => {
     const { to, from, courseCode, courseName } = lecture
@@ -289,7 +289,7 @@ const addExtraLecture = catchAsync(async (userID, lecture, semester, day) => {
     })
 
     lectures = lectures?.concat(lecture)
-    lectures?.sort((a, b) => a.from.localeCompare(b.from))
+    lectures?.sort((a, b) => parseTime(a.from) - parseTime(b.from))
 
     return {
         status: 200,
