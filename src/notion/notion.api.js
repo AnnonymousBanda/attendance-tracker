@@ -23,10 +23,13 @@ const getCourses = catchAsync(async (semester, branch) => {
         }
 
         const raw = await response.text()
+        console.log('Raw response:', raw)
         const json = JSON.parse(raw.substr(47).slice(0, -2))
 
-        const allcourses = parseCourses(json)
+        const allcourses = parseCourses(json, branch)
         const semcourses = allcourses[semester]
+
+        console.log('Fetched courses:', allcourses)
 
         return semcourses
     } catch (error) {
@@ -60,8 +63,8 @@ const getLectures = catchAsync(async (semester, day, branch) => {
     }
 })
 
-const parseCourses = (json) => {
-    const totalSemesters = 4
+const parseCourses = (json, branch) => {
+    const totalSemesters = branch.toLowerCase().includes('dual degree') ? 10 : 8
     const columnsPerSemester = 14
     const semesterData = {}
 
