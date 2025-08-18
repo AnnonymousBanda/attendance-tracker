@@ -23,17 +23,13 @@ const getCourses = catchAsync(async (semester, branch) => {
         }
 
         const raw = await response.text()
-        console.log('Raw response:', raw)
         const json = JSON.parse(raw.substr(47).slice(0, -2))
 
         const allcourses = parseCourses(json, branch)
         const semcourses = allcourses[semester]
 
-        console.log('Fetched courses:', allcourses)
-
         return semcourses
     } catch (error) {
-        console.log('Error fetching courses:', error)
         throw new AppError(error.message, 500)
     }
 })
