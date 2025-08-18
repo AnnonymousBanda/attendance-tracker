@@ -208,14 +208,14 @@ export default function ProfileDialog({ setisDialogOpen }) {
     return (
         <div
             onClick={handleClose}
-            className="fixed z-50 inset-0 bg-[rgba(0,0,0,0.5)] backdrop-blur-[6px] flex justify-center items-center"
+            className="fixed z-50 inset-0 bg-[rgba(0,0,0,0.5)] backdrop-blur-[6px] flex justify-center items-center h-screen"
         >
             <div
                 onClick={(e) => e.stopPropagation()}
-                className="lg:max-w-[35vw] w-full bg-primary h-full p-[2rem] flex flex-col gap-[2rem] overflow-auto max-container"
+                className="lg:max-w-[35vw] w-full bg-primary h-full p-[2rem] flex flex-col gap-[2rem] max-container"
             >
                 {/* Header */}
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center h-auto">
                     <div className="flex justify-center items-center gap-[0.5rem]">
                         <UserCircleIcon className="w-[2.5rem] h-[2.5rem]" />
                         <h2 className="font-[900] uppercase tracking-wide">
@@ -227,6 +227,7 @@ export default function ProfileDialog({ setisDialogOpen }) {
                     </button>
                 </div>
 
+                <div className='h-full'>
                 {/* Main content */}
                 <div className="flex flex-col h-full justify-center items-center">
                     {/* Profile picture + basic info */}
@@ -244,7 +245,7 @@ export default function ProfileDialog({ setisDialogOpen }) {
                     </div>
 
                     {/* Details */}
-                    <div className="flex flex-col justify-between h-full gap-[1.2rem] w-full">
+                    <div className="flex flex-col justify-between h-full gap-[1.2rem] w-full overflow-auto">
                         <div className="flex flex-col w-full justify-center items-center p-[1rem] gap-[1rem]">
                             {/* Branch */}
                             <div className="flex justify-center w-full items-center bg-[#d7e4ee] p-[1rem] gap-[1rem] rounded-lg">
@@ -317,7 +318,7 @@ export default function ProfileDialog({ setisDialogOpen }) {
                                     <div>
                                         <button
                                             onClick={toggleCoursesExpanded}
-                                            className="bg-secondary py-[0.5rem] px-[0.75rem] rounded-lg hover:bg-black transition-colors"
+                                            className={`${coursesExpanded ? 'bg-red' : 'bg-secondary'} py-[0.5rem] px-[0.75rem] rounded-lg hover:opacity-80 transition-colors cursor-pointer text-white`}
                                         >
                                             <h4 className="uppercase">
                                                 {coursesExpanded ? 'Close' : 'Edit'}
@@ -354,6 +355,7 @@ export default function ProfileDialog({ setisDialogOpen }) {
                                                             <h4 className="font-semibold">P</h4>
                                                             <h4 className="font-semibold">A</h4>
                                                             <h4 className="font-semibold">M</h4>
+                                                            <h4 className="font-semibold">Changes</h4>
                                                         </div>
                                                     </div>
 
@@ -370,7 +372,7 @@ export default function ProfileDialog({ setisDialogOpen }) {
 
                                                                 <div className="flex flex-col">
                                                                     <h3 className="font-bold">{c.courseCode}</h3>
-                                                                    <p className="text-sm">{c.courseName}</p>
+                                                                    <p className="text-md">{c.courseName}</p>
                                                                 </div>
                                                             </div>
 
@@ -405,7 +407,7 @@ export default function ProfileDialog({ setisDialogOpen }) {
                                                                         onClick={() => cancelEditCourse(idx, c.courseCode)}
                                                                         className="bg-red py-[0.4rem] px-[0.75rem] rounded-lg cursor-pointer hover:bg-red-600"
                                                                     >
-                                                                        <h4 className="uppercase text-xs">Cancel</h4>
+                                                                        <h4 className="uppercase">Cancel</h4>
                                                                     </button>
                                                                     <button
                                                                         onClick={() => saveCourse(c)}
@@ -414,7 +416,7 @@ export default function ProfileDialog({ setisDialogOpen }) {
                                                                             savingCourseId === c.courseCode ? 'opacity-50 cursor-not-allowed' : ''
                                                                         }`}
                                                                     >
-                                                                        <h4 className="uppercase text-xs">Save</h4>
+                                                                        <h4 className="uppercase">Save</h4>
                                                                     </button>
                                                                 </div>
                                                             </div>
@@ -440,6 +442,7 @@ export default function ProfileDialog({ setisDialogOpen }) {
                         </div>
 
                         {/* Bug Report + Logout */}
+                    </div>
                         <div className="flex flex-col w-full bg-[#d7e4ee] justify-center items-center mt-[4rem] p-[1rem] gap-[1rem] rounded-lg">
                             <Link
                                 href="https://forms.gle/DjoRKfTt6NNjepzU9"
@@ -469,8 +472,9 @@ export default function ProfileDialog({ setisDialogOpen }) {
                                 </div>
                             </button>
                         </div>
-                    </div>
                 </div>
+                </div>
+
             </div>
         </div>
     )
