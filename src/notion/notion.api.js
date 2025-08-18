@@ -52,12 +52,33 @@ const getLectures = catchAsync(async (semester, day, branch) => {
         const timetable = extractTimetable(json)
         const lectures = timetable[day]
 
-        return lectures
+        const mergedlectures = mergeLectures(lectures)
+
+        return mergedlectures
     } catch (error) {
         console.log('Error fetching lectures:', error)
         throw new AppError(error.message, 500)
     }
 })
+
+function mergeLectures(lectures) {
+    if (!lectures.length) return [];
+  
+    let merged = [lectures[0]];
+  
+    for (let i = 1; i < lectures.length; i++) {
+      let prev = merged[merged.length - 1];
+      let curr = lectures[i];
+  
+      if (prev.courseCode === curr.courseCode && prev.to === curr.from) {
+        prev.to = curr.to; 
+      } else {
+        merged.push(curr);
+      }
+    }
+  
+    return merged;
+  }
 
 const parseCourses = (json, branch) => {
     const totalSemesters = branch.toLowerCase().includes('dual degree') ? 10 : 8
