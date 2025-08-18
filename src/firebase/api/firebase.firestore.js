@@ -476,13 +476,22 @@ const updateAttendance = catchAsync(
 
         if (courseIndex === -1) throw new AppError('Course not found', 404)
 
-        const updatedCourse = {
-            ...courses[courseIndex],
-            ...attendanceData,
-        }
+        const updatedCourse = courses.map(
+            (course) => {
+                if(course.courseCode === courseCode) {
+                    return {
+                        ...course,
+                        present: attendanceData.present || course.present,
+                        absent: attendanceData.absent || course.absent,
+                        medical: attendanceData.medical || course.medical,
+                    }
+                }
+                return course
+            }
+        )
 
         await updateDoc(userRef, {
-            [`courses.${semester}.${courseIndex}`]: updatedCourse,
+            [`courses.${semester}`]: updatedCourse,
         })
 
         return { status: 200, message: 'Attendance updated successfully' }
