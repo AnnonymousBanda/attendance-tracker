@@ -203,3 +203,15 @@
     font-weight: 500;
     background-blend-mode: overlay;
 }
+
+/* For Chrome, Safari, Edge, Opera */
+.no-spinner::-webkit-inner-spin-button,
+.no-spinner::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* For Firefox */
+.no-spinner {
+  -moz-appearance: textfield;
+}
