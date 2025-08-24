@@ -498,6 +498,39 @@ const updateAttendance = catchAsync(
     }
 )
 
+const getISTWeekKey = (date = new Date()) => {
+  const istNow = new Date(date.toLocaleString("en-US", { timeZone: "Asia/Kolkata" }))
+  istNow.setHours(0, 0, 0, 0)
+  const sunday = new Date(istNow)
+  sunday.setDate(sunday.getDate() - sunday.getDay())
+  const y = sunday.getFullYear()
+  const m = String(sunday.getMonth() + 1).padStart(2, "0")
+  const d = String(sunday.getDate()).padStart(2, "0")
+  return `${y}-${m}-${d}`
+}
+
+const resetLecturesIfNeeded = catchAsync(async (userID) => {
+  const userRef = doc(USER, userID)
+  await runTransaction(db, async (tx) => {
+    const snap = await tx.get(userRef)
+    if (!snap.exists()) throw new AppError("User not found", 404)
+
+    const data = snap.data()
+    const thisWeekKey = getISTWeekKey()
+    const lastKey = data.lastLectureResetKey || null
+    if (lastKey === thisWeekKey) return
+
+    const maxSem = data.degree === "Dual Degree" ? 10 : 8
+    const updates = {}
+    for (let sem = 1; sem <= maxSem; sem++) {
+      updates[`lectures.${sem}`] = { mon: [], tue: [], wed: [], thu: [], fri: [], sat: [], sun: [] }
+    }
+    updates["lastLectureResetKey"] = thisWeekKey
+
+    tx.update(userRef, updates)
+  })
+})
+
 export {
     registerUser,
     getUser,
@@ -508,4 +541,5 @@ export {
     getAttendanceReport,
     resetSemester,
     updateAttendance,
+    resetLecturesIfNeeded
 }
