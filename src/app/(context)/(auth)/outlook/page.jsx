@@ -37,6 +37,7 @@ export default function OutlookCallback() {
 
             const data = new URLSearchParams({
                 client_id: process.env.NEXT_PUBLIC_OUTLOOK_CLIENT_ID,
+                scope: 'openid profile email offline_access https://graph.microsoft.com/User.Read',
                 grant_type: 'authorization_code',
                 code,
                 redirect_uri: process.env.NEXT_PUBLIC_OUTLOOK_REDIRECT_URI,
@@ -66,6 +67,7 @@ export default function OutlookCallback() {
                 }
 
                 localStorage.setItem('accessToken', result.access_token)
+                localStorage.setItem('refreshToken', result.refresh_token)
 
                 router.replace('/')
             } catch (error) {
