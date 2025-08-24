@@ -4,7 +4,7 @@ import { XMarkIcon } from '@heroicons/react/16/solid'
 import { UserCircleIcon } from '@heroicons/react/24/outline'
 import { profilePic } from '@/assets'
 import { HiAcademicCap } from 'react-icons/hi2'
-import { IoCalendar, IoBook, IoClose } from 'react-icons/io5'
+import { IoCalendar, IoBook, IoClose, IoWarning } from 'react-icons/io5'
 import { MdBugReport, MdLogout, MdModeEdit } from 'react-icons/md'
 import { BiSolidBookBookmark } from 'react-icons/bi'
 import Image from 'next/image'
@@ -253,7 +253,7 @@ export default function ProfileDialog({ setisDialogOpen }) {
         >
             <div
                 onClick={(e) => e.stopPropagation()}
-                className="lg:max-w-[35vw] w-full bg-primary h-full p-[2rem] flex flex-col gap-[2rem] max-container"
+                className="lg:max-w-[35vw] w-full bg-primary h-svh p-[2rem] flex flex-col max-container"
             >
                 {/* Header */}
                 <div className="flex justify-between items-center h-auto">
@@ -268,11 +268,11 @@ export default function ProfileDialog({ setisDialogOpen }) {
                     </button>
                 </div>
 
-                <div className="h-full">
+                <>
                     {/* Main content */}
-                    <div className="flex flex-col h-full justify-center items-center">
+                    <div className="flex flex-col h-full justify-between items-center py-[1.5rem]">
                         {/* Profile picture + basic info */}
-                        <div className="flex justify-center items-center gap-[2rem] w-full p-[1rem] rounded-lg">
+                        <div className="flex justify-center items-center gap-[2rem] w-full prem] p-[1rem] rounded-lg">
                             <Image
                                 src={profilePic}
                                 alt="User icon"
@@ -286,7 +286,11 @@ export default function ProfileDialog({ setisDialogOpen }) {
                         </div>
 
                         {/* Details */}
-                        <div className="flex flex-col justify-between h-full gap-[1.2rem] w-full overflow-auto">
+                        <div
+                            className={`flex flex-col justify-between h-[58%] gap-[1.2rem] w-full rounded-xl ${
+                                loading ? 'overflow-hidden' : 'overflow-auto'
+                            }`}
+                        >
                             <div className="flex flex-col w-full justify-center items-center p-[1rem] gap-[1rem]">
                                 {/* Branch */}
                                 <div className="flex justify-center w-full items-center bg-[#d7e4ee] p-[1rem] gap-[1rem] rounded-lg">
@@ -362,277 +366,232 @@ export default function ProfileDialog({ setisDialogOpen }) {
                                 <div className="flex flex-col w-full bg-[#d7e4ee] p-[1rem] gap-[1rem] rounded-lg">
                                     <div className="flex flex-row justify-between items-center">
                                         <div className="flex flex-row gap-[1rem] items-center">
-                                            <IoBook className="w-[3.3rem] h-[4rem]" />
+                                            <IoBook className="w-[3rem] h-[4rem]" />
                                             <h3 className="font-bold">
                                                 Courses
                                             </h3>
-                                        </div>
-                                        {/* Edit toggle button */}
-                                        <div>
-                                            <button
-                                                onClick={toggleCoursesExpanded}
-                                                className={`${
-                                                    coursesExpanded
-                                                        ? 'bg-red'
-                                                        : 'bg-secondary'
-                                                } py-[0.5rem] px-[0.75rem] rounded-lg hover:opacity-80 transition-colors cursor-pointer text-white`}
-                                            >
-                                                <h4 className="bg-secondary p-[0.5rem] rounded-lg cursor-pointer hover:bg-black">
-                                                    {coursesExpanded ? (
-                                                        <IoClose className="w-8 h-8 text-red-600 cursor-pointer" />
-                                                    ) : (
-                                                        <MdModeEdit className="w-[2rem] text-primary h-[2rem]" />
-                                                    )}
-                                                </h4>
-                                            </button>
                                         </div>
                                     </div>
 
                                     <div className="flex flex-col gap-[0.5rem]">
                                         {loading ? (
-                                            <Loader />
+                                            <CoursesSkeletonUI />
                                         ) : (
                                             <>
-                                                {!coursesExpanded && (
-                                                    <div className="flex flex-col gap-[0.5rem]">
-                                                        {courses.map(
-                                                            (course, index) => (
-                                                                <p
-                                                                    key={index}
-                                                                    className="text-[1.2rem] md:text-[1.6rem]"
+                                                {attendanceReport.length > 0 ? (
+                                                    <div className="flex flex-col gap-[1rem]">
+                                                        {/* header row with P A M */}
+                                                        {attendanceReport.map(
+                                                            (c, idx) => (
+                                                                <div
+                                                                    key={
+                                                                        c.courseCode
+                                                                    }
+                                                                    className="flex flex-col justify-between items-center gap-[1rem] bg-white p-[1rem] rounded-lg"
                                                                 >
-                                                                    {course}
-                                                                </p>
-                                                            )
-                                                        )}
-                                                    </div>
-                                                )}
+                                                                    <div className="flex items-start justify-start gap-[2rem] w-full">
+                                                                        <button
+                                                                            onClick={() =>
+                                                                                startEditCourse(
+                                                                                    c.courseCode
+                                                                                )
+                                                                            }
+                                                                            disabled={
+                                                                                editingCourse ===
+                                                                                c.courseCode
+                                                                            }
+                                                                            className={`bg-secondary mt-[0.25rem] p-[0.25rem] rounded-lg ${
+                                                                                editingCourse ===
+                                                                                c.courseCode
+                                                                                    ? 'opacity-50 cursor-not-allowed'
+                                                                                    : 'hover:bg-black'
+                                                                            }`}
+                                                                        >
+                                                                            <MdModeEdit className="w-[2rem] h-[2rem] text-primary" />
+                                                                        </button>
 
-                                                {coursesExpanded &&
-                                                    attendanceReport.length ===
-                                                        0 && (
-                                                        <p className="text-[1.2rem]">
-                                                            No course attendance
-                                                            data available.
-                                                        </p>
-                                                    )}
-
-                                                {coursesExpanded &&
-                                                    attendanceReport.length >
-                                                        0 && (
-                                                        <div className="flex flex-col gap-[1rem]">
-                                                            {/* header row with P A M */}
-                                                            {attendanceReport.map(
-                                                                (c, idx) => (
-                                                                    <div
-                                                                        key={
-                                                                            c.courseCode
-                                                                        }
-                                                                        className="flex flex-col justify-between items-center gap-[1rem] bg-white p-[1rem] rounded-lg"
-                                                                    >
-                                                                        <div className="flex items-start justify-start gap-[2rem] w-full">
-                                                                            <button
-                                                                                onClick={() =>
-                                                                                    startEditCourse(
-                                                                                        c.courseCode
-                                                                                    )
-                                                                                }
-                                                                                disabled={
-                                                                                    editingCourse ===
+                                                                        <div className="flex flex-col">
+                                                                            <h3 className="font-bold">
+                                                                                {
                                                                                     c.courseCode
                                                                                 }
-                                                                                className={`bg-secondary mt-[0.25rem] p-[0.25rem] rounded-lg ${
-                                                                                    editingCourse ===
-                                                                                    c.courseCode
-                                                                                        ? 'opacity-50 cursor-not-allowed'
-                                                                                        : 'hover:bg-black'
-                                                                                }`}
-                                                                            >
-                                                                                <MdModeEdit className="w-[2rem] h-[2rem] text-primary" />
-                                                                            </button>
-
-                                                                            <div className="flex flex-col">
-                                                                                <h3 className="font-bold">
-                                                                                    {
-                                                                                        c.courseCode
-                                                                                    }
-                                                                                </h3>
-                                                                                <p className="text-md">
-                                                                                    {
-                                                                                        c.courseName
-                                                                                    }
-                                                                                </p>
-                                                                            </div>
-                                                                        </div>
-
-                                                                        <div className="flex-1 flex-col w-full flex gap-[2rem] justify-between items-center px-[2rem] md:px-[4rem]">
-                                                                            <div className="flex w-full justify-center items-center">
-                                                                                <div className=" w-[7rem] flex flex-col gap-[1rem] justify-center items-center">
-                                                                                    <p className="font-bold">
-                                                                                        P
-                                                                                    </p>
-                                                                                    <input
-                                                                                        type="number"
-                                                                                        min={
-                                                                                            0
-                                                                                        }
-                                                                                        value={
-                                                                                            c.present
-                                                                                        }
-                                                                                        onChange={(
-                                                                                            e
-                                                                                        ) =>
-                                                                                            onChangeCourseValue(
-                                                                                                idx,
-                                                                                                'present',
-                                                                                                e
-                                                                                                    .target
-                                                                                                    .value
-                                                                                            )
-                                                                                        }
-                                                                                        disabled={
-                                                                                            editingCourse !==
-                                                                                            c.courseCode
-                                                                                        }
-                                                                                        className="w-[7rem] no-spinner m-0 px-0 text-[1rem] md:text-[1.2rem] text-center bg-white rounded-lg"
-                                                                                    />
-                                                                                </div>
-                                                                                <div className=" w-[rem] flex flex-col gap-[1rem] justify-center items-center">
-                                                                                    <p className="font-bold">
-                                                                                        A
-                                                                                    </p>
-                                                                                    <input
-                                                                                        type="number"
-                                                                                        min={
-                                                                                            0
-                                                                                        }
-                                                                                        value={
-                                                                                            c.absent
-                                                                                        }
-                                                                                        onChange={(
-                                                                                            e
-                                                                                        ) =>
-                                                                                            onChangeCourseValue(
-                                                                                                idx,
-                                                                                                'absent',
-                                                                                                e
-                                                                                                    .target
-                                                                                                    .value
-                                                                                            )
-                                                                                        }
-                                                                                        disabled={
-                                                                                            editingCourse !==
-                                                                                            c.courseCode
-                                                                                        }
-                                                                                        className="w-[7rem] no-spinner text-[1rem] md:text-[1.2rem] text-center bg-white rounded-lg"
-                                                                                    />
-                                                                                </div>
-                                                                                <div className=" w-[rem] flex flex-col gap-[1rem] justify-center items-center">
-                                                                                    <p className="font-bold">
-                                                                                        M
-                                                                                    </p>
-                                                                                    <input
-                                                                                        type="number"
-                                                                                        min={
-                                                                                            0
-                                                                                        }
-                                                                                        value={
-                                                                                            c.medical
-                                                                                        }
-                                                                                        onChange={(
-                                                                                            e
-                                                                                        ) =>
-                                                                                            onChangeCourseValue(
-                                                                                                idx,
-                                                                                                'medical',
-                                                                                                e
-                                                                                                    .target
-                                                                                                    .value
-                                                                                            )
-                                                                                        }
-                                                                                        disabled={
-                                                                                            editingCourse !==
-                                                                                            c.courseCode
-                                                                                        }
-                                                                                        className="w-[7rem] no-spinner text-[1rem] md:text-[1.2rem] text-center bg-white rounded-lg"
-                                                                                    />
-                                                                                </div>
-                                                                            </div>
-
-                                                                            {editingCourse && (
-                                                                                <div className="flex items-center justify-end w-full gap-[0.5rem]">
-                                                                                    <button
-                                                                                        onClick={() =>
-                                                                                            cancelEditCourse(
-                                                                                                idx,
-                                                                                                c.courseCode
-                                                                                            )
-                                                                                        }
-                                                                                        className="bg-red py-[0.4rem] px-[0.75rem] rounded-lg cursor-pointer hover:bg-red-600"
-                                                                                    >
-                                                                                        <p className="uppercase">
-                                                                                            Cancel
-                                                                                        </p>
-                                                                                    </button>
-                                                                                    <button
-                                                                                        onClick={() =>
-                                                                                            saveCourse(
-                                                                                                c
-                                                                                            )
-                                                                                        }
-                                                                                        disabled={
-                                                                                            savingCourseId ===
-                                                                                            c.courseCode
-                                                                                        }
-                                                                                        className={`bg-green py-[0.4rem] px-[0.75rem] rounded-lg cursor-pointer hover:bg-green-600 ${
-                                                                                            savingCourseId ===
-                                                                                            c.courseCode
-                                                                                                ? 'opacity-50 cursor-not-allowed'
-                                                                                                : ''
-                                                                                        }`}
-                                                                                    >
-                                                                                        <p className="uppercase">
-                                                                                            Save
-                                                                                        </p>
-                                                                                    </button>
-                                                                                </div>
-                                                                            )}
+                                                                            </h3>
+                                                                            <p className="text-md">
+                                                                                {
+                                                                                    c.courseName
+                                                                                }
+                                                                            </p>
                                                                         </div>
                                                                     </div>
-                                                                )
-                                                            )}
 
-                                                            <div className="flex justify-end mt-[0.5rem]">
-                                                                <button
-                                                                    onClick={() => {
-                                                                        saveAllCourses()
-                                                                        // handleChangeSem()
-                                                                    }}
-                                                                    disabled={
-                                                                        loading
-                                                                    }
-                                                                    className={`bg-primary py-[0.6rem] px-[1rem] rounded-lg cursor-pointer hover:opacity-90 ${
-                                                                        loading
-                                                                            ? 'opacity-50 cursor-not-allowed'
-                                                                            : ''
-                                                                    }`}
-                                                                >
-                                                                    <h4 className="uppercase">
-                                                                        Save All
-                                                                    </h4>
-                                                                </button>
-                                                            </div>
+                                                                    <div className="flex-1 flex-col w-full flex gap-[2rem] justify-between items-center px-[2rem] md:px-[4rem]">
+                                                                        <div className="flex w-full justify-center items-center">
+                                                                            <div className=" w-[7rem] flex flex-col gap-[1rem] justify-center items-center">
+                                                                                <p className="font-bold">
+                                                                                    P
+                                                                                </p>
+                                                                                <input
+                                                                                    type="number"
+                                                                                    min={
+                                                                                        0
+                                                                                    }
+                                                                                    value={
+                                                                                        c.present
+                                                                                    }
+                                                                                    onChange={(
+                                                                                        e
+                                                                                    ) =>
+                                                                                        onChangeCourseValue(
+                                                                                            idx,
+                                                                                            'present',
+                                                                                            e
+                                                                                                .target
+                                                                                                .value
+                                                                                        )
+                                                                                    }
+                                                                                    disabled={
+                                                                                        editingCourse !==
+                                                                                        c.courseCode
+                                                                                    }
+                                                                                    className="w-[7rem] no-spinner m-0 px-0 text-[1rem] md:text-[1.2rem] text-center bg-white rounded-lg"
+                                                                                />
+                                                                            </div>
+                                                                            <div className=" w-[rem] flex flex-col gap-[1rem] justify-center items-center">
+                                                                                <p className="font-bold">
+                                                                                    A
+                                                                                </p>
+                                                                                <input
+                                                                                    type="number"
+                                                                                    min={
+                                                                                        0
+                                                                                    }
+                                                                                    value={
+                                                                                        c.absent
+                                                                                    }
+                                                                                    onChange={(
+                                                                                        e
+                                                                                    ) =>
+                                                                                        onChangeCourseValue(
+                                                                                            idx,
+                                                                                            'absent',
+                                                                                            e
+                                                                                                .target
+                                                                                                .value
+                                                                                        )
+                                                                                    }
+                                                                                    disabled={
+                                                                                        editingCourse !==
+                                                                                        c.courseCode
+                                                                                    }
+                                                                                    className="w-[7rem] no-spinner text-[1rem] md:text-[1.2rem] text-center bg-white rounded-lg"
+                                                                                />
+                                                                            </div>
+                                                                            <div className=" w-[rem] flex flex-col gap-[1rem] justify-center items-center">
+                                                                                <p className="font-bold">
+                                                                                    M
+                                                                                </p>
+                                                                                <input
+                                                                                    type="number"
+                                                                                    min={
+                                                                                        0
+                                                                                    }
+                                                                                    value={
+                                                                                        c.medical
+                                                                                    }
+                                                                                    onChange={(
+                                                                                        e
+                                                                                    ) =>
+                                                                                        onChangeCourseValue(
+                                                                                            idx,
+                                                                                            'medical',
+                                                                                            e
+                                                                                                .target
+                                                                                                .value
+                                                                                        )
+                                                                                    }
+                                                                                    disabled={
+                                                                                        editingCourse !==
+                                                                                        c.courseCode
+                                                                                    }
+                                                                                    className="w-[7rem] no-spinner text-[1rem] md:text-[1.2rem] text-center bg-white rounded-lg"
+                                                                                />
+                                                                            </div>
+                                                                        </div>
+
+                                                                        {editingCourse && (
+                                                                            <div className="flex items-center justify-end w-full gap-[0.5rem]">
+                                                                                <button
+                                                                                    onClick={() =>
+                                                                                        cancelEditCourse(
+                                                                                            idx,
+                                                                                            c.courseCode
+                                                                                        )
+                                                                                    }
+                                                                                    className="bg-red py-[0.4rem] px-[0.75rem] rounded-lg cursor-pointer hover:bg-red-600"
+                                                                                >
+                                                                                    <p className="uppercase">
+                                                                                        Cancel
+                                                                                    </p>
+                                                                                </button>
+                                                                                <button
+                                                                                    onClick={() =>
+                                                                                        saveCourse(
+                                                                                            c
+                                                                                        )
+                                                                                    }
+                                                                                    disabled={
+                                                                                        savingCourseId ===
+                                                                                        c.courseCode
+                                                                                    }
+                                                                                    className={`bg-green py-[0.4rem] px-[0.75rem] rounded-lg cursor-pointer hover:bg-green-600 ${
+                                                                                        savingCourseId ===
+                                                                                        c.courseCode
+                                                                                            ? 'opacity-50 cursor-not-allowed'
+                                                                                            : ''
+                                                                                    }`}
+                                                                                >
+                                                                                    <p className="uppercase">
+                                                                                        Save
+                                                                                    </p>
+                                                                                </button>
+                                                                            </div>
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+                                                            )
+                                                        )}
+
+                                                        <div className="flex justify-end mt-[0.5rem]">
+                                                            <button
+                                                                onClick={() => {
+                                                                    saveAllCourses()
+                                                                    // handleChangeSem()
+                                                                }}
+                                                                disabled={
+                                                                    loading
+                                                                }
+                                                                className={`bg-primary py-[0.6rem] px-[1rem] rounded-lg cursor-pointer hover:opacity-90 ${
+                                                                    loading
+                                                                        ? 'opacity-50 cursor-not-allowed'
+                                                                        : ''
+                                                                }`}
+                                                            >
+                                                                <p className="uppercase">
+                                                                    Save All
+                                                                </p>
+                                                            </button>
                                                         </div>
-                                                    )}
+                                                    </div>
+                                                ) : (
+                                                    <NoCourses />
+                                                )}
                                             </>
                                         )}
                                     </div>
                                 </div>
                             </div>
-
-                            {/* Bug Report + Logout */}
                         </div>
-                        <div className="flex flex-col w-full bg-[#d7e4ee] justify-center items-center mt-[4rem] p-[1rem] gap-[1rem] rounded-lg">
+                        <div className="flex flex-col w-full bg-[#d7e4ee] justify-center items-center p-[1rem] gap-[1rem] rounded-lg">
                             <Link
                                 href="https://forms.gle/DjoRKfTt6NNjepzU9"
                                 target="#"
@@ -644,7 +603,7 @@ export default function ProfileDialog({ setisDialogOpen }) {
                                 </div>
                             </Link>
                             <button
-                                className={`w-full flex justify-center items-center bg-red-300 p-[1rem] gap-[1rem] rounded-lg cursor-pointer ${
+                                className={`w-full flex items-center bg-red-300 p-[1rem] gap-[1rem] rounded-lg cursor-pointer ${
                                     buttonClicked
                                         ? 'opacity-50 '
                                         : 'hover:bg-red '
@@ -655,8 +614,8 @@ export default function ProfileDialog({ setisDialogOpen }) {
                                     setButtonClicked(false)
                                 }}
                             >
-                                <MdLogout className="w-[3rem] h-[4rem]" />
-                                <div className="flex flex-col w-full justify-center">
+                                <MdLogout className="w-[2.5rem] h-[4rem]" />
+                                <div className="flex flex-col justify-start">
                                     <h3 className="font-bold uppercase">
                                         Logout
                                     </h3>
@@ -664,8 +623,38 @@ export default function ProfileDialog({ setisDialogOpen }) {
                             </button>
                         </div>
                     </div>
-                </div>
+                </>
             </div>
+        </div>
+    )
+}
+
+function CoursesSkeletonUI() {
+    return (
+        <div className="flex flex-col w-full justify-center items-center">
+            <div className="flex flex-col w-full flex-1 justify-center items-center">
+                <div className="bg-gray-300 h-[7rem] w-full rounded-md mb-2 animate-skeleton"></div>
+                <div className="bg-gray-300 h-[7rem] w-full rounded-md mb-2 animate-skeleton"></div>
+                <div className="bg-gray-300 h-[7rem] w-full rounded-md mb-2 animate-skeleton"></div>
+                <div className="bg-gray-300 h-[7rem] w-full rounded-md mb-2 animate-skeleton"></div>
+                <div className="bg-gray-300 h-[7rem] w-full rounded-md mb-2 animate-skeleton"></div>
+                <div className="bg-gray-300 h-[7rem] w-full rounded-md mb-2 animate-skeleton"></div>
+                <div className="bg-gray-300 h-[7rem] w-full rounded-md mb-2 animate-skeleton"></div>
+                <div className="bg-gray-300 h-[7rem] w-full rounded-md mb-2 animate-skeleton"></div>
+                <div className="bg-gray-300 h-[7rem] w-full rounded-md mb-2 animate-skeleton"></div>
+                <div className="bg-gray-300 h-[7rem] w-full rounded-md mb-2 animate-skeleton"></div>
+                <div className="bg-gray-300 h-[7rem] w-full rounded-md mb-2 animate-skeleton"></div>
+                <div className="bg-gray-300 h-[7rem] w-full rounded-md mb-2 animate-skeleton"></div>
+            </div>
+        </div>
+    )
+}
+
+function NoCourses() {
+    return (
+        <div className="flex flex-col w-full justify-center items-center bg-white/70 p-[2rem] rounded-xl">
+            <IoWarning size={40} color='#3a3a3a'/>
+            <h3>No courses available</h3>
         </div>
     )
 }
