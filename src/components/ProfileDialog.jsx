@@ -2,7 +2,6 @@
 
 import { XMarkIcon } from '@heroicons/react/16/solid'
 import { UserCircleIcon } from '@heroicons/react/24/outline'
-import { profilePic } from '@/assets'
 import { HiAcademicCap } from 'react-icons/hi2'
 import { IoCalendar, IoBook, IoClose, IoWarning } from 'react-icons/io5'
 import { MdBugReport, MdLogout, MdModeEdit } from 'react-icons/md'
@@ -20,7 +19,7 @@ import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
 import { Loader } from '@/components'
 
-export default function ProfileDialog({ setisDialogOpen }) {
+export default function ProfileDialog({ profilePicture, setisDialogOpen }) {
     const { user, logout } = useAuth()
     const [courses, setCourses] = useState([])
     const [attendanceReport, setAttendanceReport] = useState([]) // per-course attendance aggregates
@@ -274,9 +273,11 @@ export default function ProfileDialog({ setisDialogOpen }) {
                         {/* Profile picture + basic info */}
                         <div className="flex justify-center items-center gap-[2rem] w-full prem] p-[1rem] rounded-lg">
                             <Image
-                                src={profilePic}
+                                src={profilePicture}
                                 alt="User icon"
-                                className="w-[8rem] h-[8rem]"
+                                width={400}
+                                height={400}
+                                className="w-[8rem] h-[8rem] rounded-full"
                             />
                             <div className="flex flex-col gap-[0.5rem] justify-center">
                                 <h1 className="text-[1.7rem]">{user?.name}</h1>
