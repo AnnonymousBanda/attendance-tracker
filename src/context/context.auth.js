@@ -1,7 +1,7 @@
 'use client'
 
 import { Loader } from '@/components'
-import { getUser } from '@/firebase/api/firebase.firestore'
+import { getUser, resetLecturesIfNeeded } from '@/firebase/api/firebase.firestore'
 import { createContext, useContext, useState, useEffect } from 'react'
 import { toast } from 'react-hot-toast'
 import { usePathname, useRouter } from 'next/navigation'
@@ -67,6 +67,7 @@ const AuthProvider = ({ children }) => {
                 }
 
                 setUser(userData.data)
+                await resetLecturesIfNeeded(user.data.id)
 
                 if (['/login', '/register', '/outlook'].includes(pathname))
                     router.replace('/')
