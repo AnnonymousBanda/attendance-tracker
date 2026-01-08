@@ -190,15 +190,12 @@ const getLectures = catchAsync(async (userID, semester, day) => {
 
     // firebase lectures get fetched and then gsheet data is fetched which includes the cancelled lectures with status null.
     let lecturesFirebase =
-        user
-            .data()
-            .lectures?.[semester]?.[day]?.sort((a, b) =>
-                a.from.localeCompare(b.from)
-            ) || []
+        user.data().lectures?.[semester]?.[day]?.sort((a, b) => {
+            const padTime = (timeStr) => timeStr.padStart(5, '0')
+            return padTime(a.from).localeCompare(padTime(b.from))
+        }) || []
     let lecturesNotion =
-        (await Notion.getLectures(semester, day, branch))?.sort((a, b) =>
-            a.from.localeCompare(b.from)
-        ) || []
+        (await Notion.getLectures(semester, day, branch))
 
     let lectures = []
     let l1 = lecturesFirebase.length,
@@ -227,7 +224,10 @@ const getLectures = catchAsync(async (userID, semester, day) => {
 
     lectures = lectures
         .filter((lecture) => lecture.status !== 'cancelled')
-        .sort((a, b) => parseTime(a.from) - parseTime(b.from))
+        .sort((a, b) => {
+            const padTime = (timeStr) => timeStr.padStart(5, '0')
+            return padTime(a.from).localeCompare(padTime(b.from))
+        })
 
     return {
         status: 200,
@@ -289,7 +289,10 @@ const addExtraLecture = catchAsync(async (userID, lecture, semester, day) => {
     })
 
     lectures = lectures?.concat(lecture)
-    lectures?.sort((a, b) => parseTime(a.from) - parseTime(b.from))
+    lectures?.sort((a, b) => {
+        const padTime = (timeStr) => timeStr.padStart(5, '0')
+        return padTime(a.from).localeCompare(padTime(b.from))
+    })
 
     return {
         status: 200,
@@ -360,7 +363,10 @@ const modifyAttendance = catchAsync(
 
         lectures = lectures
             .filter((lecture) => lecture.status !== 'cancelled')
-            .sort((a, b) => parseTime(a.from) - parseTime(b.from))
+            .sort((a, b) => {
+                const padTime = (timeStr) => timeStr.padStart(5, '0')
+                return padTime(a.from).localeCompare(padTime(b.from))
+            })
 
         return {
             status: 200,
@@ -476,19 +482,17 @@ const updateAttendance = catchAsync(
 
         if (courseIndex === -1) throw new AppError('Course not found', 404)
 
-        const updatedCourse = courses.map(
-            (course) => {
-                if(course.courseCode === courseCode) {
-                    return {
-                        ...course,
-                        present: attendanceData.present || course.present,
-                        absent: attendanceData.absent || course.absent,
-                        medical: attendanceData.medical || course.medical,
-                    }
+        const updatedCourse = courses.map((course) => {
+            if (course.courseCode === courseCode) {
+                return {
+                    ...course,
+                    present: attendanceData.present || course.present,
+                    absent: attendanceData.absent || course.absent,
+                    medical: attendanceData.medical || course.medical,
                 }
-                return course
             }
-        )
+            return course
+        })
 
         await updateDoc(userRef, {
             [`courses.${semester}`]: updatedCourse,
@@ -499,36 +503,46 @@ const updateAttendance = catchAsync(
 )
 
 const getISTWeekKey = (date = new Date()) => {
-  const istNow = new Date(date.toLocaleString("en-US", { timeZone: "Asia/Kolkata" }))
-  istNow.setHours(0, 0, 0, 0)
-  const sunday = new Date(istNow)
-  sunday.setDate(sunday.getDate() - sunday.getDay())
-  const y = sunday.getFullYear()
-  const m = String(sunday.getMonth() + 1).padStart(2, "0")
-  const d = String(sunday.getDate()).padStart(2, "0")
-  return `${y}-${m}-${d}`
+    const istNow = new Date(
+        date.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' })
+    )
+    istNow.setHours(0, 0, 0, 0)
+    const sunday = new Date(istNow)
+    sunday.setDate(sunday.getDate() - sunday.getDay())
+    const y = sunday.getFullYear()
+    const m = String(sunday.getMonth() + 1).padStart(2, '0')
+    const d = String(sunday.getDate()).padStart(2, '0')
+    return `${y}-${m}-${d}`
 }
 
 const resetLecturesIfNeeded = catchAsync(async (userID) => {
-  const userRef = doc(USER, userID)
-  await runTransaction(db, async (tx) => {
-    const snap = await tx.get(userRef)
-    if (!snap.exists()) throw new AppError("User not found", 404)
+    const userRef = doc(USER, userID)
+    await runTransaction(db, async (tx) => {
+        const snap = await tx.get(userRef)
+        if (!snap.exists()) throw new AppError('User not found', 404)
 
-    const data = snap.data()
-    const thisWeekKey = getISTWeekKey()
-    const lastKey = data.lastLectureResetKey || null
-    if (lastKey === thisWeekKey) return
+        const data = snap.data()
+        const thisWeekKey = getISTWeekKey()
+        const lastKey = data.lastLectureResetKey || null
+        if (lastKey === thisWeekKey) return
 
-    const maxSem = data.degree === "Dual Degree" ? 10 : 8
-    const updates = {}
-    for (let sem = 1; sem <= maxSem; sem++) {
-      updates[`lectures.${sem}`] = { mon: [], tue: [], wed: [], thu: [], fri: [], sat: [], sun: [] }
-    }
-    updates["lastLectureResetKey"] = thisWeekKey
+        const maxSem = data.degree === 'Dual Degree' ? 10 : 8
+        const updates = {}
+        for (let sem = 1; sem <= maxSem; sem++) {
+            updates[`lectures.${sem}`] = {
+                mon: [],
+                tue: [],
+                wed: [],
+                thu: [],
+                fri: [],
+                sat: [],
+                sun: [],
+            }
+        }
+        updates['lastLectureResetKey'] = thisWeekKey
 
-    tx.update(userRef, updates)
-  })
+        tx.update(userRef, updates)
+    })
 })
 
 export {
@@ -541,5 +555,5 @@ export {
     getAttendanceReport,
     resetSemester,
     updateAttendance,
-    resetLecturesIfNeeded
+    resetLecturesIfNeeded,
 }

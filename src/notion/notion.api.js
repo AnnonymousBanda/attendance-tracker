@@ -14,7 +14,7 @@ const cellrange = {
 const getCourses = catchAsync(async (semester, branch) => {
     try {
         const id = process.env.NEXT_PUBLIC_GSHEET_ID
-        const url = `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:json&sheet=${branch}`
+        const url = `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:json&sheet=${branch}&t=${Date.now()}`
 
         const response = await fetch(url)
 
@@ -37,9 +37,15 @@ const getCourses = catchAsync(async (semester, branch) => {
 const getLectures = catchAsync(async (semester, day, branch) => {
     try {
         const id = process.env.NEXT_PUBLIC_GSHEET_ID
-        const semCellRange = cellrange[semester]
+        const rawRange = cellrange[semester]
+        const safeRange = rawRange
+            .split(', ')
+            .map((col) => `\`${col}\``)
+            .join(', ')
 
-        const url = `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:json&tq=SELECT ${semCellRange}&sheet=${branch}`
+        const query = encodeURIComponent(`SELECT ${safeRange}`)
+        const url = `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:json&tq=${query}&sheet=${branch}&t=${Date.now()}`
+
         const response = await fetch(url)
 
         if (response.status !== 200) {
@@ -62,23 +68,23 @@ const getLectures = catchAsync(async (semester, day, branch) => {
 })
 
 function mergeLectures(lectures) {
-    if (!lectures.length) return [];
-  
-    let merged = [lectures[0]];
-  
+    if (!lectures.length) return []
+
+    let merged = [lectures[0]]
+
     for (let i = 1; i < lectures.length; i++) {
-      let prev = merged[merged.length - 1];
-      let curr = lectures[i];
-  
-      if (prev.courseCode === curr.courseCode && prev.to === curr.from) {
-        prev.to = curr.to; 
-      } else {
-        merged.push(curr);
-      }
+        let prev = merged[merged.length - 1]
+        let curr = lectures[i]
+
+        if (prev.courseCode === curr.courseCode && prev.to === curr.from) {
+            prev.to = curr.to
+        } else {
+            merged.push(curr)
+        }
     }
-  
-    return merged;
-  }
+
+    return merged
+}
 
 const parseCourses = (json, branch) => {
     const totalSemesters = branch.toLowerCase().includes('dual degree') ? 10 : 8
@@ -120,8 +126,8 @@ const parseCourses = (json, branch) => {
 function extractTimetable(json) {
     const weekdays = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
 
-    const cols = json.table.cols.slice(1, 13)
-    const rows = json.table.rows
+    const cols = json.table?.cols.slice(1, 13) || []
+    const rows = json.table?.rows || []
 
     const lectures = {
         mon: [],

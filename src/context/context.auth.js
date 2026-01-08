@@ -1,7 +1,10 @@
 'use client'
 
 import { Loader } from '@/components'
-import { getUser, resetLecturesIfNeeded } from '@/firebase/api/firebase.firestore'
+import {
+    getUser,
+    resetLecturesIfNeeded,
+} from '@/firebase/api/firebase.firestore'
 import { createContext, useContext, useState, useEffect } from 'react'
 import { toast } from 'react-hot-toast'
 import { usePathname, useRouter } from 'next/navigation'
@@ -36,43 +39,51 @@ const AuthProvider = ({ children }) => {
                     scope: 'openid profile email offline_access https://graph.microsoft.com/User.Read',
                 })
             )
-            const { access_token: newAccessToken, refresh_token: newRefreshToken } = response.data
+            const {
+                access_token: newAccessToken,
+                refresh_token: newRefreshToken,
+            } = response.data
             if (newRefreshToken) {
                 localStorage.setItem('refreshToken', newRefreshToken)
             }
-            apiClient.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`
+            apiClient.defaults.headers.common[
+                'Authorization'
+            ] = `Bearer ${newAccessToken}`
             return newAccessToken
         } catch (error) {
             logout()
             return null
         }
     }
-    
+
     useEffect(() => {
         const interceptor = apiClient.interceptors.response.use(
-            response => response,
-            async error => {
-                const originalRequest = error.config;
+            (response) => response,
+            async (error) => {
+                const originalRequest = error.config
                 if (error.response?.status === 401 && !originalRequest._retry) {
-                    originalRequest._retry = true;
-                    const newAccessToken = await refreshAccessToken();
+                    originalRequest._retry = true
+                    const newAccessToken = await refreshAccessToken()
                     if (newAccessToken) {
-                        axios.defaults.headers.common['Authorization'] = 'Bearer ' + newAccessToken;
-                        return apiClient(originalRequest);
+                        axios.defaults.headers.common['Authorization'] =
+                            'Bearer ' + newAccessToken
+                        return apiClient(originalRequest)
                     }
                 }
-                return Promise.reject(error);
+                return Promise.reject(error)
             }
-        );
+        )
         return () => {
-            apiClient.interceptors.response.eject(interceptor);
-        };
-    }, []);
+            apiClient.interceptors.response.eject(interceptor)
+        }
+    }, [])
 
     const fetchAndSetUser = async (currentAccessToken) => {
         if (!currentAccessToken) return false
         try {
-            apiClient.defaults.headers.common['Authorization'] = `Bearer ${currentAccessToken}`
+            apiClient.defaults.headers.common[
+                'Authorization'
+            ] = `Bearer ${currentAccessToken}`
             const graphUserResponse = await apiClient.get('/me')
             const firestoreUser = await getUser(graphUserResponse.data.id)
 
@@ -81,11 +92,16 @@ const AuthProvider = ({ children }) => {
                 await resetLecturesIfNeeded(graphUserResponse.data.id)
                 return true
             } else if (firestoreUser.status === 404) {
-                const { displayName, mail, id, jobTitle } = graphUserResponse.data
-                router.replace(`/register?displayName=${displayName}&email=${mail}&uuid=${id}&degree=${jobTitle}`)
+                const { displayName, mail, id, jobTitle } =
+                    graphUserResponse.data
+                router.replace(
+                    `/register?displayName=${displayName}&email=${mail}&uuid=${id}&degree=${jobTitle}`
+                )
                 return false
             } else {
-                throw new Error(firestoreUser.message || 'Failed to fetch user data.')
+                throw new Error(
+                    firestoreUser.message || 'Failed to fetch user data.'
+                )
             }
         } catch (error) {
             logout()
@@ -120,7 +136,9 @@ const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         if (!isLoading) {
-            const isAuthPage = ['/login', '/register', '/outlook'].includes(pathname)
+            const isAuthPage = ['/login', '/register', '/outlook'].includes(
+                pathname
+            )
             if (user && isAuthPage) {
                 router.replace('/')
             }
@@ -146,7 +164,9 @@ const AuthProvider = ({ children }) => {
             prompt: 'select_account',
         })
 
-        window.location.href = `https://login.microsoftonline.com/${process.env.NEXT_PUBLIC_OUTLOOK_TENANT_ID}/oauth2/v2.0/authorize?${params.toString()}`
+        window.location.href = `https://login.microsoftonline.com/${
+            process.env.NEXT_PUBLIC_OUTLOOK_TENANT_ID
+        }/oauth2/v2.0/authorize?${params.toString()}`
     }
 
     const isAuthenticated = () => !!user
@@ -155,6 +175,7 @@ const AuthProvider = ({ children }) => {
         <AuthContext.Provider
             value={{
                 user,
+                setUser,
                 logout,
                 signInWithMicrosoft,
                 isAuthenticated,
