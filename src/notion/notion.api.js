@@ -35,36 +35,41 @@ const getCourses = catchAsync(async (semester, branch) => {
 })
 
 const getLectures = catchAsync(async (semester, day, branch) => {
-    try {
-        const id = process.env.NEXT_PUBLIC_GSHEET_ID
-        const rawRange = cellrange[semester]
-        const safeRange = rawRange
-            .split(', ')
-            .map((col) => `\`${col}\``)
-            .join(', ')
 
-        const query = encodeURIComponent(`SELECT ${safeRange}`)
-        const url = `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:json&tq=${query}&sheet=${branch}&t=${Date.now()}`
+    const id = process.env.NEXT_PUBLIC_GSHEET_ID
 
-        const response = await fetch(url)
+    const rawRange = cellrange[semester]
+    const safeRange = rawRange
+        .split(', ')
+        .map((col) => `\`${col}\``)
+        .join(', ')
 
-        if (response.status !== 200) {
-            throw new AppError('Failed to fetch lectures', 404)
-        }
+    const query = encodeURIComponent(`SELECT ${safeRange}`)
+    const url = `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:json&tq=${query}&sheet=${branch}&t=${Date.now()}`
 
-        const raw = await response.text()
-        const json = JSON.parse(raw.substr(47).slice(0, -2))
+    const response = await fetch(url)
 
-        const timetable = extractTimetable(json)
-        const lectures = timetable[day]
-
-        const mergedlectures = mergeLectures(lectures)
-
-        return mergedlectures
-    } catch (error) {
-        console.log('Error fetching lectures:', error)
-        throw new AppError(error.message, 500)
+    if (response.status !== 200) {
+        throw new AppError('Failed to fetch lectures', 404)
     }
+
+    const raw = await response.text()
+
+    const jsonStart = raw.indexOf('{')
+    const jsonEnd = raw.lastIndexOf('}')
+    const json = JSON.parse(raw.substring(jsonStart, jsonEnd + 1))
+
+    if (json.status === 'error') {
+        throw new AppError(
+            `Google Sheet Error: ${json.errors[0].detailed_message}`,
+            400
+        )
+    }
+
+    const timetable = extractTimetable(json)
+    const lectures = timetable[day] || []
+
+    return mergeLectures(lectures)
 })
 
 function mergeLectures(lectures) {
