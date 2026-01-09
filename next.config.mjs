@@ -33,6 +33,7 @@ const withPWA = nextPWA({
 
 const nextConfig = withPWA({
     reactStrictMode: true,
+    turbopack: {},
 })
 
 export default nextConfig
